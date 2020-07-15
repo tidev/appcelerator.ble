@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 2.0.0
+apiversion: 4
+architectures: arm64-v8a armeabi-v7a x86 x86_64
+description: BluetoothLowEnergy
+author: Axway
+license: Apache Public License v2
+copyright: Copyright (c) 2013-present by Axway Appcelerator
+
+# these should not be edited
+name: BluetoothLowEnergy
+moduleid: appcelerator.ble
+guid: 8d0b486f-27ff-4029-a989-56e4a6755e6f
+platform: android
+minsdk: 9.0.0

@@ -1,0 +1,7 @@
+android/documentation/
+android/example/
+
+test/
+apidoc/
+Jenkinsfile
+dangerfile.js
