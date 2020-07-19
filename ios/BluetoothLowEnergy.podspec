@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
                      DESC
   
    s.homepage     = "https://example.com"
-    s.license      = { :type => "Apache 2", :file => "LICENSE" }
+    s.license      = { :type => "Appcelerator Commercial License", :file => "LICENSE" }
     s.author       = 'Author'
   
     s.platform     = :ios

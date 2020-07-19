@@ -16,24 +16,3 @@ win.open();
 var bluetoothLowEnergy = require('appcelerator.ble');
 Ti.API.info("module is => " + bluetoothLowEnergy);
 
-label.text = bluetoothLowEnergy.example();
-
-Ti.API.info("module exampleProp is => " + bluetoothLowEnergy.exampleProp);
-bluetoothLowEnergy.exampleProp = "This is a test value";
-
-if (Ti.Platform.name == "android") {
-	var proxy = bluetoothLowEnergy.createExample({
-		message: "Creating an example Proxy",
-		backgroundColor: "red",
-		width: 100,
-		height: 100,
-		top: 100,
-		left: 150
-	});
-
-	proxy.printMessage("Hello world!");
-	proxy.message = "Hi world!.  It's me again.";
-	proxy.printMessage("Hello world!");
-	win.add(proxy);
-}
-

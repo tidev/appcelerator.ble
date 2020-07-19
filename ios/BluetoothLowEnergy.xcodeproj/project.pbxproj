@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB24E03C20766AC90033B2B1 /* AppceleratorBleExampleProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB24E03B20766AC90033B2B1 /* AppceleratorBleExampleProxy.swift */; };
 		DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */; };
 		DB34CDE1207B998A005F8E8C /* AppceleratorBleModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB34CDE6207B9EBD005F8E8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB34CDE5207B9EBD005F8E8C /* Foundation.framework */; };
@@ -18,7 +17,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DB24E03B20766AC90033B2B1 /* AppceleratorBleExampleProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppceleratorBleExampleProxy.swift; path = Classes/AppceleratorBleExampleProxy.swift; sourceTree = "<group>"; };
 		DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppceleratorBleModuleAssets.m; path = Classes/AppceleratorBleModuleAssets.m; sourceTree = SOURCE_ROOT; };
 		DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppceleratorBleModuleAssets.h; path = Classes/AppceleratorBleModuleAssets.h; sourceTree = SOURCE_ROOT; };
 		DB34CDE5207B9EBD005F8E8C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				DB52E2421E9CD0F800AAAEE0 /* AppceleratorBleModule.swift */,
-				DB24E03B20766AC90033B2B1 /* AppceleratorBleExampleProxy.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -201,7 +198,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB24E03C20766AC90033B2B1 /* AppceleratorBleExampleProxy.swift in Sources */,
 				DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */,
 				DB52E2431E9CD0F800AAAEE0 /* AppceleratorBleModule.swift in Sources */,
 			);

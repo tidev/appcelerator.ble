@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2020 by Axway Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -24,8 +24,6 @@ import TitaniumKit
 
 @objc(AppceleratorBleModule)
 class AppceleratorBleModule: TiModule {
-
-  public let testProperty: String = "Hello World"
   
   func moduleGUID() -> String {
     return "8d0b486f-27ff-4029-a989-56e4a6755e6f"
@@ -39,26 +37,4 @@ class AppceleratorBleModule: TiModule {
     super.startup()
     debugPrint("[DEBUG] \(self) loaded")
   }
-
-  @objc(example:)
-  func example(arguments: Array<Any>?) -> String? {
-    guard let arguments = arguments, let params = arguments[0] as? [String: Any] else { return nil }
-
-    // Example method. 
-    // Call with "MyModule.example({ hello: 'world' })"
-
-    return params["hello"] as? String
-  }
-  
-  @objc public var exampleProp: String {
-     get { 
-        // Example property getter
-        return "Titanium rocks!"
-     }
-     set {
-        // Example property setter
-        // Call with "MyModule.exampleProp = 'newValue'"
-        self.replaceValue(newValue, forKey: "exampleProp", notification: false)
-     }
-   }
 }
