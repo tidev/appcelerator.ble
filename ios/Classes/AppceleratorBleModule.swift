@@ -1,9 +1,8 @@
 /**
- * Appcelerator Titanium Mobile
- * Copyright (c) 2020 by Axway Appcelerator, Inc. All Rights Reserved.
- * Licensed under the terms of the Apache Public License
- * Please see the LICENSE included with this distribution for details.
- */
+* Appcelerator Titanium Mobile - Bluetooth Module
+* Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
+* Proprietary and Confidential - This source code is not for redistribution
+*/
 
 import UIKit
 import TitaniumKit
