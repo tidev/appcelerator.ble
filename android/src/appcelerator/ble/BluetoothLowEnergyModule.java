@@ -10,13 +10,11 @@ package appcelerator.ble;
 
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
-
-import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
+import org.appcelerator.titanium.TiApplication;
 
-
-@Kroll.module(name="BluetoothLowEnergy", id="appcelerator.ble")
+@Kroll.module(name = "BluetoothLowEnergy", id = "appcelerator.ble")
 public class BluetoothLowEnergyModule extends KrollModule
 {
 
@@ -31,6 +29,4 @@ public class BluetoothLowEnergyModule extends KrollModule
 	{
 		super();
 	}
-
 }
-
