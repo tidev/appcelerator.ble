@@ -1,0 +1,7 @@
+---
+name: Modules.ble
+extends: Titanium.Module
+summary: add summary here.
+description: |
+    add description here
+platforms: [android, iphone, ipad] 
