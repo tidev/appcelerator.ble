@@ -23,17 +23,19 @@ import TitaniumKit
 
 @objc(AppceleratorBleModule)
 class AppceleratorBleModule: TiModule {
-  
   func moduleGUID() -> String {
     return "8d0b486f-27ff-4029-a989-56e4a6755e6f"
   }
-  
   override func moduleId() -> String! {
     return "appcelerator.ble"
   }
-
   override func startup() {
     super.startup()
     debugPrint("[DEBUG] \(self) loaded")
   }
+    @objc(createCentral:)
+    func createCentral(args:Any?) -> TiBLECentralProxy {
+        let central = TiBLECentralProxy(maximumUpdateValueLength: 123, UUID: "some")
+        return central!
+    }
 }

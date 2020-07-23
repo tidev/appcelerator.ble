@@ -7,6 +7,17 @@
 import Foundation
 import TitaniumKit
 
-class TiBLECentralProxy: TiProxy {
-    
+@objc class TiBLECentralProxy: TiProxy {
+   @objc var maximumUpdateValueLength: NSNumber?
+   @objc var UUID: String?
+    //MARK: Initialization
+    init?(maximumUpdateValueLength: NSNumber, UUID: String) {
+        // The UUID and maximumUpdateValueLength must not be empty
+        guard (!UUID.isEmpty) else {
+            return nil
+        }
+        // Initialize stored properties.
+        self.maximumUpdateValueLength = maximumUpdateValueLength
+        self.UUID = UUID
+    }
 }
