@@ -1,0 +1,17 @@
+name: TiBLEDescriptorProxy
+summary: Managing Descriptors
+properties:
+
+      - name: characteristic
+        summary: A back-pointer to the characteristic this descriptor belongs to.
+        type: Object
+      
+      - name: value
+        summary:  The Bluetooth UUID of the descriptor.
+        type: Number
+
+      - name: UUID
+        summary: The UUID of the central.
+        type: String
+platforms: [iphone, ipad]
+since: "1.0.0"

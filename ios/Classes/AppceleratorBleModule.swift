@@ -1,5 +1,5 @@
 /**
-* Appcelerator Titanium Mobile - Bluetooth Module
+* Appcelerator Titanium Mobile - Bluetooth Low Energy (BLE) Module
 * Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
 * Proprietary and Confidential - This source code is not for redistribution
 */
@@ -36,4 +36,10 @@ class AppceleratorBleModule: TiModule {
     super.startup()
     debugPrint("[DEBUG] \(self) loaded")
   }
+    @objc(createDescriptor:)
+    func createDescriptor(args:Any?) -> TiBLEDescriptorProxy {
+        let characterstic : TiBLECharacteristicProxy? = TiBLECharacteristicProxy()
+        let central = TiBLEDescriptorProxy(characterstic: characterstic, value: 123, UUID: "some")
+        return central!
+    }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-describe('ti.map', function () {
+describe('appcelerator.ble', function () {
 	it('can be required', () => {
-		expect('vicky').toBeDefined();
+		expect(require('appcelerator.ble')).toBeDefined();
 	});
 });
