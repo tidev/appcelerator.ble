@@ -5,7 +5,18 @@
 */
 import Foundation
 import TitaniumKit
+import CoreBluetooth
 
 class TiBLECharacteristicProxy : TiProxy {
+    private var _characteristic:CBCharacteristic
+    
+    init(characteristic:CBCharacteristic) {
+        _characteristic = characteristic
+    }
+    
+    func characteristic() -> CBCharacteristic {
+        return _characteristic;
+    }
+    
     
 }

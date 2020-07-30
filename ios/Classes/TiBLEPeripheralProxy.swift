@@ -6,7 +6,10 @@
 
 import Foundation
 import TitaniumKit
+import CoreBluetooth
 
 class TiBLEPeripheralProxy: TiProxy {
+    
+    init(peripheral:CBPeripheral){}
     
 }
