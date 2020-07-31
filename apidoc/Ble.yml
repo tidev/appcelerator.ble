@@ -1,7 +1,29 @@
 ---
-name: Modules.ble
+name: Modules.BLE
 extends: Titanium.Module
-summary: add summary here.
+summary: Add-on Bluetooth Low Energy module
 description: |
-    add description here
+    Using Bluetooth Low Energy module is used to interact with Bluetooth Low Energy (BLE) devices.
+    Note (IOS): Starting iOS 13, it's mandatory for developers to specify the Privacy Usage Description for Bluetooth by including NSBluetoothAlwaysUsageDescription in their info.plist file. Otherwise accessing any Core Bluetooth APIs would lead to a crash. For backward support for older iOS versions, NSBluetoothPeripheralUsageDescription needs to be defined.
 platforms: [android, iphone, ipad] 
+properties:
+  - name: AUTHORISATION_STATUS_NOT_DETERMINED
+    type: Number
+    summary: A permission that indicates a peripheral can read the attribute’s value.
+    permission: read-only
+    value: 0
+  - name: AUTHORISATION_STATUS_RESTRICTED
+    type: Number
+    summary: A permission that indicates a peripheral can read the attribute’s value.
+    permission: read-only
+    value: 1
+  - name: AUTHORISATION_STATUS_DENIED
+    type: Number
+    summary: A permission that indicates a peripheral can read the attribute’s value.
+    permission: read-only
+    value: 2
+  - name: AUTHORISATION_STATUS_ALLOWED_ALWAYS
+    type: Number
+    summary: A permission that indicates a peripheral can read the attribute’s value.
+    permission: read-only
+    value: 3
