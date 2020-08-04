@@ -1,0 +1,7 @@
+---
+name: Modules.BLE.Peripheral
+summary: add summary here
+description: |
+    add description here
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
