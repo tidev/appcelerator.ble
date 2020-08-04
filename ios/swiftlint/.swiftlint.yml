@@ -1,0 +1,4 @@
+disabled_rules: # rule identifiers to exclude from running
+  - orphaned_doc_comment
+  - line_length
+  - identifier_name
