@@ -10,12 +10,16 @@ import CoreBluetooth
 
 @objc
 public class TiBLEPeripheralProxy: TiProxy {
-    private var _peripheral: CBPeripheral
+    private var _peripheral: CBPeripheral!
 
-    init(pageContext: TiEvaluator, peripheral: CBPeripheral) {
-        _peripheral = peripheral
+    private override init() {
         super.init()
+    }
+
+    convenience init(pageContext: TiEvaluator, peripheral: CBPeripheral) {
+        self.init()
         _init(withPageContext: pageContext)
+        _peripheral = peripheral
     }
 
     @objc

@@ -10,12 +10,16 @@ import CoreBluetooth
 
 @objc
 class TiBLEServiceProxy: TiProxy {
-    private var _service: CBService
+    private var _service: CBService!
 
-    init(pageContext: TiEvaluator, service: CBService) {
-        _service = service
+    private override init() {
         super.init()
+    }
+
+    convenience init(pageContext: TiEvaluator, service: CBService) {
+        self.init()
         _init(withPageContext: pageContext)
+        _service = service
     }
 
     @objc
@@ -48,8 +52,8 @@ class TiBLEServiceProxy: TiProxy {
     }
 
     @objc
-    func isPrimary() -> Bool {
-        return _service.isPrimary
+    func isPrimary() -> NSNumber {
+        return NSNumber(value: _service.isPrimary)
     }
 
     @objc
