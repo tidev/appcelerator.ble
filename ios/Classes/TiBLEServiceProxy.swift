@@ -12,8 +12,10 @@ import CoreBluetooth
 class TiBLEServiceProxy: TiProxy {
     private var _service: CBService
 
-    init(service: CBService) {
-        self._service = service
+    init(pageContext: TiEvaluator, service: CBService) {
+        _service = service
+        super.init()
+        _init(withPageContext: pageContext)
     }
 
     @objc
@@ -35,14 +37,14 @@ class TiBLEServiceProxy: TiProxy {
         }
         var objects = [TiBLEServiceProxy]()
         for service in includedServices {
-            objects.append(TiBLEServiceProxy(service: service))
+            objects.append(TiBLEServiceProxy(pageContext: self.pageContext, service: service))
         }
         return objects
     }
 
     @objc
     func peripheral() -> TiBLEPeripheralProxy {
-        return TiBLEPeripheralProxy(peripheral: _service.peripheral)
+        return TiBLEPeripheralProxy(pageContext: self.pageContext, peripheral: _service.peripheral)
     }
 
     @objc

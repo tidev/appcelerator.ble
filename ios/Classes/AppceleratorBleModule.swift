@@ -55,6 +55,11 @@ class AppceleratorBleModule: TiModule {
     @objc public let CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING = CBUUIDCharacteristicAggregateFormatString
     @objc public let CBUUID_L2CAPPSM_CHARACTERISTIC_STRING = "ABDD3056-28FA-441D-A470-55A75A52553A"
 
+    @objc public let PERIPHERAL_STATE_CONNECTED = CBPeripheralState.connected.rawValue
+    @objc public let PERIPHERAL_STATE_CONNECTING = CBPeripheralState.connecting.rawValue
+    @objc public let PERIPHERAL_STATE_DISCONNECTED = CBPeripheralState.disconnected.rawValue
+    @objc public let PERIPHERAL_STATE_DISCONNECTING = 3 //setting direct value as CBPeripheralState.disconnecting is available from ios 9 only
+
     var _peripheralManager: CBPeripheralManager?
 
     func moduleGUID() -> String {
@@ -110,7 +115,7 @@ class AppceleratorBleModule: TiModule {
         service.characteristics = characteristicArray
 
         _peripheralManager?.add(service)
-        return TiBLEServiceProxy(service: service)
+        return TiBLEServiceProxy(pageContext: self.pageContext, service: service)
     }
 
     @objc(removeAllServices:)
