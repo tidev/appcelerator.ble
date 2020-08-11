@@ -15,7 +15,7 @@ class TiBLERequestProxy: TiProxy {
     }
     @objc
     func central() -> TiBLECentralProxy {
-        return TiBLECentralProxy()
+        return TiBLECentralProxy(central: _request.central)
     }
     @objc
     func characteristic() -> TiBLECharacteristicProxy {
