@@ -1,0 +1,23 @@
+name: Modules.BLE.Descriptor
+summary: An object that provides further information about a remote peripheral’s characteristic.
+description: Descriptor objects represent the descriptors of a remote peripheral’s characteristic. Descriptors provide further information about a characteristic’s value. For example, they may describe the value in human-readable form and describe how to format the value for presentation purposes. Characteristic descriptors also indicate whether a characteristic’s value indicates or notifies a client (a central) when the value of the characteristic changes.
+since: "1.0.0"
+properties:
+
+      - name: characteristic
+        summary: A back-pointer to the characteristic this descriptor belongs to.
+        since: "1.0.0"
+        type: Modules.BLE.Characteristic
+        platforms: [iphone, ipad]
+
+      - name: value
+        summary: The value of the descriptor. Could be of type Number, String and TiBuffer
+        since: "1.0.0"
+        type: Object
+        platforms: [iphone, ipad]
+
+      - name: uuid
+        summary: The Bluetooth UUID of the descriptor.
+        since: "1.0.0"
+        type: String
+        platforms: [iphone, ipad]

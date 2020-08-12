@@ -117,6 +117,48 @@ properties:
     permission: read-only
     value: 9
 
+  - name: CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING
+    type: String
+    summary: The UUID for the Extended Properties descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
+    permission: read-only
+    value: 2900
+
+  - name: CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING
+    type: String
+    summary: The UUID for the User Description descriptor, as a string. The corresponding value for this descriptor is an NSString object.
+    permission: read-only
+    value: 2901
+
+  - name: CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING
+    type: String
+    summary: The UUID for the Client Configuration descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
+    permission: read-only
+    value: 2902
+
+  - name: CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING
+    type: String
+    summary: The UUID for the Server Configuration descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
+    permission: read-only
+    value: 2903
+
+  - name: CBUUID_CHARACTERISTIC_FORMAT_STRING
+    type: String
+    summary: The UUID for the Presentation Format descriptor, as a string. The corresponding value for this descriptor is an NSData object.
+    permission: read-only
+    value: 2904
+
+  - name: CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING
+    type: String
+    summary: The UUID for the Aggregate Format descriptor, as a string.
+    permission: read-only
+    value: 2905
+
+  - name: CBUUID_L2CAPPSM_CHARACTERISTIC_STRING
+    type: String
+    summary: The PSM of an L2CAP channel associated with the GATT service containing this characteristic.This PSM is a little-endian UInt16. Servers can publish this characteristic with the UUID ABDD3056-28FA-441D-A470-55A75A52553A.
+    permission: read-only
+    value: 2906
+
 methods:
   - name: addService
     summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.

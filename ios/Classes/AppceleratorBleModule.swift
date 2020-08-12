@@ -46,6 +46,14 @@ class AppceleratorBleModule: TiModule {
     @objc public let CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES = CBCharacteristicProperties.extendedProperties.rawValue
     @objc public let CHARACTERISTIC_PROPERTIES_NOTIFY_ENCRYPTION_REQUIRED = CBCharacteristicProperties.notifyEncryptionRequired.rawValue
     @objc public let CHARACTERISTIC_PROPERTIES_INDICATE_ENCRYPTION_REQUIRED = CBCharacteristicProperties.indicateEncryptionRequired.rawValue
+    // Descriptor UUID
+    @objc public let CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING = CBUUIDCharacteristicExtendedPropertiesString
+    @objc public let CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING = CBUUIDCharacteristicUserDescriptionString
+    @objc public let CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING = CBUUIDClientCharacteristicConfigurationString
+    @objc public let CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING = CBUUIDServerCharacteristicConfigurationString
+    @objc public let CBUUID_CHARACTERISTIC_FORMAT_STRING = CBUUIDCharacteristicFormatString
+    @objc public let CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING = CBUUIDCharacteristicAggregateFormatString
+    @objc public let CBUUID_L2CAPPSM_CHARACTERISTIC_STRING = "ABDD3056-28FA-441D-A470-55A75A52553A"
 
     var _peripheralManager: CBPeripheralManager?
 
@@ -119,4 +127,23 @@ class AppceleratorBleModule: TiModule {
         _peripheralManager?.remove(service.mutableService())
     }
 
+    // temp method needed for UT's
+    @objc(addDescriptor:)
+    func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
+        guard let values = arg as? [Any],
+            let options = values.first as? [String: Any],
+            let value = options["value"],
+            let uuid = options["uuid"] as? String else {
+                return nil
+        }
+        var descriptorValue: Any?
+        if value is TiBuffer, let data = (value as? TiBuffer)?.data {
+            descriptorValue = data
+        } else {
+            descriptorValue = value
+        }
+        let cbUUID = CBUUID(string: uuid)
+        let mutableDescriptor = CBMutableDescriptor(type: cbUUID, value: descriptorValue)
+        return TiBLEDescriptorProxy(descriptor: mutableDescriptor)
+    }
 }
