@@ -4,6 +4,7 @@ description: |
     The CBCentral class represents remote central devices (or centrals) that have connected to an app implementing the peripheral role on a local device. Remote centrals use universally unique identifiers (UUIDs), to identify themselves.
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
+since: "1.0.0"
 properties:
       - name: maximumUpdateValueLength
         summary: The maximum amount of data, in bytes, that can be received by the central in a single notification or indication.

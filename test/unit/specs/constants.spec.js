@@ -3,6 +3,25 @@ const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 describe('appcelerator.ble', function () {
 	if (IOS) {
+
+		describe('PERIPHERAL_STATE_*', () => {
+			it('PERIPHERAL_STATE_CONNECTED', () => {
+				expect(BLE.PERIPHERAL_STATE_CONNECTED).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_CONNECTING', () => {
+				expect(BLE.PERIPHERAL_STATE_CONNECTING).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_DISCONNECTED', () => {
+				expect(BLE.PERIPHERAL_STATE_DISCONNECTED).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_DISCONNECTING', () => {
+				expect(BLE.PERIPHERAL_STATE_DISCONNECTING).toEqual(jasmine.any(Number));
+			});
+		});
+
 		describe('AUTHORISATION_STATUS_*', () => {
 			it('AUTHORISATION_STATUS_NOT_DETERMINED', () => {
 				expect(BLE.AUTHORISATION_STATUS_NOT_DETERMINED).toEqual(jasmine.any(Number));
