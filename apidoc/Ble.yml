@@ -2,6 +2,7 @@
 name: Modules.BLE
 extends: Titanium.Module
 summary: Add-on Bluetooth Low Energy module
+since: "1.0.0"
 description: |
     Using Bluetooth Low Energy module is used to interact with Bluetooth Low Energy (BLE) devices.
     Note (IOS): Starting iOS 13, it's mandatory for developers to specify the Privacy Usage Description for Bluetooth by including NSBluetoothAlwaysUsageDescription in their info.plist file. 
@@ -14,6 +15,7 @@ properties:
     summary: A state that indicates the user has yet to authorize Bluetooth for this app.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 0
 
   - name: AUTHORISATION_STATUS_RESTRICTED
@@ -21,6 +23,7 @@ properties:
     summary: A state that indicates this app isn’t authorized to use Bluetooth.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 1
     
   - name: AUTHORISATION_STATUS_DENIED
@@ -28,6 +31,7 @@ properties:
     summary: A state that indicates the user explicitly denied Bluetooth access for this app.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2
     
   - name: AUTHORISATION_STATUS_ALLOWED_ALWAYS
@@ -35,6 +39,7 @@ properties:
     summary: A state that indicates the user has authorized Bluetooth at any time.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 3
 
   - name: ATTRIBUTE_PERMISSION_READABLE
@@ -42,6 +47,7 @@ properties:
     summary: A permission that indicates a peripheral can read the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 0
     
   - name: ATTRIBUTE_PERMISSION_WRITEABLE
@@ -49,6 +55,7 @@ properties:
     summary: A permission that indicates a peripheral can write the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 1
 
   - name: ATTRIBUTE_PERMISSION_READ_ENCRYPTION_REQUIRED
@@ -56,6 +63,7 @@ properties:
     summary: A permission that indicates only trusted devices can read the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2
 
   - name: ATTRIBUTE_PERMISSION_WRITE_ENCRYPTION_REQUIRED
@@ -63,6 +71,7 @@ properties:
     summary: A permission that indicates only trusted devices can write the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 3
 
   - name: CHARACTERISTIC_PROPERTIES_BROADCAST
@@ -70,6 +79,7 @@ properties:
     summary: A property that indicates the characteristic can broadcast its value using a characteristic configuration descriptor.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 0
 
   - name: CHARACTERISTIC_PROPERTIES_READ
@@ -77,6 +87,7 @@ properties:
     summary: A property that indicates a peripheral can read the characteristic’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 1
 
   - name: CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE
@@ -84,6 +95,7 @@ properties:
     summary: A property that indicates a peripheral can write the characteristic's value, without a response to indicate that the write succeeded.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2
 
   - name: CHARACTERISTIC_PROPERTIES_WRITE
@@ -91,6 +103,7 @@ properties:
     summary: A property that indicates a peripheral can write the characteristic’s value, with a response to indicate that the write succeeded.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 3
 
   - name: CHARACTERISTIC_PROPERTIES_NOTIFY
@@ -98,6 +111,7 @@ properties:
     summary: A property that indicates the peripheral permits notifications of the characteristic’s value, without a response from the central to indicate receipt of the notification.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 4
 
   - name: CHARACTERISTIC_PROPERTIES_INDICATE
@@ -105,6 +119,7 @@ properties:
     summary: A property that indicates the peripheral permits notifications of the characteristic’s value, with a response from the central to indicate receipt of the notification.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 5
 
   - name: CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES
@@ -112,6 +127,7 @@ properties:
     summary: A property that indicates the perhipheral allows signed writes of the characteristic’s value, without a response to indicate the write succeeded.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 6
 
   - name: CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES
@@ -119,6 +135,7 @@ properties:
     summary: A property that indicates the characteristic defines additional properties in the extended properties descriptor.A property that indicates the characteristic defines additional properties in the extended properties descriptor.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 7
 
   - name: CHARACTERISTIC_PROPERTIES_NOTIFY_ENCRYPTION_REQUIRED
@@ -126,6 +143,7 @@ properties:
     summary: A property that indicates that only trusted devices can enable notifications of the characteristic’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 8
 
   - name: CHARACTERISTIC_PROPERTIES_INDICATE_ENCRYPTION_REQUIRED
@@ -133,48 +151,63 @@ properties:
     summary: A property that indicates only trusted devices can enable indications of the characteristic’s value.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 9
 
   - name: CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING
     type: String
     summary: The UUID for the Extended Properties descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2900
 
   - name: CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING
     type: String
     summary: The UUID for the User Description descriptor, as a string. The corresponding value for this descriptor is an NSString object.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2901
 
   - name: CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING
     type: String
     summary: The UUID for the Client Configuration descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2902
 
   - name: CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING
     type: String
     summary: The UUID for the Server Configuration descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2903
 
   - name: CBUUID_CHARACTERISTIC_FORMAT_STRING
     type: String
     summary: The UUID for the Presentation Format descriptor, as a string. The corresponding value for this descriptor is an NSData object.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2904
 
   - name: CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING
     type: String
     summary: The UUID for the Aggregate Format descriptor, as a string.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2905
 
   - name: CBUUID_L2CAPPSM_CHARACTERISTIC_STRING
     type: String
     summary: The PSM of an L2CAP channel associated with the GATT service containing this characteristic.This PSM is a little-endian UInt16. Servers can publish this characteristic with the UUID ABDD3056-28FA-441D-A470-55A75A52553A.
     permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2906
 
   - name: PERIPHERAL_STATE_DISCONNECTED
@@ -182,6 +215,7 @@ properties:
     summary: The peripheral isn’t connected to the central manager.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 0
 
   - name: PERIPHERAL_STATE_CONNECTING
@@ -189,6 +223,7 @@ properties:
     summary: The peripheral is in the process of connecting to the central manager.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 1
 
   - name: PERIPHERAL_STATE_CONNECTED
@@ -196,6 +231,7 @@ properties:
     summary: The peripheral is connected to the central manager.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 2
 
   - name: PERIPHERAL_STATE_DISCONNECTING
@@ -203,12 +239,14 @@ properties:
     summary: The peripheral is disconnecting from the central manager.
     permission: read-only
     platforms: [iphone, ipad]
+    since: "1.0.0"
     value: 3       
 
 methods:
   - name: addService
     summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
     platforms: [iphone, ipad]
+    since: "1.0.0"
     parameters:
       - name: data
         type: Object
@@ -235,6 +273,7 @@ methods:
   - name: removeServices
     summary: Removes a specified published service from the local GATT database.
     platforms: [iphone, ipad]
+    since: "1.0.0"
     parameters:
       - name: service
         type: Modules.BLE.Service
@@ -245,5 +284,6 @@ methods:
   - name: removeAllServices
     summary: Removes all published services from the local GATT database.
     platforms: [iphone, ipad]
+    since: "1.0.0"
     returns:
       type: void

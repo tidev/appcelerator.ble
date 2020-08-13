@@ -7,35 +7,42 @@ description: |
     Peripherals may contain one or more services or provide useful information about their connected signal strength.
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
+since: "1.0.0"
 properties:
   - name: isConnected
     summary: Whether or not the peripheral is currently connected.
     type: Boolean
     platforms: [iphone, ipad]
+    since: "1.0.0"
 
   - name: name
     summary: The name of the peripheral.
     type: String
     platforms: [iphone, ipad]
+    since: "1.0.0"
 
   - name: services
     summary: A list of a peripheral’s discovered services.
     type: Array<Modules.BLE.Service>
     platforms: [iphone, ipad]
+    since: "1.0.0"
 
   - name: state
     summary: The current connection state of the peripheral. Possible values defined by PERIPHERAL_STATE_* constants.
     type: Number
     platforms: [iphone, ipad]
+    since: "1.0.0"
   
   - name: UUID
     summary: Once a peripheral has been connected at least once by the system, it is assigned a UUID. This UUID can be stored and later provided to the retrievePeripherals method.
     type: String
     platforms: [iphone, ipad]
+    since: "1.0.0"
     
 methods:
   - name: readRSSI
     summary: Retrieves the current RSSI value for the peripheral while connected to the central manager.
     platforms: [iphone, ipad]
+    since: "1.0.0"
     returns:
       type: void
