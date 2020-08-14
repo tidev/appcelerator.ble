@@ -8,6 +8,7 @@ import Foundation
 import TitaniumKit
 import CoreBluetooth
 
+@objc
 class TiBLECentralProxy: TiProxy {
     private var _central: CBCentral
     init(central: CBCentral) {

@@ -8,6 +8,7 @@ import Foundation
 import TitaniumKit
 import CoreBluetooth
 
+@objc
 class TiBLEDescriptorProxy: TiProxy {
     private var _descriptor: CBDescriptor
 
