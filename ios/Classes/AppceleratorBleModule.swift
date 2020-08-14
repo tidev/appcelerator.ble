@@ -151,4 +151,31 @@ class AppceleratorBleModule: TiModule {
         let mutableDescriptor = CBMutableDescriptor(type: cbUUID, value: descriptorValue)
         return TiBLEDescriptorProxy(descriptor: mutableDescriptor)
     }
+
+    @objc(addCharacteristic:)
+    func addCharacteristic(arg: Any?) -> TiBLECharacteristicProxy? {
+        guard let values = arg as? [Any],
+            let options = values.first as? [String: Any],
+            let value = options["value"] as? String,
+            let properties = options["properties"] as? NSNumber,
+            let permission = options["permissions"] as? NSNumber,
+            let uuid = options["uuid"] as? String else {
+                return nil
+        }
+        let cbUUID = CBUUID(string: uuid)
+        var descriptorArray = [CBDescriptor]()
+        let characteristicData = value.data(using: .utf8)
+        let characteristicPermission: CBAttributePermissions = CBAttributePermissions(rawValue: permission.uintValue)
+        let characteristicProperties = CBCharacteristicProperties(rawValue: properties.uintValue)
+        let mutablecharacteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
+        let descriptor = CBMutableDescriptor(type: cbUUID, value: value)
+        descriptorArray.append(descriptor)
+        if let descriptor = options["descriptor"] as? [TiBLEDescriptorProxy] {
+            for object in descriptor {
+                descriptorArray.append(object.descriptor())
+            }
+        }
+        mutablecharacteristic.descriptors = descriptorArray
+        return TiBLECharacteristicProxy(characteristic: mutablecharacteristic)
+    }
 }

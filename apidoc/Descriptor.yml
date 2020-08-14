@@ -11,7 +11,7 @@ properties:
         platforms: [iphone, ipad]
 
       - name: value
-        summary: The value of the descriptor. Could be of type Number, String and TiBuffer
+        summary: The value of the descriptor.
         since: "1.0.0"
         type: Object
         platforms: [iphone, ipad]

@@ -6,3 +6,41 @@ description: |
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
 since: "1.0.0"
+
+properties:
+
+  - name: descriptors
+    summary: A list of the Descriptor* objects that have so far been discovered in this characteristic. It is writeable if this JavaScript object represents a mutable characteristic.
+    since: "1.0.0"
+    type: Array<Modules.BLE.Descriptor>
+    platforms: [iphone, ipad]
+
+  - name: isMutable
+    summary: Indicates whether this characteristic is mutable.
+    since: "1.0.0"
+    type: Boolean
+    platforms: [iphone, ipad]
+
+  - name: properties
+    summary: The properties of the characteristic as a bitfield. See also the CHAR_PROP_* constants attached to the module object.
+    since: "1.0.0"
+    type: Number
+    platforms: [iphone, ipad]
+
+  - name: service
+    summary: The service this characteristic belongs to.
+    since: "1.0.0"
+    type: Modules.BLE.Service
+    platforms: [iphone, ipad]
+
+  - name: uuid
+    summary: The Bluetooth-specific UUID of the attribute.
+    since: "1.0.0"  
+    type: String
+    platforms: [iphone, ipad] 
+  
+  - name: value
+    summary: The value of the descriptor.
+    since: "1.0.0"
+    type: Titanium.Buffer
+    platforms: [iphone, ipad]
