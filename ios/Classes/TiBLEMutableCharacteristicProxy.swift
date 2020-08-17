@@ -11,9 +11,16 @@ import CoreBluetooth
 @objc
 class TiBLEMutableCharacteristicProxy: TiBLECharacteristicProxy {
 
-    init(characteristic: CBMutableCharacteristic) {
-        super.init(characteristic: characteristic)
+    private override init() {
+        super.init()
     }
+
+    convenience init(pageContext: TiEvaluator, characteristic: CBMutableCharacteristic) {
+        self.init()
+        _init(withPageContext: pageContext)
+        setCharacteristic(characteristic: characteristic)
+    }
+
     @objc
     func subscribedCentrals() -> [TiBLECentralProxy] {
         guard let _mutableCharacteristic = characteristic() as? CBMutableCharacteristic,
@@ -22,7 +29,7 @@ class TiBLEMutableCharacteristicProxy: TiBLECharacteristicProxy {
         }
         var objects = [TiBLECentralProxy]()
         for central in centrals {
-            objects.append(TiBLECentralProxy(central: central))
+            objects.append(TiBLECentralProxy(pageContext: pageContext, central: central))
         }
         return objects
     }

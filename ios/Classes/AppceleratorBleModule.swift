@@ -26,6 +26,18 @@ import CoreBluetooth
 class AppceleratorBleModule: TiModule {
 
     // MARK: Constants
+    @objc public let CENTREL_MANAGER_EVENT_STATE_UPDATED = "updated"
+    @objc public let CENTREL_MANAGER_EVENT_STATE_RESTORE = "restore_state"
+    @objc public let CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "peripheral_discoverd"
+
+    //setting direct value as CBManagerState is available from ios 10 only
+    @objc public let CENTREL_MANAGER_STATE_UNKNOWN = 0
+    @objc public let CENTREL_MANAGER_STATE_RESETTING = 1
+    @objc public let CENTREL_MANAGER_STATE_UNSUPPORTED = 2
+    @objc public let CENTREL_MANAGER_STATE_UNAUTHORIZED = 3
+    @objc public let CENTREL_MANAGER_STATE_POWERED_OFF = 4
+    @objc public let CENTREL_MANAGER_STATE_POWERED_ON = 5
+
     @objc public let AUTHORISATION_STATUS_NOT_DETERMINED = 0
     @objc public let AUTHORISATION_STATUS_RESTRICTED = 1
     @objc public let AUTHORISATION_STATUS_DENIED = 2
@@ -131,7 +143,6 @@ class AppceleratorBleModule: TiModule {
         }
         _peripheralManager?.remove(service.mutableService())
     }
-
     // temp method needed for UT's
     @objc(addDescriptor:)
     func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
@@ -149,11 +160,11 @@ class AppceleratorBleModule: TiModule {
         }
         let cbUUID = CBUUID(string: uuid)
         let mutableDescriptor = CBMutableDescriptor(type: cbUUID, value: descriptorValue)
-        return TiBLEDescriptorProxy(descriptor: mutableDescriptor)
+        return TiBLEDescriptorProxy(pageContext: pageContext, descriptor: mutableDescriptor)
     }
 
     @objc(addCharacteristic:)
-    func addCharacteristic(arg: Any?) -> TiBLECharacteristicProxy? {
+    func addCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
         guard let values = arg as? [Any],
             let options = values.first as? [String: Any],
             let value = options["value"] as? String,
@@ -176,6 +187,15 @@ class AppceleratorBleModule: TiModule {
             }
         }
         mutablecharacteristic.descriptors = descriptorArray
-        return TiBLECharacteristicProxy(characteristic: mutablecharacteristic)
+        return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: mutablecharacteristic)
     }
+    @objc(initCentralManager:)
+    func initCentralManager(arg: Any?) -> TiBLECentralManagerProxy? {
+        let options = arg as? [String: Any]
+        let showPowerAlert = options?["showPowerAlert"] as? Bool
+        let restoreIdentifier = options?["restoreIdentifier"] as? String
+        let centralManager = TiBLECentralManagerProxy(pageContext: self.pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)
+        return centralManager
+    }
+
 }
