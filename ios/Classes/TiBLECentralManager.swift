@@ -42,11 +42,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
 
     @objc
     func isScanning() -> NSNumber {
-        if #available(iOS 9.0, *) {
-            return NSNumber(value: _centralManager.isScanning)
-        } else {
-            return NSNumber(value: 0)
-        }
+        return NSNumber(value: _centralManager.isScanning)
     }
 
     @objc

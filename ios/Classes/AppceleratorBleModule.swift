@@ -30,13 +30,12 @@ class AppceleratorBleModule: TiModule {
     @objc public let CENTREL_MANAGER_EVENT_STATE_RESTORE = "restore_state"
     @objc public let CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "peripheral_discoverd"
 
-    //setting direct value as CBManagerState is available from ios 10 only
-    @objc public let CENTREL_MANAGER_STATE_UNKNOWN = 0
-    @objc public let CENTREL_MANAGER_STATE_RESETTING = 1
-    @objc public let CENTREL_MANAGER_STATE_UNSUPPORTED = 2
-    @objc public let CENTREL_MANAGER_STATE_UNAUTHORIZED = 3
-    @objc public let CENTREL_MANAGER_STATE_POWERED_OFF = 4
-    @objc public let CENTREL_MANAGER_STATE_POWERED_ON = 5
+    @objc public let CENTREL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
+    @objc public let CENTREL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
+    @objc public let CENTREL_MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
+    @objc public let CENTREL_MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
+    @objc public let CENTREL_MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
+    @objc public let CENTREL_MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
 
     @objc public let AUTHORISATION_STATUS_NOT_DETERMINED = 0
     @objc public let AUTHORISATION_STATUS_RESTRICTED = 1
@@ -70,7 +69,7 @@ class AppceleratorBleModule: TiModule {
     @objc public let PERIPHERAL_STATE_CONNECTED = CBPeripheralState.connected.rawValue
     @objc public let PERIPHERAL_STATE_CONNECTING = CBPeripheralState.connecting.rawValue
     @objc public let PERIPHERAL_STATE_DISCONNECTED = CBPeripheralState.disconnected.rawValue
-    @objc public let PERIPHERAL_STATE_DISCONNECTING = 3 //setting direct value as CBPeripheralState.disconnecting is available from ios 9 only
+    @objc public let PERIPHERAL_STATE_DISCONNECTING = CBPeripheralState.disconnecting.rawValue
 
     var _peripheralManager: CBPeripheralManager?
 

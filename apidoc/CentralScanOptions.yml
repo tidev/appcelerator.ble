@@ -1,5 +1,5 @@
 name: Modules.BLE.CentralScanOptions
-summary: Simple object passed to <Modules.Admob.InterstitialAd.load> or <Modules.Admob.BannerView.load> methods
+summary: Simple object passed to <Modules.BLE.CentralManager.startScan> method
 platforms: [iphone, ipad]
 since: "1.0.0"
 properties:
