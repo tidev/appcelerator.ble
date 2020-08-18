@@ -45,3 +45,25 @@ methods:
     since: "1.0.0"
     returns:
       type: void
+
+  - name: retrievePeripheralsWithIdentifiers
+    summary: Returns a list of known peripherals by their identifiers.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: UUIDs
+        type: Array<String>
+        summary: A list of peripheral identifiers from which Peripheral objects can be retrieved.
+    returns:
+      type: Array<Modules.BLE.Peripheral>
+
+  - name: retrieveConnectedPeripheralsWithServices
+    summary: Returns a list of the peripherals connected to the system whose services match a given set of criteria.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: UUIDs
+        type: Array<String>
+        summary: A list of service UUIDs.
+    returns:
+      type: Array<Modules.BLE.Peripheral>

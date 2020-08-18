@@ -1,9 +1,8 @@
-//
-//  TiBLECentralManager.swift
-//  AppceleratorBle
-//
-//  Created by Vikas Goyal on 06/08/20.
-//
+/**
+ * Appcelerator Titanium Mobile - Bluetooth Low Energy (BLE) Module
+ * Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
+ * Proprietary and Confidential - This source code is not for redistribution
+ */
 
 import Foundation
 import CoreBluetooth
@@ -87,6 +86,44 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
     func stopScan(arg: Any?) {
         _centralManager.stopScan()
         _peripherals = [String: TiBLEPeripheralProxy]()
+    }
+
+    @objc
+    func retrievePeripheralsWithIdentifiers(arg: Any?) -> [TiBLEPeripheralProxy] {
+        guard let args = arg as? [String: Any],
+            let uuids = args["UUIDs"] as? [String] else {
+                return []
+        }
+        var ids = [UUID]()
+        uuids.forEach { (value) in
+            if let id = UUID(uuidString: value) {
+                ids.append(id)
+            }
+        }
+        let cbPeripherals = _centralManager.retrievePeripherals(withIdentifiers: ids)
+        var peripherals = [TiBLEPeripheralProxy]()
+        cbPeripherals.forEach { (cbPeripheral) in
+            peripherals.append(TiBLEPeripheralProxy(pageContext: pageContext, peripheral: cbPeripheral))
+        }
+        return peripherals
+    }
+
+    @objc
+    func retrieveConnectedPeripheralsWithServices(arg: Any?) -> [TiBLEPeripheralProxy] {
+        guard let args = arg as? [String: Any],
+            let uuids = args["UUIDs"] as? [String] else {
+                return []
+        }
+        var ids = [CBUUID]()
+        uuids.forEach { (value) in
+            ids.append(CBUUID(string: value))
+        }
+        let cbPeripherals = _centralManager.retrieveConnectedPeripherals(withServices: ids)
+        var peripherals = [TiBLEPeripheralProxy]()
+        cbPeripherals.forEach { (cbPeripheral) in
+            peripherals.append(TiBLEPeripheralProxy(pageContext: pageContext, peripheral: cbPeripheral))
+        }
+        return peripherals
     }
 
     // MARK: Events
