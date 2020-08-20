@@ -53,7 +53,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         return list
     }
 
-    @objc
+    @objc(startScan:)
     func startScan(arg: Any?) {
         let args = arg as? [String: Any]
         let services = args?["services"] as? [String]
@@ -82,13 +82,13 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         _centralManager.scanForPeripherals(withServices: servicesUUID.isEmpty ? nil : servicesUUID, options: scanOptions.isEmpty ? nil : scanOptions)
     }
 
-    @objc
+    @objc(stopScan:)
     func stopScan(arg: Any?) {
         _centralManager.stopScan()
         _peripherals = [String: TiBLEPeripheralProxy]()
     }
 
-    @objc
+    @objc(retrievePeripheralsWithIdentifiers:)
     func retrievePeripheralsWithIdentifiers(arg: Any?) -> [TiBLEPeripheralProxy] {
         guard let args = arg as? [String: Any],
             let uuids = args["UUIDs"] as? [String] else {
@@ -108,7 +108,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         return peripherals
     }
 
-    @objc
+    @objc(retrieveConnectedPeripheralsWithServices:)
     func retrieveConnectedPeripheralsWithServices(arg: Any?) -> [TiBLEPeripheralProxy] {
         guard let args = arg as? [String: Any],
             let uuids = args["UUIDs"] as? [String] else {
