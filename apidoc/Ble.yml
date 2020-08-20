@@ -290,30 +290,86 @@ properties:
     since: "1.0.0"
     value: 5
 
-  - name: CENTRAL_MANAGER_EVENT_STATE_UPDATED
-    type: String
-    summary: A event called when centrel manager state updated
+  - name: CONNECTION_EVENT_TYPE_PEER_DISCONNECTED
+    type: Number
+    summary: Peer disconnect event type. This is 'event' type value for CENTREL_MANAGER_EVENT_PERIPHERAL_CONNECTION_EVENT_DID_OCCUR event.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: didUpdateState
-
-  - name: CENTRAL_MANAGER_EVENT_STATE_RESTORE
-    type: String
-    summary: A event called when centrel manager will restore state
+    value: 0
+ 
+  - name: CONNECTION_EVENT_TYPE_PEER_CONNECTED
+    type: Number
+    summary: Peer connected event type. This is 'event' type value for CENTREL_MANAGER_EVENT_PERIPHERAL_CONNECTION_EVENT_DID_OCCUR event.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: willRestoreState
+    value: 1
 
-  - name: CENTRAL_MANAGER_EVENT_PERIPHERAL_DISCOVERED
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION
     type: String
-    summary: A event called when centrel manager discover peripheral
+    summary: A Boolean value that specifies whether the system should display an alert when connecting a peripheral in the background.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+       The value for this key is an Boolean. This key is useful for apps that haven’t specified the bluetooth-central background mode and can’t display their own alert. 
+       If more than one app requests a notification for a given peripheral, the one that was most recently in the foreground receives the alert. If the key isn’t specified,
+       the default value is false.    
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: didDiscoverPeripheral
 
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION
+    type: String
+    summary: A Boolean value that specifies whether the system should display an alert when disconnecting a peripheral in the background.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+       The value for this key is an Boolean. This key is useful for apps that haven’t specified the bluetooth-central background mode and can’t display their own alert. 
+       If more than one app requests a notification for a given peripheral, the one that was most recently in the foreground receives the alert. If the key isn’t specified,
+       the default value is false.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_NOTIFICATION
+    type: String
+    summary: A Boolean value that specifies whether the system should display an alert for any notification sent by a peripheral.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+       If true, the system displays an alert for all notifications received from a given peripheral while the app is suspended.
+       the default value is false.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY
+    type: String
+    summary: An option that indicates a delay before the system makes a connection.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+       The corresponding value is an Number that indicates the duration of the delay in seconds.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING
+    type: String
+    summary: An option to bridge classic Bluetooth technology profiles, if already connected over Bluetooth Low Energy.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+       This option tells the system to connect non-GATT profiles on classic Bluetooth devices, if there is a low energy GATT connection to the same device.
+       A true value instructs the system to bring up classic transport profiles when a low energy transport peripheral connects. A false value tells the system not to use the profiles.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS
+    type: String
+    summary: An option to require Apple Notification Center Service (ANCS) when connecting a device.
+    description: |
+       options object key used in Modules.BLE.CentralManager.connectPeripheral.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
 
   - name: ADVERTISEMENT_DATA_KEY_SERVICE_DATA
     type: String

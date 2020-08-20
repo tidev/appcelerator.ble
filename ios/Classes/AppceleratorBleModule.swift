@@ -24,11 +24,9 @@ import CoreBluetooth
 
 @objc(AppceleratorBleModule)
 class AppceleratorBleModule: TiModule {
-
     // MARK: Constants
-    @objc public let CENTRAL_MANAGER_EVENT_STATE_UPDATED = "didUpdateState"
-    @objc public let CENTRAL_MANAGER_EVENT_STATE_RESTORE = "willRestoreState"
-    @objc public let CENTRAL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "didDiscoverPeripheral"
+    @objc public let CONNECTION_EVENT_TYPE_PEER_DISCONNECTED = CBConnectionEvent.peerDisconnected.rawValue
+    @objc public let CONNECTION_EVENT_TYPE_PEER_CONNECTED =  CBConnectionEvent.peerConnected.rawValue
 
     @objc public let CENTRAL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
     @objc public let CENTRAL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
@@ -79,6 +77,14 @@ class AppceleratorBleModule: TiModule {
     @objc public let ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL = CBAdvertisementDataTxPowerLevelKey
     @objc public let ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE = CBAdvertisementDataIsConnectable
     @objc public let ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS = CBAdvertisementDataSolicitedServiceUUIDsKey
+
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION = CBConnectPeripheralOptionNotifyOnConnectionKey
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION = CBConnectPeripheralOptionNotifyOnDisconnectionKey
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_NOTIFICATION = CBConnectPeripheralOptionNotifyOnNotificationKey
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY = CBConnectPeripheralOptionStartDelayKey
+    // Setting hardcode values as these are avalible ios 13 and above
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING = "kCBConnectOptionEnableTransportBridging"
+    @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS = "kCBConnectOptionRequiresANCS"
 
     var _peripheralManager: CBPeripheralManager?
 
