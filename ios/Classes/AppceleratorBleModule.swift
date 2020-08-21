@@ -26,9 +26,9 @@ import CoreBluetooth
 class AppceleratorBleModule: TiModule {
 
     // MARK: Constants
-    @objc public let CENTREL_MANAGER_EVENT_STATE_UPDATED = "updated"
-    @objc public let CENTREL_MANAGER_EVENT_STATE_RESTORE = "restore_state"
-    @objc public let CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "peripheral_discoverd"
+    @objc public let CENTREL_MANAGER_EVENT_STATE_UPDATED = "didUpdateState"
+    @objc public let CENTREL_MANAGER_EVENT_STATE_RESTORE = "willRestoreState"
+    @objc public let CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "didDiscoverPeripheral"
 
     @objc public let CENTREL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
     @objc public let CENTREL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue

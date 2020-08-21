@@ -129,10 +129,10 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
     // MARK: Events
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if !self._hasListeners("updated") {
+        if !self._hasListeners("didUpdateState") {
             return
         }
-        self.fireEvent("updated")
+        self.fireEvent("didUpdateState", with: ["state": NSNumber(value: central.state.rawValue)])
     }
 
     func centralManager(_ central: CBCentralManager, willRestoreState dict: [String: Any]) {
@@ -145,7 +145,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
             }
         }
 
-        if !self._hasListeners("restore_state") {
+        if !self._hasListeners("willRestoreState") {
             return
         }
         var servicesUUID = [String]()
@@ -167,21 +167,25 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
                 scanOptions["solicitedServiceUUIDsKey"] = solicitedServiceUUIDs
             }
         }
-        var restoreState = [String: Any]()
-        restoreState["peripherals"] = objects
-        restoreState["services"] = servicesUUID
-        restoreState["options"] = scanOptions
-        self.fireEvent("restore_state", with: restoreState)
+        self.fireEvent("willRestoreState", with: [
+            "peripherals": objects,
+            "services": servicesUUID,
+            "options": scanOptions
+        ])
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         let proxy = TiBLEPeripheralProxy(pageContext: self.pageContext, peripheral: peripheral)
         _peripherals[peripheral.identifier.uuidString] = proxy
 
-        if !self._hasListeners("peripheral_discoverd") {
+        if !self._hasListeners("didDiscoverPeripheral") {
             return
         }
-        self.fireEvent("peripheral_discoverd", with: proxy)
+        self.fireEvent("didDiscoverPeripheral", with: [
+            "peripheral": proxy,
+            "advertisementData": advertisementData,
+            "rssi": RSSI
+        ])
     }
 
 }

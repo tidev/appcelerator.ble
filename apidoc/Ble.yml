@@ -296,7 +296,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: updated
+    value: didUpdateState
 
   - name: CENTREL_MANAGER_EVENT_STATE_RESTORE
     type: String
@@ -304,7 +304,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: restore_state
+    value: willRestoreState
 
   - name: CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED
     type: String
@@ -312,7 +312,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-    value: peripheral_discoverd
+    value: didDiscoverPeripheral
 
 
 methods:
