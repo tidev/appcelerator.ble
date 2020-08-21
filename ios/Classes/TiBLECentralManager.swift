@@ -193,57 +193,63 @@ class TiBLECentralManagerProxy: TiProxy {
 
 extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        if !self._hasListeners("peripheral_did_connect") {
+        if !self._hasListeners("didConnect") {
             return
         }
-        var values = [String: Any]()
-        values["peripheral"] = TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
-        self.fireEvent("peripheral_did_connect", with: values)
+        self.fireEvent("didConnect", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
     }
 
     func centralManager(_ central: CBCentralManager, didUpdateANCSAuthorizationFor peripheral: CBPeripheral) {
-        if !self._hasListeners("peripheral_did_update_ancs_authorization") {
+        if !self._hasListeners("didUpdateANCSAuthorization") {
             return
         }
-        var values = [String: Any]()
-        values["peripheral"] = TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
-        self.fireEvent("peripheral_did_update_ancs_authorization", with: values)
+        self.fireEvent("didUpdateANCSAuthorization", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        if !self._hasListeners("peripheral_failed_to_connect") {
+        if !self._hasListeners("didFailToConnect") {
             return
         }
-        var values = [String: Any]()
-        values["peripheral"] = TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
         if let error = error {
-            self.fireEvent("peripheral_failed_to_connect", with: values, errorCode: (error as NSError).code, message: error.localizedDescription)
-        } else {
-            self.fireEvent("peripheral_failed_to_connect", with: values)
+            self.fireEvent("didFailToConnect", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            ], errorCode: (error as NSError).code, message: error.localizedDescription)
+            return
         }
+        self.fireEvent("didFailToConnect", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if !self._hasListeners("peripheral_did_disconnected") {
+        if !self._hasListeners("didDisconnect") {
             return
         }
-        var values = [String: Any]()
-        values["peripheral"] = TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
         if let error = error {
-            self.fireEvent("peripheral_did_disconnected", with: values, errorCode: (error as NSError).code, message: error.localizedDescription)
-        } else {
-            self.fireEvent("peripheral_did_disconnected", with: values)
+            self.fireEvent("didDisconnect", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            ], errorCode: (error as NSError).code, message: error.localizedDescription)
+            return
         }
+        self.fireEvent("didDisconnect", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
+
     }
 
     func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
-        if !self._hasListeners("peripheral_connection_event_occur") {
+        if !self._hasListeners("connectionEventDidOccur") {
             return
         }
-        var values = [String: Any]()
-        values["peripheral"] = TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
-        values["event"] = event.rawValue
-        self.fireEvent("peripheral_connection_event_occur", with: values)
+
+        self.fireEvent("connectionEventDidOccur", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "event": NSNumber(value: event.rawValue)
+        ])
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {

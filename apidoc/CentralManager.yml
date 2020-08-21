@@ -113,7 +113,7 @@ methods:
       type: void 
 
 events:
-  - name: state_updated
+  - name: didUpdateState
     summary: A event called when centrel manager state updated
     description: |
          Invoked whenever the central manager's state has been updated. Commands should only be issued when the state is
@@ -123,8 +123,13 @@ events:
          manager become invalid and must be retrieved or discovered again.
     platforms: [iphone, ipad]
     since: "1.0.0"
+    properties:
+      - name: state
+        type: Number
+        summary: state of central manager
+    
 
-  - name: state_restore
+  - name: willRestoreState
     summary: A event called when centrel manager will restore state
     description: |
          For apps that opt-in to state preservation and restoration, this is the first event invoked when your app is relaunched into 
@@ -143,7 +148,7 @@ events:
         type: Array<Modules.BLE.Service>
         summary: The dictionary contains all of the peripheral scan options in use by the central manager when the system terminated the app.
 
-  - name: peripheral_discoverd
+  - name: didDiscoverPeripheral
     summary: A event called when centrel manager discover peripheral
     description: |
          This method is invoked while scanning, upon the discovery of peripheral by central. A discovered peripheral must
@@ -157,7 +162,7 @@ events:
         summary: object of discovered  peripheral
 
 
-  - name: peripheral_did_connect
+  - name: didConnect
     summary: This event is called when a connection initiated by connectPeripheral has succeeded.
     description: |
         This event is called when a connection initiated by connectPeripheral has succeeded.
@@ -167,8 +172,14 @@ events:
       - name: peripheral
         type: Modules.BLE.Peripheral
         summary: object of connected peripheral
+      - name: advertisementData
+        type: Object
+        summary:  A dictionary containing any advertisement and scan response data.
+      - name: rssi
+        type: Number
+        summary:  The current RSSI of peripheral, in dBm. A value of 127 is reserved and indicates the RSSI
 
-  - name: peripheral_failed_to_connect
+  - name: didFailToConnect
     summary: This event is called when a connection initiated by connectPeripheral has failed.
     description: |
         This event is called when a connection initiated by connectPeripheral has failed to complete. As connection attempts do not
@@ -183,7 +194,7 @@ events:
         type: String
         summary: error message   
 
-  - name: peripheral_did_disconnected
+  - name: didDisconnect
     summary: This event is called when a peripheral disconnected.
     description: |
         This event is called upon the disconnection of a peripheral that was connected by connectPeripheral If the disconnection
@@ -199,7 +210,7 @@ events:
         type: String
         summary: error message 
 
-  - name: peripheral_connection_event_occur
+  - name: connectionEventDidOccur
     summary: This method is called upon the connection or disconnection of a peripheral that matches any of the options provided in registerForConnectionEventsWithOptions
     platforms: [iphone, ipad]
     since: "1.0.0"
@@ -211,7 +222,7 @@ events:
         type: Modules.BLE.Peripheral
         summary: object of peripheral.
 
-  - name: peripheral_did_update_ancs_authorization
+  - name: didUpdateANCSAuthorization
     summary: This event is called when the authorization status changes for a peripheral connected with connectPeripheral with option Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS
     platforms: [iphone, ipad]
     since: "1.0.0"
