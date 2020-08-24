@@ -181,9 +181,63 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         if !self._hasListeners("didDiscoverPeripheral") {
             return
         }
+        var values = [String: Any]()
+
+        if let optionValue = values[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data] {
+            var adsData = [String: TiBuffer]()
+            optionValue.forEach { (key, value) in
+                let data = TiBuffer()._init(withPageContext: pageContext)
+                data?.data = NSMutableData(data: value)
+                adsData[key.uuidString] = data
+            }
+            values[CBAdvertisementDataServiceDataKey] = adsData
+        }
+
+        if let optionValue = values[CBAdvertisementDataLocalNameKey] as? String {
+            values[CBAdvertisementDataLocalNameKey] = optionValue
+        }
+
+        if let optionValue = values[CBAdvertisementDataManufacturerDataKey] as? Data {
+            let data = TiBuffer()._init(withPageContext: pageContext)
+            data?.data = NSMutableData(data: optionValue)
+            values[CBAdvertisementDataManufacturerDataKey] = data
+        }
+
+        if let optionValue = values[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
+            var serviceUUIDs = [String]()
+            optionValue.forEach { (value) in
+                serviceUUIDs.append(value.uuidString)
+            }
+            values[CBAdvertisementDataServiceUUIDsKey] = serviceUUIDs
+        }
+
+        if let optionValue = values[CBAdvertisementDataOverflowServiceUUIDsKey] as? [CBUUID] {
+            var serviceUUIDs = [String]()
+            optionValue.forEach { (value) in
+                serviceUUIDs.append(value.uuidString)
+            }
+            values[CBAdvertisementDataOverflowServiceUUIDsKey] = serviceUUIDs
+        }
+
+        if let optionValue = values[CBAdvertisementDataTxPowerLevelKey] as? NSNumber {
+            values[CBAdvertisementDataTxPowerLevelKey] = optionValue
+        }
+
+        if let optionValue = values[CBAdvertisementDataIsConnectable] as? NSNumber {
+            values[CBAdvertisementDataIsConnectable] = optionValue
+        }
+
+        if let optionValue = values[CBAdvertisementDataSolicitedServiceUUIDsKey] as? [CBUUID] {
+            var serviceUUIDs = [String]()
+            optionValue.forEach { (value) in
+                serviceUUIDs.append(value.uuidString)
+            }
+            values[CBAdvertisementDataSolicitedServiceUUIDsKey] = serviceUUIDs
+        }
+
         self.fireEvent("didDiscoverPeripheral", with: [
             "peripheral": proxy,
-            "advertisementData": advertisementData,
+            "advertisementData": values,
             "rssi": RSSI
         ])
     }

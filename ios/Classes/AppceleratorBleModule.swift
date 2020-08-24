@@ -26,16 +26,16 @@ import CoreBluetooth
 class AppceleratorBleModule: TiModule {
 
     // MARK: Constants
-    @objc public let CENTREL_MANAGER_EVENT_STATE_UPDATED = "didUpdateState"
-    @objc public let CENTREL_MANAGER_EVENT_STATE_RESTORE = "willRestoreState"
-    @objc public let CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "didDiscoverPeripheral"
+    @objc public let CENTRAL_MANAGER_EVENT_STATE_UPDATED = "didUpdateState"
+    @objc public let CENTRAL_MANAGER_EVENT_STATE_RESTORE = "willRestoreState"
+    @objc public let CENTRAL_MANAGER_EVENT_PERIPHERAL_DISCOVERED = "didDiscoverPeripheral"
 
-    @objc public let CENTREL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
-    @objc public let CENTREL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
-    @objc public let CENTREL_MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
-    @objc public let CENTREL_MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
-    @objc public let CENTREL_MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
-    @objc public let CENTREL_MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
+    @objc public let CENTRAL_MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
 
     @objc public let AUTHORISATION_STATUS_NOT_DETERMINED = 0
     @objc public let AUTHORISATION_STATUS_RESTRICTED = 1
@@ -70,6 +70,15 @@ class AppceleratorBleModule: TiModule {
     @objc public let PERIPHERAL_STATE_CONNECTING = CBPeripheralState.connecting.rawValue
     @objc public let PERIPHERAL_STATE_DISCONNECTED = CBPeripheralState.disconnected.rawValue
     @objc public let PERIPHERAL_STATE_DISCONNECTING = CBPeripheralState.disconnecting.rawValue
+
+    @objc public let ADVERTISEMENT_DATA_KEY_SERVICE_DATA = CBAdvertisementDataServiceDataKey
+    @objc public let ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY = CBAdvertisementDataLocalNameKey
+    @objc public let ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA = CBAdvertisementDataManufacturerDataKey
+    @objc public let ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS = CBAdvertisementDataServiceUUIDsKey
+    @objc public let ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS = CBAdvertisementDataOverflowServiceUUIDsKey
+    @objc public let ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL = CBAdvertisementDataTxPowerLevelKey
+    @objc public let ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE = CBAdvertisementDataIsConnectable
+    @objc public let ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS = CBAdvertisementDataSolicitedServiceUUIDsKey
 
     var _peripheralManager: CBPeripheralManager?
 

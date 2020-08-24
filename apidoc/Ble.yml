@@ -242,7 +242,7 @@ properties:
     since: "1.0.0"
     value: 3  
 
-  - name: CENTREL_MANAGER_STATE_UNKNOWN
+  - name: CENTRAL_MANAGER_STATE_UNKNOWN
     type: Number
     summary: The manager’s state is unknown
     permission: read-only
@@ -250,7 +250,7 @@ properties:
     since: "1.0.0"
     value: 0 
 
-  - name: CENTREL_MANAGER_STATE_RESETTING
+  - name: CENTRAL_MANAGER_STATE_RESETTING
     type: Number
     summary: A state that indicates the connection with the system service was momentarily lost.
     permission: read-only
@@ -258,7 +258,7 @@ properties:
     since: "1.0.0"
     value: 1
 
-  - name: CENTREL_MANAGER_STATE_UNSUPPORTED
+  - name: CENTRAL_MANAGER_STATE_UNSUPPORTED
     type: Number
     summary: A state that indicates this device doesn’t support the Bluetooth low energy central or client role.
     permission: read-only
@@ -266,7 +266,7 @@ properties:
     since: "1.0.0"
     value: 2
 
-  - name: CENTREL_MANAGER_STATE_UNAUTHORIZED
+  - name: CENTRAL_MANAGER_STATE_UNAUTHORIZED
     type: Number
     summary: A state that indicates the application isn’t authorized to use the Bluetooth low energy role.
     permission: read-only
@@ -274,7 +274,7 @@ properties:
     since: "1.0.0"
     value: 3
 
-  - name: CENTREL_MANAGER_STATE_POWERED_OFF
+  - name: CENTRAL_MANAGER_STATE_POWERED_OFF
     type: Number
     summary: A state that indicates Bluetooth is currently powered off.
     permission: read-only
@@ -282,7 +282,7 @@ properties:
     since: "1.0.0"
     value: 4
  
-  - name: CENTREL_MANAGER_STATE_POWERED_ON
+  - name: CENTRAL_MANAGER_STATE_POWERED_ON
     type: Number
     summary: A state that indicates Bluetooth is currently powered on and available to use.
     permission: read-only
@@ -290,7 +290,7 @@ properties:
     since: "1.0.0"
     value: 5
 
-  - name: CENTREL_MANAGER_EVENT_STATE_UPDATED
+  - name: CENTRAL_MANAGER_EVENT_STATE_UPDATED
     type: String
     summary: A event called when centrel manager state updated
     permission: read-only
@@ -298,7 +298,7 @@ properties:
     since: "1.0.0"
     value: didUpdateState
 
-  - name: CENTREL_MANAGER_EVENT_STATE_RESTORE
+  - name: CENTRAL_MANAGER_EVENT_STATE_RESTORE
     type: String
     summary: A event called when centrel manager will restore state
     permission: read-only
@@ -306,7 +306,7 @@ properties:
     since: "1.0.0"
     value: willRestoreState
 
-  - name: CENTREL_MANAGER_EVENT_PERIPHERAL_DISCOVERED
+  - name: CENTRAL_MANAGER_EVENT_PERIPHERAL_DISCOVERED
     type: String
     summary: A event called when centrel manager discover peripheral
     permission: read-only
@@ -314,6 +314,80 @@ properties:
     since: "1.0.0"
     value: didDiscoverPeripheral
 
+
+  - name: ADVERTISEMENT_DATA_KEY_SERVICE_DATA
+    type: String
+    summary: A dictionary that contains service-specific advertisement data.
+    description: |
+       The keys (Strings objects) represent Service UUIDs, and the values (TiBuffer objects) represent service-specific data.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY
+    type: String
+    summary: The local name of a peripheral.
+    description: |
+       The value associated with this key is an String.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA
+    type: String
+    summary: The manufacturer data of a peripheral.
+    description: |
+       The value associated with this key is an TiBuffer object.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS
+    type: String
+    summary: An array of service UUIDs.
+    description: |
+       The value associated with this key is an Array<String> object.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS
+    type: String
+    summary: An array of UUIDs found in the overflow area of the advertisement data.
+    description: |
+       The value associated with this key is an array of one or more String objects, representing Service UUIDs.
+       Because data stored in this area results from not fitting in the main advertisement, UUIDs listed here are “best effort” and may not always be accurate. For details about the overflow area of advertisement data, see the startAdvertising(_:) method in PeripheralManager.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL
+    type: String
+    summary: The transmit power of a peripheral.
+    description: |
+       The value associated with this key is an instance of Number.
+       This key and value are available if the peripheral provides its transmitting power level in its advertising packet. You can calculate the path loss by comparing the RSSI value with the transmitting power level.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE
+    type: String
+    summary: A Boolean value that indicates whether the advertising event type is connectable.
+    description: |
+       The value for this key is an Number object. You can use this value to determine whether your app can currently connect to a peripheral.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS
+    type: String
+    summary: An array of solicited service UUIDs.
+    description: |
+       The value associated with this key is an array of one or more String objects, representing Service UUIDs.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
 
 methods:
   - name: addService
