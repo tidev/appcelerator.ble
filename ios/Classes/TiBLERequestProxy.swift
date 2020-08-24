@@ -38,9 +38,7 @@ class TiBLERequestProxy: TiProxy {
         guard let requestValue = _request.value else {
             return nil
         }
-        let buffer = TiBuffer()._init(withPageContext: self.pageContext)
-        buffer?.data = NSMutableData.init(data: requestValue)
-        return buffer
+        return TiBLEUtils.toTiBuffer(from: requestValue)._init(withPageContext: pageContext)
     }
     func request() -> CBATTRequest {
         return _request

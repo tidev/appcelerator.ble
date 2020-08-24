@@ -59,26 +59,16 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         let services = args?["services"] as? [String]
         let options = args?["options"] as? [String: Any]
 
-        var servicesUUID = [CBUUID]()
-        if let services = services {
-            services.forEach { (value) in
-                servicesUUID.append(CBUUID(string: value))
-            }
-        }
+        let servicesUUID = TiBLEUtils.toCBUUIDs(from: services)
         var scanOptions = [String: Any]()
         if let options = options {
             if let allowDuplicatesKey = options["allowDuplicatesKey"] as? Bool {
                 scanOptions[CBCentralManagerScanOptionAllowDuplicatesKey] = allowDuplicatesKey
             }
             if let solicitedServiceUUIDsKey = options["solicitedServiceUUIDsKey"] as? [String] {
-                var solicitedServiceUUIDs = [CBUUID]()
-                solicitedServiceUUIDsKey.forEach { (value) in
-                    solicitedServiceUUIDs.append(CBUUID(string: value))
-                }
-                scanOptions[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] = solicitedServiceUUIDs
+                scanOptions[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] = TiBLEUtils.toCBUUIDs(from: solicitedServiceUUIDsKey)
             }
         }
-
         _centralManager.scanForPeripherals(withServices: servicesUUID.isEmpty ? nil : servicesUUID, options: scanOptions.isEmpty ? nil : scanOptions)
     }
 
@@ -94,12 +84,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
-        var ids = [UUID]()
-        uuids.forEach { (value) in
-            if let id = UUID(uuidString: value) {
-                ids.append(id)
-            }
-        }
+        let ids = TiBLEUtils.toUUIDs(from: uuids)
         let cbPeripherals = _centralManager.retrievePeripherals(withIdentifiers: ids)
         var peripherals = [TiBLEPeripheralProxy]()
         cbPeripherals.forEach { (cbPeripheral) in
@@ -114,10 +99,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
-        var ids = [CBUUID]()
-        uuids.forEach { (value) in
-            ids.append(CBUUID(string: value))
-        }
+        let ids = TiBLEUtils.toCBUUIDs(from: uuids)
         let cbPeripherals = _centralManager.retrieveConnectedPeripherals(withServices: ids)
         var peripherals = [TiBLEPeripheralProxy]()
         cbPeripherals.forEach { (cbPeripheral) in
@@ -148,24 +130,13 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         if !self._hasListeners("willRestoreState") {
             return
         }
-        var servicesUUID = [String]()
-        if let resotredServices = dict[CBCentralManagerRestoredStateScanServicesKey] as? [CBUUID] {
-            resotredServices.forEach { (uuid) in
-                servicesUUID.append(uuid.uuidString)
-            }
-        }
+        let servicesUUID = TiBLEUtils.toStringUUIDs(from: dict[CBCentralManagerRestoredStateScanServicesKey] as? [CBUUID])
         var scanOptions = [String: Any]()
         if let options = dict[CBCentralManagerRestoredStateScanOptionsKey] as? [String: Any] {
-            if let allowDuplicatesKey = options[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool {
+            if let allowDuplicatesKey = options[CBCentralManagerScanOptionAllowDuplicatesKey] as? NSNumber {
                 scanOptions["allowDuplicatesKey"] = allowDuplicatesKey
             }
-            if let solicitedServiceUUIDsKey = options[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] as? [CBUUID] {
-                var solicitedServiceUUIDs = [String]()
-                solicitedServiceUUIDsKey.forEach { (value) in
-                    solicitedServiceUUIDs.append(value.uuidString)
-                }
-                scanOptions["solicitedServiceUUIDsKey"] = solicitedServiceUUIDs
-            }
+            scanOptions["solicitedServiceUUIDsKey"] = TiBLEUtils.toStringUUIDs(from: options[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] as? [CBUUID])
         }
         self.fireEvent("willRestoreState", with: [
             "peripherals": objects,
@@ -186,9 +157,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         if let optionValue = values[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data] {
             var adsData = [String: TiBuffer]()
             optionValue.forEach { (key, value) in
-                let data = TiBuffer()._init(withPageContext: pageContext)
-                data?.data = NSMutableData(data: value)
-                adsData[key.uuidString] = data
+                adsData[key.uuidString] = TiBLEUtils.toTiBuffer(from: value)._init(withPageContext: pageContext)
             }
             values[CBAdvertisementDataServiceDataKey] = adsData
         }
@@ -198,25 +167,15 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         }
 
         if let optionValue = values[CBAdvertisementDataManufacturerDataKey] as? Data {
-            let data = TiBuffer()._init(withPageContext: pageContext)
-            data?.data = NSMutableData(data: optionValue)
-            values[CBAdvertisementDataManufacturerDataKey] = data
+            values[CBAdvertisementDataManufacturerDataKey] = TiBLEUtils.toTiBuffer(from: optionValue)._init(withPageContext: pageContext)
         }
 
         if let optionValue = values[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
-            var serviceUUIDs = [String]()
-            optionValue.forEach { (value) in
-                serviceUUIDs.append(value.uuidString)
-            }
-            values[CBAdvertisementDataServiceUUIDsKey] = serviceUUIDs
+            values[CBAdvertisementDataServiceUUIDsKey] = TiBLEUtils.toStringUUIDs(from: optionValue)
         }
 
         if let optionValue = values[CBAdvertisementDataOverflowServiceUUIDsKey] as? [CBUUID] {
-            var serviceUUIDs = [String]()
-            optionValue.forEach { (value) in
-                serviceUUIDs.append(value.uuidString)
-            }
-            values[CBAdvertisementDataOverflowServiceUUIDsKey] = serviceUUIDs
+            values[CBAdvertisementDataOverflowServiceUUIDsKey] = TiBLEUtils.toStringUUIDs(from: optionValue)
         }
 
         if let optionValue = values[CBAdvertisementDataTxPowerLevelKey] as? NSNumber {
@@ -228,11 +187,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         }
 
         if let optionValue = values[CBAdvertisementDataSolicitedServiceUUIDsKey] as? [CBUUID] {
-            var serviceUUIDs = [String]()
-            optionValue.forEach { (value) in
-                serviceUUIDs.append(value.uuidString)
-            }
-            values[CBAdvertisementDataSolicitedServiceUUIDsKey] = serviceUUIDs
+            values[CBAdvertisementDataSolicitedServiceUUIDsKey] = TiBLEUtils.toStringUUIDs(from: optionValue)
         }
 
         self.fireEvent("didDiscoverPeripheral", with: [

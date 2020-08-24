@@ -49,9 +49,7 @@ class TiBLECharacteristicProxy: TiProxy {
         guard let requestValue = _characteristic.value else {
             return nil
         }
-        let buffer = TiBuffer()._init(withPageContext: self.pageContext)
-        buffer?.data = NSMutableData.init(data: requestValue)
-        return buffer
+        return TiBLEUtils.toTiBuffer(from: requestValue)._init(withPageContext: pageContext)
     }
     @objc
     func uuid() -> String {

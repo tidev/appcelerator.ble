@@ -32,8 +32,7 @@ class TiBLEDescriptorProxy: TiProxy {
             return _descriptor.value
         }
         if let value = _descriptor.value as? Data {
-            let buffer = TiBuffer()._init(withPageContext: self.pageContext)
-            buffer?.data = NSMutableData.init(data: value)
+            return TiBLEUtils.toTiBuffer(from: value)._init(withPageContext: self.pageContext)
         }
         return nil
     }
