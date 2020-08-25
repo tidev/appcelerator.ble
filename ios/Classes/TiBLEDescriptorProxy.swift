@@ -10,15 +10,21 @@ import CoreBluetooth
 
 @objc
 class TiBLEDescriptorProxy: TiProxy {
-    private var _descriptor: CBDescriptor
+    private var _descriptor: CBDescriptor!
 
-    init(descriptor: CBDescriptor) {
-        self._descriptor = descriptor
+    private override init() {
+        super.init()
+    }
+
+    convenience init(pageContext: TiEvaluator, descriptor: CBDescriptor) {
+        self.init()
+        _init(withPageContext: pageContext)
+        _descriptor = descriptor
     }
     @objc
     func characteristic() -> TiBLECharacteristicProxy {
         let characteristic = _descriptor.characteristic
-        return TiBLECharacteristicProxy(characteristic: characteristic)
+        return TiBLECharacteristicProxy(pageContext: self.pageContext, characteristic: characteristic)
     }
     @objc
     func value() -> Any? {
@@ -26,8 +32,7 @@ class TiBLEDescriptorProxy: TiProxy {
             return _descriptor.value
         }
         if let value = _descriptor.value as? Data {
-            let buffer = TiBuffer()._init(withPageContext: self.pageContext)
-            buffer?.data = NSMutableData.init(data: value)
+            return TiBLEUtils.toTiBuffer(from: value)._init(withPageContext: self.pageContext)
         }
         return nil
     }

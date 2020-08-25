@@ -1,0 +1,69 @@
+name: Modules.BLE.CentralManager
+summary: An object that scans for, discovers, connects to, and manages peripherals.
+description: |
+      CentralManager objects manage discovered or connected remote peripheral devices (represented by Peripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+since: "1.0.0"
+properties:
+      - name: state
+        summary: State of the module's internal central manager. Its value is one of the CENTRAL_MANAGER_STATE_* constants.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+      - name: isScanning
+        summary: A Boolean value that indicates whether the central is currently scanning.
+        type: Boolean
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+      - name: peripherals
+        summary: All discovered peripherals
+        type: Array<Modules.BLE.Peripheral>
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+    
+methods:
+  - name: startScan
+    summary: Starts scanning for peripherals.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: services
+        type: Array<String>
+        summary: The UUIDs of services.
+      - name: options
+        type: Modules.BLE.CentralScanOptions
+        summary: Key/value pairs specifying options for the scan.
+    returns:
+      type: void
+
+  - name: stopScan
+    summary:  Stops scanning for peripherals.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    returns:
+      type: void
+
+  - name: retrievePeripheralsWithIdentifiers
+    summary: Returns a list of known peripherals by their identifiers.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: UUIDs
+        type: Array<String>
+        summary: A list of peripheral identifiers from which Peripheral objects can be retrieved.
+    returns:
+      type: Array<Modules.BLE.Peripheral>
+
+  - name: retrieveConnectedPeripheralsWithServices
+    summary: Returns a list of the peripherals connected to the system whose services match a given set of criteria.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: UUIDs
+        type: Array<String>
+        summary: A list of service UUIDs.
+    returns:
+      type: Array<Modules.BLE.Peripheral>

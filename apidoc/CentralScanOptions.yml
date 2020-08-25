@@ -1,0 +1,16 @@
+name: Modules.BLE.CentralScanOptions
+summary: Simple object passed to <Modules.BLE.CentralManager.startScan> method
+platforms: [iphone, ipad]
+since: "1.0.0"
+properties:
+      - name: allowDuplicatesKey
+        summary: A Boolean value that specifies whether the scan should run without duplicate filtering.
+        type: Boolean
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+      - name: solicitedServiceUUIDsKey
+        summary: An array of service UUIDs that you want to scan for.
+        type: Array<String>
+        platforms: [iphone, ipad]
+        since: "1.0.0"

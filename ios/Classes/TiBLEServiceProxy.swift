@@ -29,7 +29,7 @@ class TiBLEServiceProxy: TiProxy {
         }
         var objects = [TiBLECharacteristicProxy]()
         for characteristic in characteristics {
-            objects.append(TiBLECharacteristicProxy(characteristic: characteristic))
+            objects.append(TiBLECharacteristicProxy(pageContext: self.pageContext, characteristic: characteristic))
         }
         return objects
     }

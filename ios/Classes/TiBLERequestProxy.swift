@@ -9,17 +9,25 @@ import TitaniumKit
 import CoreBluetooth
 
 class TiBLERequestProxy: TiProxy {
-    private var _request: CBATTRequest
-    init(request: CBATTRequest) {
-        self._request = request
+    private var _request: CBATTRequest!
+
+    private override init() {
+        super.init()
     }
+
+    convenience init(request: CBATTRequest) {
+        self.init()
+        _request = request
+        _init(withPageContext: pageContext)
+    }
+
     @objc
     func central() -> TiBLECentralProxy {
-        return TiBLECentralProxy(central: _request.central)
+        return TiBLECentralProxy(pageContext: self.pageContext, central: _request.central)
     }
     @objc
     func characteristic() -> TiBLECharacteristicProxy {
-        return TiBLECharacteristicProxy(characteristic: _request.characteristic) as TiBLECharacteristicProxy
+        return TiBLECharacteristicProxy(pageContext: self.pageContext, characteristic: _request.characteristic) as TiBLECharacteristicProxy
     }
     @objc
     func offset() -> NSNumber {
@@ -30,9 +38,7 @@ class TiBLERequestProxy: TiProxy {
         guard let requestValue = _request.value else {
             return nil
         }
-        let buffer = TiBuffer()._init(withPageContext: self.pageContext)
-        buffer?.data = NSMutableData.init(data: requestValue)
-        return buffer
+        return TiBLEUtils.toTiBuffer(from: requestValue)._init(withPageContext: pageContext)
     }
     func request() -> CBATTRequest {
         return _request

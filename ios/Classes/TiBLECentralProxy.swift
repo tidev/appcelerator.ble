@@ -10,9 +10,16 @@ import CoreBluetooth
 
 @objc
 class TiBLECentralProxy: TiProxy {
-    private var _central: CBCentral
-    init(central: CBCentral) {
-        self._central = central
+    private var _central: CBCentral!
+
+    private override init() {
+        super.init()
+    }
+
+    convenience init(pageContext: TiEvaluator, central: CBCentral) {
+        self.init()
+        _init(withPageContext: pageContext)
+        _central = central
     }
     @objc
     func maximumUpdateValueLength() -> NSNumber {
