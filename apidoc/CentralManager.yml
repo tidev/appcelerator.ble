@@ -33,9 +33,11 @@ methods:
       - name: services
         type: Array<String>
         summary: The UUIDs of services.
+        optional: true
       - name: options
         type: Modules.BLE.CentralScanOptions
         summary: Key/value pairs specifying options for the scan.
+        optional: true
     returns:
       type: void
 
@@ -54,6 +56,7 @@ methods:
       - name: UUIDs
         type: Array<String>
         summary: A list of peripheral identifiers from which Peripheral objects can be retrieved.
+        optional: false
     returns:
       type: Array<Modules.BLE.Peripheral>
 
@@ -65,6 +68,7 @@ methods:
       - name: UUIDs
         type: Array<String>
         summary: A list of service UUIDs.
+        optional: false
     returns:
       type: Array<Modules.BLE.Peripheral>
 
@@ -77,9 +81,11 @@ methods:
       - name: peripherals
         type: Array<String>
         summary: A list of peripherals UUIDs.
+        optional: true
       - name: services
         type: Array<String>
         summary: A list of services UUIDs.
+        optional: true
     returns:
       type: void  
 
@@ -92,6 +98,7 @@ methods:
       - name: peripheral
         type: Modules.BLE.Peripheral
         summary: peripheral object which connnection will be canceled
+        optional: false
     returns:
       type: void 
 
@@ -105,10 +112,12 @@ methods:
       - name: peripheral
         type: Modules.BLE.Peripheral
         summary: peripheral object to connect
+        optional: false
       - name: options
         type: Object
         summary: An optional dictionary specifying connection behavior options. 
          all available dictionary keys are defined as Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_*
+        optional: true
     returns:
       type: void 
 
@@ -162,7 +171,7 @@ events:
         summary: object of discovered  peripheral
 
 
-  - name: didConnect
+  - name: didConnectPeripheral
     summary: This event is called when a connection initiated by connectPeripheral has succeeded.
     description: |
         This event is called when a connection initiated by connectPeripheral has succeeded.
@@ -171,15 +180,9 @@ events:
     properties:
       - name: peripheral
         type: Modules.BLE.Peripheral
-        summary: object of connected peripheral
-      - name: advertisementData
-        type: Object
-        summary:  A dictionary containing any advertisement and scan response data.
-      - name: rssi
-        type: Number
-        summary:  The current RSSI of peripheral, in dBm. A value of 127 is reserved and indicates the RSSI
+        summary: An object representing the peripheral that connected to the local central manager.
 
-  - name: didFailToConnect
+  - name: didFailToConnectPeripheral
     summary: This event is called when a connection initiated by connectPeripheral has failed.
     description: |
         This event is called when a connection initiated by connectPeripheral has failed to complete. As connection attempts do not
@@ -189,12 +192,18 @@ events:
     properties:
       - name: peripheral
         type: Modules.BLE.Peripheral
-        summary: object of peripheral which failed to connect
-      - name: error
+        summary: An object representing the peripheral that failed to connect.
+      - name: errorCode
         type: String
-        summary: error message   
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an  
 
-  - name: didDisconnect
+  - name: didDisconnectPeripheral
     summary: This event is called when a peripheral disconnected.
     description: |
         This event is called upon the disconnection of a peripheral that was connected by connectPeripheral If the disconnection
@@ -205,10 +214,16 @@ events:
     properties:
       - name: peripheral
         type: Modules.BLE.Peripheral
-        summary: object of peripheral which disconnected.
-      - name: error
+        summary: An object representing the peripheral that disconnected.
+      - name: errorCode
         type: String
-        summary: error message 
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an
 
   - name: connectionEventDidOccur
     summary: This method is called upon the connection or disconnection of a peripheral that matches any of the options provided in registerForConnectionEventsWithOptions

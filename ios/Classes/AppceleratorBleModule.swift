@@ -151,7 +151,7 @@ class AppceleratorBleModule: TiModule {
 
     @objc(removeServices:)
     func removeServices(arg: Any?) {
-        guard let options = arg as? [String: Any],
+        guard let options = (arg as? [[String: Any]])?.first,
             let service = options["service"] as? TiBLEServiceProxy else {
                 return
         }
@@ -205,7 +205,7 @@ class AppceleratorBleModule: TiModule {
     }
     @objc(initCentralManager:)
     func initCentralManager(arg: Any?) -> TiBLECentralManagerProxy? {
-        let options = arg as? [String: Any]
+        let options = (arg as? [[String: Any]])?.first
         let showPowerAlert = options?["showPowerAlert"] as? Bool
         let restoreIdentifier = options?["restoreIdentifier"] as? String
         let centralManager = TiBLECentralManagerProxy(pageContext: self.pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)

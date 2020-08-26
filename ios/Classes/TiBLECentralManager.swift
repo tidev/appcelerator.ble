@@ -55,7 +55,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(startScan:)
     func startScan(arg: Any?) {
-        let args = arg as? [String: Any]
+        let args = (arg as? [[String: Any]])?.first
         let services = args?["services"] as? [String]
         let options = args?["options"] as? [String: Any]
 
@@ -81,7 +81,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(registerForConnectionEvents:)
     func registerForConnectionEvents(arg: Any?) {
-        guard let args = arg as? [String: Any] else {
+        guard let args = (arg as? [[String: Any]])?.first else {
             if #available(iOS 13.0, *) {
                 _centralManager.registerForConnectionEvents(options: nil)
             }
@@ -121,7 +121,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(retrievePeripheralsWithIdentifiers:)
     func retrievePeripheralsWithIdentifiers(arg: Any?) -> [TiBLEPeripheralProxy] {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
@@ -136,7 +136,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(retrieveConnectedPeripheralsWithServices:)
     func retrieveConnectedPeripheralsWithServices(arg: Any?) -> [TiBLEPeripheralProxy] {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
@@ -151,7 +151,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(cancelPeripheralConnection:)
     func cancelPeripheralConnection(arg: Any?) {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
                 return
         }
@@ -160,7 +160,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc(connectPeripheral:)
     func connectPeripheral(arg: Any?) {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
                 return
         }
@@ -193,10 +193,10 @@ class TiBLECentralManagerProxy: TiProxy {
 
 extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        if !self._hasListeners("didConnect") {
+        if !self._hasListeners("didConnectPeripheral") {
             return
         }
-        self.fireEvent("didConnect", with: [
+        self.fireEvent("didConnectPeripheral", with: [
             "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
         ])
     }
@@ -211,31 +211,37 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        if !self._hasListeners("didFailToConnect") {
+        if !self._hasListeners("didFailToConnectPeripheral") {
             return
         }
         if let error = error {
-            self.fireEvent("didFailToConnect", with: [
-                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
-            ], errorCode: (error as NSError).code, message: error.localizedDescription)
+            self.fireEvent("didFailToConnectPeripheral", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+                "errorCode": (error as NSError).code,
+                "errorDomain": (error as NSError).domain,
+                "errorDescription": error.localizedDescription
+            ])
             return
         }
-        self.fireEvent("didFailToConnect", with: [
+        self.fireEvent("didFailToConnectPeripheral", with: [
             "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
         ])
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if !self._hasListeners("didDisconnect") {
+        if !self._hasListeners("didDisconnectPeripheral") {
             return
         }
         if let error = error {
-            self.fireEvent("didDisconnect", with: [
-                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
-            ], errorCode: (error as NSError).code, message: error.localizedDescription)
+            self.fireEvent("didDisconnectPeripheral", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+                "errorCode": (error as NSError).code,
+                "errorDomain": (error as NSError).domain,
+                "errorDescription": error.localizedDescription
+            ])
             return
         }
-        self.fireEvent("didDisconnect", with: [
+        self.fireEvent("didDisconnectPeripheral", with: [
             "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
         ])
 
