@@ -33,9 +33,11 @@ methods:
       - name: services
         type: Array<String>
         summary: The UUIDs of services.
+        optional: true
       - name: options
         type: Modules.BLE.CentralScanOptions
         summary: Key/value pairs specifying options for the scan.
+        optional: true
     returns:
       type: void
 
@@ -54,6 +56,7 @@ methods:
       - name: UUIDs
         type: Array<String>
         summary: A list of peripheral identifiers from which Peripheral objects can be retrieved.
+        optional: false
     returns:
       type: Array<Modules.BLE.Peripheral>
 
@@ -65,5 +68,181 @@ methods:
       - name: UUIDs
         type: Array<String>
         summary: A list of service UUIDs.
+        optional: false
     returns:
       type: Array<Modules.BLE.Peripheral>
+
+  - name: registerForConnectionEvents
+    summary: Calls connectionEventDidOccur event when a connection event occurs matching any of the given options.
+             Passing nil in the option parameter clears any prior registered matching options.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: peripherals
+        type: Array<String>
+        summary: A list of peripherals UUIDs.
+        optional: true
+      - name: services
+        type: Array<String>
+        summary: A list of services UUIDs.
+        optional: true
+    returns:
+      type: void  
+
+  - name: cancelPeripheralConnection
+    summary: Cancels an active or pending connection to peripheral. Note that this is non-blocking, and any Peripheral
+             commands that are still pending to peripheral may or may not complete.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: peripheral object which connnection will be canceled
+        optional: false
+    returns:
+      type: void 
+
+  - name: connectPeripheral
+    summary: Initiates a connection to peripheral. Connection attempts never time out and, depending on the outcome, will result
+              in a call to either didConnectPeripheral or didFailToConnectPeripheral event.
+              Pending attempts are cancelled automatically upon deallocation of peripheral, and explicitly via Modules.BLE.CentralManager.cancelPeripheralConnection}.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: peripheral object to connect
+        optional: false
+      - name: options
+        type: Object
+        summary: An optional dictionary specifying connection behavior options. 
+         all available dictionary keys are defined as Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_*
+        optional: true
+    returns:
+      type: void 
+
+events:
+  - name: didUpdateState
+    summary: A event called when centrel manager state updated
+    description: |
+         Invoked whenever the central manager's state has been updated. Commands should only be issued when the state is
+         Modules.BLE.CENTREL_MANAGER_STATE_POWERED_ON. A state below Modules.BLE.CENTREL_MANAGER_STATE_POWERED_ON
+         implies that scanning has stopped and any connected peripherals have been disconnected. If the state moves below
+         Modules.BLE.CENTREL_MANAGER_STATE_POWERED_OFF, all Peripheral objects obtained from this central
+         manager become invalid and must be retrieved or discovered again.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: state
+        type: Number
+        summary: state of central manager
+    
+
+  - name: willRestoreState
+    summary: A event called when centrel manager will restore state
+    description: |
+         For apps that opt-in to state preservation and restoration, this is the first event invoked when your app is relaunched into 
+         the background to complete some Bluetooth-related task. Use this method to synchronize your app's state with the state of the
+         Bluetooth system.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripherals
+        type: Array<Modules.BLE.Peripheral>
+        summary: The array contains all of the peripherals connected to the central manager (or had a pending connection) at the time the system terminated the app.
+      - name: services
+        type: Array<Modules.BLE.Service>
+        summary: an NSArray of service UUIDs containing all the services the central manager was scanning for at the time the system terminated the app.
+      - name: options
+        type: Array<Modules.BLE.Service>
+        summary: The dictionary contains all of the peripheral scan options in use by the central manager when the system terminated the app.
+
+  - name: didDiscoverPeripheral
+    summary: A event called when centrel manager discover peripheral
+    description: |
+         This method is invoked while scanning, upon the discovery of peripheral by central. A discovered peripheral must
+         be retained in order to use it; otherwise, it is assumed to not be of interest and will be cleaned up by the central manager. For
+         a list of discovered peripherals, see peripherals property
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: object of discovered  peripheral
+
+
+  - name: didConnectPeripheral
+    summary: This event is called when a connection initiated by connectPeripheral has succeeded.
+    description: |
+        This event is called when a connection initiated by connectPeripheral has succeeded.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: An object representing the peripheral that connected to the local central manager.
+
+  - name: didFailToConnectPeripheral
+    summary: This event is called when a connection initiated by connectPeripheral has failed.
+    description: |
+        This event is called when a connection initiated by connectPeripheral has failed to complete. As connection attempts do not
+        timeout, the failure of a connection is atypical and usually indicative of a transient issue.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: An object representing the peripheral that failed to connect.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an  
+
+  - name: didDisconnectPeripheral
+    summary: This event is called when a peripheral disconnected.
+    description: |
+        This event is called upon the disconnection of a peripheral that was connected by connectPeripheral If the disconnection
+        was not initiated by cancelPeripheralConnection, the cause will be detailed in the error parameter. Once this method has been
+        called, no more event will be invoked on peripheral.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: An object representing the peripheral that disconnected.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an
+
+  - name: connectionEventDidOccur
+    summary: This method is called upon the connection or disconnection of a peripheral that matches any of the options provided in registerForConnectionEventsWithOptions
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: event
+        type: Number
+        summary: event value will be Moduels.BLE.CONNECTION_EVENT_TYPE_PEER_DISCONNECTED or Moduels.BLE.CONNECTION_EVENT_TYPE_PEER_CONNECTED
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: object of peripheral.
+
+  - name: didUpdateANCSAuthorization
+    summary: This event is called when the authorization status changes for a peripheral connected with connectPeripheral with option Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: object of peripheral which disconnected.    
+          

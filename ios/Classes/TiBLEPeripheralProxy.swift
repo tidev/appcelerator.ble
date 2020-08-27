@@ -59,4 +59,8 @@ public class TiBLEPeripheralProxy: TiProxy {
         _peripheral.readRSSI()
     }
 
+    func peripheral() -> CBPeripheral {
+        return _peripheral
+    }
+
 }

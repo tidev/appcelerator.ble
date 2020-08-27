@@ -9,7 +9,7 @@ import CoreBluetooth
 import TitaniumKit
 
 @objc
-class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
+class TiBLECentralManagerProxy: TiProxy {
 
     private var _peripherals = [String: TiBLEPeripheralProxy]()
 
@@ -55,7 +55,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
 
     @objc(startScan:)
     func startScan(arg: Any?) {
-        let args = arg as? [String: Any]
+        let args = (arg as? [[String: Any]])?.first
         let services = args?["services"] as? [String]
         let options = args?["options"] as? [String: Any]
 
@@ -76,11 +76,52 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
     func stopScan(arg: Any?) {
         _centralManager.stopScan()
         _peripherals = [String: TiBLEPeripheralProxy]()
+
+    }
+
+    @objc(registerForConnectionEvents:)
+    func registerForConnectionEvents(arg: Any?) {
+        guard let args = (arg as? [[String: Any]])?.first else {
+            if #available(iOS 13.0, *) {
+                _centralManager.registerForConnectionEvents(options: nil)
+            }
+            return
+        }
+        var options = [CBConnectionEventMatchingOption: Any]()
+        if let peripheralUUIDs = args["peripherals"] as? [String] {
+            var uuids = [NSUUID]()
+            peripheralUUIDs.forEach { (value) in
+                if let uuid = NSUUID(uuidString: value) {
+                    uuids.append(uuid)
+                }
+            }
+            if #available(iOS 13.0, *) {
+                options[CBConnectionEventMatchingOption.peripheralUUIDs] = uuids
+            }
+        }
+
+        if let serviceUUIDs = args["services"] as? [String] {
+            var uuids = [CBUUID]()
+            serviceUUIDs.forEach { (value) in
+                uuids.append(CBUUID(string: value))
+            }
+            if #available(iOS 13.0, *) {
+                options[CBConnectionEventMatchingOption.serviceUUIDs] = uuids
+            }
+        }
+
+        if #available(iOS 13.0, *) {
+            if options.isEmpty {
+                _centralManager.registerForConnectionEvents(options: nil)
+                return
+            }
+            _centralManager.registerForConnectionEvents(options: [CBConnectionEventMatchingOption.peripheralUUIDs: []])
+        }
     }
 
     @objc(retrievePeripheralsWithIdentifiers:)
     func retrievePeripheralsWithIdentifiers(arg: Any?) -> [TiBLEPeripheralProxy] {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
@@ -95,7 +136,7 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
 
     @objc(retrieveConnectedPeripheralsWithServices:)
     func retrieveConnectedPeripheralsWithServices(arg: Any?) -> [TiBLEPeripheralProxy] {
-        guard let args = arg as? [String: Any],
+        guard let args = (arg as? [[String: Any]])?.first,
             let uuids = args["UUIDs"] as? [String] else {
                 return []
         }
@@ -108,7 +149,114 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
         return peripherals
     }
 
-    // MARK: Events
+    @objc(cancelPeripheralConnection:)
+    func cancelPeripheralConnection(arg: Any?) {
+        guard let args = (arg as? [[String: Any]])?.first,
+            let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
+                return
+        }
+        _centralManager.cancelPeripheralConnection(peripheral.peripheral())
+    }
+
+    @objc(connectPeripheral:)
+    func connectPeripheral(arg: Any?) {
+        guard let args = (arg as? [[String: Any]])?.first,
+            let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
+                return
+        }
+        var options = [String: Any]()
+        if let values = args["options"] as? [String: Any] {
+            if let optionValue = values[CBConnectPeripheralOptionNotifyOnConnectionKey] as? Bool {
+                options[CBConnectPeripheralOptionNotifyOnConnectionKey] = optionValue
+            }
+            if let optionValue = values[CBConnectPeripheralOptionNotifyOnDisconnectionKey] as? Bool {
+                options[CBConnectPeripheralOptionNotifyOnDisconnectionKey] = optionValue
+            }
+            if let optionValue = values[CBConnectPeripheralOptionNotifyOnNotificationKey] as? Bool {
+                options[CBConnectPeripheralOptionNotifyOnNotificationKey] = optionValue
+            }
+            if let optionValue = values[CBConnectPeripheralOptionStartDelayKey] as? NSNumber {
+                options[CBConnectPeripheralOptionStartDelayKey] = optionValue
+            }
+            if #available(iOS 13.0, *) {
+                if let optionValue = values[CBConnectPeripheralOptionEnableTransportBridgingKey] as? Bool {
+                    options[CBConnectPeripheralOptionEnableTransportBridgingKey] = optionValue
+                }
+                if let optionValue = values[CBConnectPeripheralOptionRequiresANCS] as? Bool {
+                    options[CBConnectPeripheralOptionRequiresANCS] = optionValue
+                }
+            }
+        }
+        _centralManager.connect(peripheral.peripheral(), options: options)
+    }
+}
+
+extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        if !self._hasListeners("didConnectPeripheral") {
+            return
+        }
+        self.fireEvent("didConnectPeripheral", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
+    }
+
+    func centralManager(_ central: CBCentralManager, didUpdateANCSAuthorizationFor peripheral: CBPeripheral) {
+        if !self._hasListeners("didUpdateANCSAuthorization") {
+            return
+        }
+        self.fireEvent("didUpdateANCSAuthorization", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
+    }
+
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        if !self._hasListeners("didFailToConnectPeripheral") {
+            return
+        }
+        if let error = error {
+            self.fireEvent("didFailToConnectPeripheral", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+                "errorCode": (error as NSError).code,
+                "errorDomain": (error as NSError).domain,
+                "errorDescription": error.localizedDescription
+            ])
+            return
+        }
+        self.fireEvent("didFailToConnectPeripheral", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
+    }
+
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        if !self._hasListeners("didDisconnectPeripheral") {
+            return
+        }
+        if let error = error {
+            self.fireEvent("didDisconnectPeripheral", with: [
+                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+                "errorCode": (error as NSError).code,
+                "errorDomain": (error as NSError).domain,
+                "errorDescription": error.localizedDescription
+            ])
+            return
+        }
+        self.fireEvent("didDisconnectPeripheral", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+        ])
+
+    }
+
+    func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
+        if !self._hasListeners("connectionEventDidOccur") {
+            return
+        }
+
+        self.fireEvent("connectionEventDidOccur", with: [
+            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "event": NSNumber(value: event.rawValue)
+        ])
+    }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if !self._hasListeners("didUpdateState") {
@@ -196,5 +344,4 @@ class TiBLECentralManagerProxy: TiProxy, CBCentralManagerDelegate {
             "rssi": RSSI
         ])
     }
-
 }
