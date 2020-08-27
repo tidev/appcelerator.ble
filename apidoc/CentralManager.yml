@@ -73,7 +73,7 @@ methods:
       type: Array<Modules.BLE.Peripheral>
 
   - name: registerForConnectionEvents
-    summary: Calls peripheral_connection_event_occur event when a connection event occurs matching any of the given options.
+    summary: Calls connectionEventDidOccur event when a connection event occurs matching any of the given options.
              Passing nil in the option parameter clears any prior registered matching options.
     platforms: [iphone, ipad]
     since: "1.0.0"
@@ -104,7 +104,7 @@ methods:
 
   - name: connectPeripheral
     summary: Initiates a connection to peripheral. Connection attempts never time out and, depending on the outcome, will result
-              in a call to either peripheral_did_connect or peripheral_failed_to_connect event.
+              in a call to either didConnectPeripheral or didFailToConnectPeripheral event.
               Pending attempts are cancelled automatically upon deallocation of peripheral, and explicitly via Modules.BLE.CentralManager.cancelPeripheralConnection}.
     platforms: [iphone, ipad]
     since: "1.0.0"

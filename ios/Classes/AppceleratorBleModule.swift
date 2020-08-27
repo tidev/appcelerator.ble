@@ -82,7 +82,6 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION = CBConnectPeripheralOptionNotifyOnDisconnectionKey
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_NOTIFICATION = CBConnectPeripheralOptionNotifyOnNotificationKey
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY = CBConnectPeripheralOptionStartDelayKey
-    // Setting hardcode values as these are avalible ios 13 and above
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING = "kCBConnectOptionEnableTransportBridging"
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS = "kCBConnectOptionRequiresANCS"
 
