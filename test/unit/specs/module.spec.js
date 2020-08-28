@@ -18,6 +18,10 @@ describe('appcelerator.ble', function () {
 			it('should have removeServices function', () => {
 				expect(BLE.removeServices).toEqual(jasmine.any(Function));
 			});
+
+			it('should have initCentralManager function', () => {
+				expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
+			});
 		});
 
 		describe('property', () => {

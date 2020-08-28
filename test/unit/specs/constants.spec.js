@@ -4,21 +4,39 @@ const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 describe('appcelerator.ble', function () {
 	if (IOS) {
 
-		describe('PERIPHERAL_STATE_*', () => {
-			it('PERIPHERAL_STATE_CONNECTED', () => {
-				expect(BLE.PERIPHERAL_STATE_CONNECTED).toEqual(jasmine.any(Number));
+		describe('CONNECTION_EVENT_TYPE_*', () => {
+			it('CONNECTION_EVENT_TYPE_PEER_DISCONNECTED', () => {
+				expect(BLE.CONNECTION_EVENT_TYPE_PEER_DISCONNECTED).toEqual(jasmine.any(Number));
 			});
 
-			it('PERIPHERAL_STATE_CONNECTING', () => {
-				expect(BLE.PERIPHERAL_STATE_CONNECTING).toEqual(jasmine.any(Number));
+			it('CONNECTION_EVENT_TYPE_PEER_CONNECTED', () => {
+				expect(BLE.CONNECTION_EVENT_TYPE_PEER_CONNECTED).toEqual(jasmine.any(Number));
+			});
+		});
+
+		describe('CENTRAL_MANAGER_STATE_*', () => {
+			it('CENTRAL_MANAGER_STATE_UNKNOWN', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_UNKNOWN).toEqual(jasmine.any(Number));
 			});
 
-			it('PERIPHERAL_STATE_DISCONNECTED', () => {
-				expect(BLE.PERIPHERAL_STATE_DISCONNECTED).toEqual(jasmine.any(Number));
+			it('CENTRAL_MANAGER_STATE_RESETTING', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_RESETTING).toEqual(jasmine.any(Number));
 			});
 
-			it('PERIPHERAL_STATE_DISCONNECTING', () => {
-				expect(BLE.PERIPHERAL_STATE_DISCONNECTING).toEqual(jasmine.any(Number));
+			it('CENTRAL_MANAGER_STATE_UNSUPPORTED', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_UNSUPPORTED).toEqual(jasmine.any(Number));
+			});
+
+			it('CENTRAL_MANAGER_STATE_UNAUTHORIZED', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_UNAUTHORIZED).toEqual(jasmine.any(Number));
+			});
+
+			it('CENTRAL_MANAGER_STATE_POWERED_OFF', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_POWERED_OFF).toEqual(jasmine.any(Number));
+			});
+
+			it('CENTRAL_MANAGER_STATE_POWERED_ON', () => {
+				expect(BLE.CENTRAL_MANAGER_STATE_POWERED_ON).toEqual(jasmine.any(Number));
 			});
 		});
 
@@ -127,6 +145,82 @@ describe('appcelerator.ble', function () {
 
 			it('CBUUID_L2CAPPSM_CHARACTERISTIC_STRING', () => {
 				expect(BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING).toEqual('ABDD3056-28FA-441D-A470-55A75A52553A');
+			});
+		});
+
+		describe('PERIPHERAL_STATE_*', () => {
+			it('PERIPHERAL_STATE_CONNECTED', () => {
+				expect(BLE.PERIPHERAL_STATE_CONNECTED).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_CONNECTING', () => {
+				expect(BLE.PERIPHERAL_STATE_CONNECTING).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_DISCONNECTED', () => {
+				expect(BLE.PERIPHERAL_STATE_DISCONNECTED).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_STATE_DISCONNECTING', () => {
+				expect(BLE.PERIPHERAL_STATE_DISCONNECTING).toEqual(jasmine.any(Number));
+			});
+		});
+		describe('ADVERTISEMENT_DATA_KEY_*', () => {
+			it('ADVERTISEMENT_DATA_KEY_SERVICE_DATA', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_SERVICE_DATA).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE).toEqual(jasmine.any(String));
+			});
+
+			it('ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			});
+		});
+		describe('CONNECT_PERIPHERAL_OPTIONS_KEY_*', () => {
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION).toEqual(jasmine.any(String));
+			});
+
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION).toEqual(jasmine.any(String));
+			});
+
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_NOTIFICATION', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_NOTIFICATION).toEqual(jasmine.any(String));
+			});
+
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY).toEqual(jasmine.any(String));
+			});
+
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING).toEqual(jasmine.any(String));
+			});
+
+			it('CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS', () => {
+				expect(BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS).toEqual(jasmine.any(String));
 			});
 		});
 	}
