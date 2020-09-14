@@ -46,3 +46,393 @@ methods:
     since: "1.0.0"
     returns:
       type: void
+
+  - name: discoverCharacteristics
+    summary: Discovers the specified characteristic(s) of a service. The result of this operation is returned via the discoveredCharacteristics event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: services
+        type: Modules.BLE.Service
+        summary: The service whose characteristics you want to discover.
+        optional: false
+      - name: characteristicUUIDs
+        type: Array<String>
+        summary: An array of CBUUID objects that you are interested in. Each CBUUID object represents a UUID that identifies the type of a characteristic you want to discover.
+        optional: true
+    returns:
+      type: void
+
+  - name: discoverDescriptorsForCharacteristic
+    summary: Discovers the descriptor(s) of a characteristic.The result of this operation is returned via the Peripheral/discoveredDescriptorsForCharacteristics:event event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic whose descriptors you want to discover.
+        optional: false
+    returns:
+      type: void
+
+  - name: discoverIncludedServices
+    summary: Discovers the specified included service(s) of a service.The result of this operation is returned via the discoveredIncludedServices event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: services
+        type: Modules.BLE.Service
+        summary: The service whose characteristics you want to discover.
+        optional: false
+      - name: includedServiceUUIDs
+        type: Array<String>
+        summary: An array of CBUUID objects that you are interested in. Here, each CBUUID object represents a UUID that identifies the type of included service you want to discover.
+        optional: true
+    returns:
+      type: void
+
+  - name: discoverServices
+    summary: Discovers available service(s) on the peripheral. The result of this operation is returned via the discoveredServices event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: serviceUUIDs
+        type: Array<String>
+        summary: An array of CBUUID objects that you are interested in. Each CBUUID object represents a UUID that identifies the type of service you want to discover.
+        optional: true
+    returns:
+      type: void
+
+  - name: readValueForCharacteristic
+    summary: Reads the value of a characteristic.The result of this operation is returned via the updatedValueForCharacteristic event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic whose value you want to read.
+        optional: false
+    returns:
+      type: void
+
+  - name: readValueForDescriptor
+    summary: Reads the value of a descriptor. The result of this operation is returned via the updatedValueForDescriptor event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: descriptor
+        type: Modules.BLE.Descriptor
+        summary: The characteristic descriptor whose value you want to read.
+        optional: false
+    returns:
+      type: void
+
+  - name: subscribeToCharacteristic
+    summary: Enables notifications/indications for a characteristic. If the characteristic allows both, notifications will be used.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic whose value you want to read.
+        optional: false
+    returns:
+      type: void
+
+  - name: unsubscribeFromCharacteristic
+    summary: Disables notifications/indications for a characteristic.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic whose value you want to read.
+        optional: false
+    returns:
+      type: void
+
+  - name: writeValueForCharacteristic
+    summary: Writes a value to a characteristic.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic whose value you want to write.
+        optional: false
+      - name: data
+        type: Titanium.Buffer
+        summary: The new value of the characteristic.
+        optional: false
+      - name: characteristicWriteType
+        type: Number
+        summary: The type of write to be executed. See CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE and CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE.
+        optional: false
+    returns:
+      type: void
+
+  - name: writeValueForDescriptor
+    summary: Writes the value of a descriptor. The result of this operation is returned via the wroteValueForCharacteristic event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: descriptor
+        type: Modules.BLE.Descriptor
+        summary: The descriptor whose value you want to write.
+        optional: false
+      - name: data
+        type: Titanium.Buffer
+        summary: The new value of the characteristic.
+        optional: false
+    returns:
+      type: void
+
+events:
+  - name: discoveredCharacteristics
+    summary: This event returns the result of a call to the discoverCharacteristics method. If the characteristic(s) were read successfully, they can be retrieved via the service property's characteristics property.
+    description: |
+        Core Bluetooth invokes this method when your app calls the discoverCharacteristics(_:for:) method. If the peripheral successfully discovers the characteristics of the specified service, you can access them through the service’s characteristics property. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: service
+        type: Modules.BLE.Service
+        summary: The service to which the characteristics belong.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: discoveredDescriptionForCharacteristics
+    summary: This event returns the result of a call to the discoverDescriptorsForCharacteristic method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the discoverDescriptors(for:) method. If the peripheral successfully discovers the descriptors of the specified characteristic, you can access them through the characteristic’s descriptors property. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The service to which the characteristics belong.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: discoveredIncludedServices
+    summary: This event returns the result of a call to the discoverIncludedServices method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the discoverIncludedServices(_:for:) method. If the peripheral successfully discovers services, you can access them through the service’s includedServices property. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: discoveredServices
+    summary: Discovers the specified services of the peripheral.
+    description: |
+        Core Bluetooth invokes this method when your app calls the discoverServices(_:) method. If the peripheral successfully discovers services, you can access them through the peripheral’s services property. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: invalidatedServices
+    summary: This event is fired when the services of the peripheral change.
+    description: |
+        Core Bluetooth invokes this method whenever one or more services of a peripheral change. The invalidatedServices parameter includes any changed services that you previously discovered; you can no longer use these services. You can use the discoverServices(_:) method to discover any new services that the peripheral added to its database. Use this same method to find out whether any of the invalidated services that you were using (and want to continue using) now have a different location in the peripheral’s database.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: services
+        type: Array<Modules.BLE.Service>
+        summary: The services that have been invalidated.
+
+  - name: updatedName
+    summary: This event is fired when the name of the peripheral changes.
+    description: |
+        Core Bluetooth invokes this method whenever the peripheral’s Generic Access Profile (GAP) device name changes. Since a peripheral device can change its GAP device name, you can implement this method if your app needs to display the current name of the peripheral device.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+
+  - name: updatedNotificationStateForCharacteristics
+    summary: This event returns the result of a call to the subscribeToCharacteristic or unsubscribeFromCharacteristic method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the setNotifyValue(_:for:) method. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic to subscribe.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: updatedRSSI
+    summary: This event returns the result of a call to the readRSSI method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the readRSSI() method, while the peripheral is connected to the central manager. If successful, the error parameter is nil and the parameter RSSI reports the peripheral’s signal strength, in decibels. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: rssi
+        type: Number
+        summary: value last read
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: updatedValueForCharacteristic
+    summary: This event is fired after a call to the readValueForCharacteristic method, or upon receipt of a notification/indication.
+    description: |
+        Core Bluetooth invokes this method when your app calls the readValue(for:) method. A peripheral also invokes this method to notify your app of a change to the value of the characteristic for which the app previously enabled notifications by calling setNotifyValue(_:for:). If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic containing the value.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: updatedValueForDescriptor
+    summary: This event returns the result of a call to the readValueForDescriptor method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the readValue(for:) method. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: descriptor
+        type: Modules.BLE.Descriptor
+        summary: The characteristic descriptor containing the value.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: wroteValueForCharacteristic
+    summary: This event returns the result of a call to the writeValueForCharacteristic method.
+    description: |
+        Core Bluetooth invokes this method only when your app calls the writeValue(_:for:type:) method with the CBCharacteristicWriteType.withResponse constant specified as the write type. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral providing this information.
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: The characteristic containing the value.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
+
+  - name: wroteValueForDescriptor
+    summary: This event returns the result of a call to the writeValueForDescriptor method.
+    description: |
+        Core Bluetooth invokes this method when your app calls the writeValue(_:for:) method. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: peripheral
+        type: Modules.BLE.Peripheral
+        summary: The peripheral sending the event.
+      - name: descriptor
+        type: Modules.BLE.Descriptor
+        summary: The object representing the descriptor that was changed.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred. 
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an error occurred.
