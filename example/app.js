@@ -38,6 +38,26 @@ centralManager.addEventListener('didDiscoverPeripheral', function (e) {
 	activityIndicator.hide();
 });
 
+centralManager.addEventListener('didDisconnectPeripheral', function (e) {
+	Ti.API.info('didDisconnectPeripheral');
+	Ti.API.info(e);
+});
+
+centralManager.addEventListener('didConnectPeripheral', function (e) {
+	Ti.API.info('didConnectPeripheral');
+	Ti.API.info(e);
+});
+
+centralManager.addEventListener('didFailToConnectPeripheral', function (e) {
+	Ti.API.info('didFailToConnectPeripheral');
+	Ti.API.info(e.peripheral);
+});
+
+centralManager.addEventListener('willRestoreState', function (e) {
+	Ti.API.info('willRestoreState');
+	Ti.API.info(e);
+});
+
 var mainWindow = Ti.UI.createWindow({
 	backgroundColor: 'White',
 	titleAttributes: { color: 'blue' }
@@ -133,10 +153,15 @@ var tableView = Titanium.UI.createTableView({
 function setData(list) {
 	tbl_data.splice(0, tbl_data.length);
 	if (list.length > 0) {
+		var btDevicesListSection = Ti.UI.createTableViewSection();
 		activityIndicator.hide();
 		for (var i = 0; i < list.length; i++) {
-			var row = Ti.UI.createTableViewRow();
-			row.height = 70;
+			var btDevicesRow = Ti.UI.createTableViewRow({
+				height: 70,
+				id: list[i].UUID,
+				row: i,
+				hasChild: true
+			});
 			var nameLabel = Ti.UI.createLabel({
 				left: 10,
 				color: 'black',
@@ -153,14 +178,83 @@ function setData(list) {
 				font: { fontSize: 11 },
 				text: 'UUID - ' + list[i].UUID
 			});
-			var button = Ti.UI.createButton({
-				right: 10,
-				height: 50,
-				width: 80,
-				title: 'Connect'
+			btDevicesRow.add(nameLabel, uuidLabel);
+			btDevicesRow.addEventListener('click', function (e) {
+				var periPheralObject;
+				var indexRow = e.source;
+				if (indexRow.hasChild) {
+					for (var i = 0; i < list.length; i++) {
+						if (indexRow.id == list[i].UUID) {
+							periPheralObject = list[i];
+							break;
+						}
+					}
+					var deviceWindow = Ti.UI.createWindow({
+						backgroundColor: 'white',
+						title: 'Device information',
+						titleAttributes: { color: 'blue' }
+					});
+
+					var navDeviceWindow = Ti.UI.iOS.createNavigationWindow({
+						window: deviceWindow
+					});
+
+					var nameLabel = Ti.UI.createLabel({
+						color: 'black',
+						top: 100,
+						width: 250,
+						font: { fontSize: 14 },
+						text: 'Name - ' + periPheralObject.name
+					});
+					var uuidLabel = Ti.UI.createLabel({
+						color: 'blue',
+						top: 140,
+						width: 250,
+						font: { fontSize: 11 },
+						text: 'UUID - ' + periPheralObject.UUID
+					});
+
+					var connectButton = Titanium.UI.createButton({
+						top: 200,
+						title: 'Connect'
+					});
+					var disConnectButton = Titanium.UI.createButton({
+						top: 300,
+						title: 'Disconnect'
+					});
+
+					var backButton = Titanium.UI.createButton({
+						bottom: 100,
+						title: 'Go to device list'
+					});
+					backButton.addEventListener('click', function () {
+						navDeviceWindow.close();
+					});
+					connectButton.addEventListener('click', function () {
+						if (periPheralObject) {
+							centralManager.connectPeripheral({
+								peripheral: periPheralObject,
+								options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
+							});
+							alert('Peripheral Connected');
+						} else {
+							alert('No peripheral available to connect');
+						}
+					});
+					disConnectButton.addEventListener('click', function () {
+						if (periPheralObject) {
+							centralManager.cancelPeripheralConnection({ peripheral: periPheralObject });
+							alert('Peripheral Disconnected');
+						} else {
+							alert('No peripheral available to disconnect');
+						}
+					});
+
+					navDeviceWindow.add(connectButton, backButton, nameLabel, uuidLabel, disConnectButton)
+					navDeviceWindow.open();
+				}
 			});
-			row.add(nameLabel, uuidLabel, button);
-			tbl_data.push(row);
+			tbl_data.push(btDevicesRow)
 		}
 		tableView.setData(tbl_data);
 	}
@@ -195,6 +289,5 @@ var buttonPeripheral = Ti.UI.createButton({
 buttonPeripheral.addEventListener('click', function () {
 	navCentralWindow.openWindow(peripheralDataWin, { animated: true });
 });
-
 
 mainWindow.add(buttonPeripheral);
