@@ -1,0 +1,4 @@
+name: Modules.BLE.L2CAPchannel
+summary: A live L2CAP connection to a remote device.
+description: Live L2CAP connection.
+since: "1.0.0"
