@@ -84,6 +84,8 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY = CBConnectPeripheralOptionStartDelayKey
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING = "kCBConnectOptionEnableTransportBridging"
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS = "kCBConnectOptionRequiresANCS"
+    @objc public let CHARACTERISTIC_WRYTE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
+    @objc public let CHARACTERISTIC_WRYTE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
 
     var _peripheralManager: CBPeripheralManager?
 
