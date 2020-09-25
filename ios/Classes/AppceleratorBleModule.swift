@@ -28,12 +28,12 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECTION_EVENT_TYPE_PEER_DISCONNECTED = CBConnectionEvent.peerDisconnected.rawValue
     @objc public let CONNECTION_EVENT_TYPE_PEER_CONNECTED =  CBConnectionEvent.peerConnected.rawValue
 
-    @objc public let CENTRAL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
+    @objc public let MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
+    @objc public let MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
+    @objc public let MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
+    @objc public let MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
+    @objc public let MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
+    @objc public let MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
 
     @objc public let AUTHORISATION_STATUS_NOT_DETERMINED = 0
     @objc public let AUTHORISATION_STATUS_RESTRICTED = 1
@@ -87,7 +87,28 @@ class AppceleratorBleModule: TiModule {
     @objc public let CHARACTERISTIC_WRYTE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
     @objc public let CHARACTERISTIC_WRYTE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
 
-    var _peripheralManager: CBPeripheralManager?
+    @objc public let ATT_ERROR_SUCCESS = CBATTError.success.rawValue
+    @objc public let ATT_ERROR_INVALID_HANDLE = CBATTError.invalidHandle.rawValue
+    @objc public let ATT_ERROR_READ_NOT_PERMITTED = CBATTError.readNotPermitted.rawValue
+    @objc public let ATT_ERROR_WRITE_NOT_PERMITTED = CBATTError.writeNotPermitted.rawValue
+    @objc public let ATT_ERROR_INVALID_PDU = CBATTError.invalidPdu.rawValue
+    @objc public let ATT_ERROR_INSUFFICIENT_AUTHENTICATION = CBATTError.insufficientAuthentication.rawValue
+    @objc public let ATT_ERROR_REQUEEST_NOT_SUPPORTED = CBATTError.requestNotSupported.rawValue
+    @objc public let ATT_ERROR_INVALID_OFFSET = CBATTError.invalidOffset.rawValue
+    @objc public let ATT_ERROR_INSUFFICIENT_AUTHORIZATION = CBATTError.insufficientAuthorization.rawValue
+    @objc public let ATT_ERROR_PREPARE_QUEUE_FULL = CBATTError.prepareQueueFull.rawValue
+    @objc public let ATT_ERROR_ATTRIBUTE_NOT_FOUND = CBATTError.attributeNotFound.rawValue
+    @objc public let ATT_ERROR_ATTRIBUTE_NOT_LONG = CBATTError.attributeNotLong.rawValue
+    @objc public let ATT_ERROR_INSUFFICIENT_ENCRYPTION_KEY_SIZE = CBATTError.insufficientEncryptionKeySize.rawValue
+    @objc public let ATT_ERROR_INVALID_ATTRIBUTE_VALUE_LENGTH = CBATTError.invalidAttributeValueLength.rawValue
+    @objc public let ATT_ERROR_UNLIKELY_ERROR = CBATTError.unlikelyError.rawValue
+    @objc public let ATT_ERROR_INSUFFICIENT_ENCRYPTION = CBATTError.insufficientEncryption.rawValue
+    @objc public let ATT_ERROR_UNSUPPORTED_GROUP_TYPE = CBATTError.unsupportedGroupType.rawValue
+    @objc public let ATT_ERROR_INSUFFICIENT_RESOURCE = CBATTError.insufficientResources.rawValue
+
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW = CBPeripheralManagerConnectionLatency.low.rawValue
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM = CBPeripheralManagerConnectionLatency.medium.rawValue
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH = CBPeripheralManagerConnectionLatency.high.rawValue
 
     func moduleGUID() -> String {
         return "8d0b486f-27ff-4029-a989-56e4a6755e6f"
@@ -111,53 +132,6 @@ class AppceleratorBleModule: TiModule {
         }
     }
 
-    @objc(addService:)
-    func addService(arg: Any?) -> TiBLEServiceProxy? {
-        guard let values = arg as? [Any],
-            let options = values.first as? [String: Any],
-            let primary = options["primary"] as? Bool,
-            let uuid = options["uuid"] as? String else {
-                return nil
-        }
-        let cbUUID = CBUUID(string: uuid)
-
-        let service = CBMutableService(type: cbUUID, primary: primary)
-        var characteristicArray = [CBCharacteristic]()
-
-        if let data = options["data"] as? TiBuffer,
-            let properties = options["properties"] as? NSNumber,
-            let permission = options["permissions"] as? NSNumber {
-            let characteristicData = data.data as Data
-            let characteristicPermission: CBAttributePermissions = CBAttributePermissions(rawValue: permission.uintValue)
-            let characteristicProperties = CBCharacteristicProperties(rawValue: properties.uintValue)
-            let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
-            characteristicArray.append(characteristic)
-        }
-        if let characteristics = options["characteristics"] as? [TiBLECharacteristicProxy] {
-            for object in characteristics {
-                characteristicArray.append(object.characteristic())
-            }
-        }
-
-        service.characteristics = characteristicArray
-
-        _peripheralManager?.add(service)
-        return TiBLEServiceProxy(pageContext: self.pageContext, service: service)
-    }
-
-    @objc(removeAllServices:)
-    func removeAllServices(arg: Any?) {
-        _peripheralManager?.removeAllServices()
-    }
-
-    @objc(removeServices:)
-    func removeServices(arg: Any?) {
-        guard let options = (arg as? [[String: Any]])?.first,
-            let service = options["service"] as? TiBLEServiceProxy else {
-                return
-        }
-        _peripheralManager?.remove(service.mutableService())
-    }
     // temp method needed for UT's
     @objc(addDescriptor:)
     func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
@@ -213,4 +187,12 @@ class AppceleratorBleModule: TiModule {
         return centralManager
     }
 
+    @objc(initPeripheralManager:)
+    func initPeripheralManager(arg: Any?) -> TiBLEPeripheralManagerProxy? {
+        let options = (arg as? [[String: Any]])?.first
+        let showPowerAlert = options?["showPowerAlert"] as? Bool
+        let restoreIdentifier = options?["restoreIdentifier"] as? String
+        let peripheralManager = TiBLEPeripheralManagerProxy(pageContext: pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)
+        return peripheralManager
+    }
 }

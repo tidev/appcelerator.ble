@@ -7,7 +7,7 @@ platforms: [iphone, ipad]
 since: "1.0.0"
 properties:
       - name: state
-        summary: State of the module's internal central manager. Its value is one of the CENTRAL_MANAGER_STATE_* constants.
+        summary: State of the module's internal central manager. Its value is one of the MANAGER_STATE_* constants.
         type: Number
         platforms: [iphone, ipad]
         since: "1.0.0"

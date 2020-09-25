@@ -5,7 +5,8 @@ var buffer = Ti.createBuffer({ value: 'hello world' });
 
 describe('appcelerator.service', function () {
 	if (IOS) {
-		const service = BLE.addService({
+		const peripheralManager = BLE.initPeripheralManager();
+		const service = peripheralManager.addService({
 			data: buffer,
 			properties: 0,
 			characteristics: [],
