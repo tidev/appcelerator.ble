@@ -292,8 +292,8 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                        with: [
                         "errorCode": (error as NSError?)?.code as Any,
                         "errorDomain": (error as NSError?)?.domain as Any,
-                        "errorDescription": error?.localizedDescription as Any
-                        //                        "channel":NSNumber(value: PSM)
+                        "errorDescription": error?.localizedDescription as Any,
+                        "channel": TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel)
         ])
     }
 
