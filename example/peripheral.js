@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 function deviceWin(peripheral, centralManager, BLE) {
 	var serviceUUID = '180D';
 	var characteristicUUID = '2A37';
@@ -6,14 +7,14 @@ function deviceWin(peripheral, centralManager, BLE) {
 		Ti.API.info('Connected to Peripheral: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid);
 		var connectedPeripheral = e.peripheral;
 		if (e.errorDescription !== null) {
-			Ti.API.info('Error while connecting with peripheral' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			alert('Error while connecting with peripheral' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 			return;
 		}
 		connectedPeripheral.addEventListener('didDiscoverServices', function (e) {
 			Ti.API.info('didDiscoverServices');
 			Ti.API.info(e);
 			if (e.errorDescription !== null) {
-				Ti.API.info('Error while discovering services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+				alert('Error while discovering services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
 			var servicePeripheralObject = e.sourcePeripheral;
@@ -26,7 +27,7 @@ function deviceWin(peripheral, centralManager, BLE) {
 						Ti.API.info('didDiscoverCharacteristics');
 						Ti.API.info(e);
 						if (e.errorDescription !== null) {
-							Ti.API.info('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+							alert('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 							return;
 						}
 						var charPeripheralObject = e.sourcePeripheral;
@@ -38,7 +39,7 @@ function deviceWin(peripheral, centralManager, BLE) {
 								charPeripheralObject.addEventListener('didUpdateNotificationStateForCharacteristics', function (e) {
 									Ti.API.info('didUpdateNotificationStateForCharacteristics');
 									if (e.errorDescription !== null) {
-										Ti.API.info('Error while subscribing characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+										alert('Error while subscribing characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 										return;
 									}
 								});
@@ -112,25 +113,25 @@ function deviceWin(peripheral, centralManager, BLE) {
 				peripheral: peripheral,
 				options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
 			});
-			Ti.API.info('Peripheral Connected');
+			alert('Peripheral Connected');
 		} else {
-			Ti.API.info('No peripheral available to connect');
+			alert('No peripheral available to connect');
 		}
 	});
 	disConnectButton.addEventListener('click', function () {
 		if (peripheral) {
 			centralManager.cancelPeripheralConnection({ peripheral: peripheral });
-			Ti.API.info('Peripheral Disconnected');
+			alert('Peripheral Disconnected');
 		} else {
-			Ti.API.info('No peripheral available to disconnect');
+			alert('No peripheral available to disconnect');
 		}
 	});
 	subscribeButton.addEventListener('click', function () {
 		if (peripheral) {
 			peripheral.discoverServices();
-			Ti.API.info('Subscribed for 2A37 ');
+			alert('Subscribed for 2A37 ');
 		} else {
-			Ti.API.info('No peripheral available to connect');
+			alert('No peripheral available to connect');
 		}
 	});
 	unsubscribeButton.addEventListener('click', function () {
@@ -138,9 +139,9 @@ function deviceWin(peripheral, centralManager, BLE) {
 			peripheral.unsubscribeFromCharacteristic({
 				characteristic: global.charactersticObject
 			});
-			Ti.API.info('Unsubscribed for 2A37 ');
+			alert('Unsubscribed for 2A37 ');
 		} else {
-			Ti.API.info('No peripheral available to disconnect');
+			alert('No peripheral available to disconnect');
 		}
 	});
 	return navDeviceWindow;

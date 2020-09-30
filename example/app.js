@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 // require BLE
 var BLE = require('appcelerator.ble');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
@@ -8,28 +9,28 @@ if (IOS) {
 		Ti.API.info('didUpdateState');
 		switch (e.state) {
 			case BLE.CENTRAL_MANAGER_STATE_RESETTING:
-				Ti.API.info('Resetting');
+				alert('Resetting');
 				break;
 
 			case BLE.CENTRAL_MANAGER_STATE_UNSUPPORTED:
-				Ti.API.info('Unsupported');
+				alert('Unsupported');
 				break;
 
 			case BLE.CENTRAL_MANAGER_STATE_UNAUTHORIZED:
-				Ti.API.info('Unauthorized');
+				alert('Unauthorized');
 				break;
 
 			case BLE.CENTRAL_MANAGER_STATE_POWERED_OFF:
-				Ti.API.info('Bluetooth is powered Off');
+				alert('Bluetooth is powered Off');
 				break;
 
 			case BLE.CENTRAL_MANAGER_STATE_POWERED_ON:
-				Ti.API.info('Bluetooth is powered On');
+				alert('Bluetooth is powered On');
 				break;
 
 			case BLE.CENTRAL_MANAGER_STATE_UNKNOWN:
 			default:
-				Ti.API.info('Unknown');
+				alert('Unknown');
 				break;
 		}
 	});
@@ -108,7 +109,7 @@ if (IOS) {
 	});
 	// Central button will  open central section
 	buttonCentral.addEventListener('click', function () {
-		Ti.API.info('Please scan to fetch BLE devices');
+		alert('Please scan to fetch BLE devices');
 		navCentralWindow.openWindow(centralDataWin, { animated: true });
 	});
 
@@ -116,10 +117,10 @@ if (IOS) {
 	scanButton.addEventListener('click', function () {
 		Ti.API.info(centralManager.state);
 		if (centralManager.isScanning) {
-			Ti.API.info('Already scanning, please stop scan first!');
+			alert('Already scanning, please stop scan first!');
 			return;
 		} else if (centralManager.state !== BLE.CENTRAL_MANAGER_STATE_POWERED_ON) {
-			Ti.API.info('Please check device settings to enable bluetooth');
+			alert('Please check device settings to enable bluetooth');
 			return;
 		}
 		centralManager.startScan();
@@ -130,11 +131,9 @@ if (IOS) {
 		Ti.API.info('Checking Bluetooth status');
 		var connection = BLE.authorizationState;
 		if (connection === BLE.AUTHORISATION_STATUS_ALLOWED_ALWAYS) {
-			Ti.API.info('Bluetooth is enabled in settings');
-			Ti.API.info('Bluetooth enabled in settings');
+			alert('Bluetooth enabled in settings');
 		} else {
-			Ti.API.info('Bluetooth is disabled, Please allow it in settings');
-			Ti.API.info('Bluetooth is disabled, Please allow it in settings');
+			alert('Bluetooth is disabled, Please allow it in settings');
 		}
 	});
 
@@ -198,7 +197,7 @@ if (IOS) {
 	// Stop scan button functionality
 	stopScanButton.addEventListener('click', function () {
 		if (!centralManager.isScanning) {
-			Ti.API.info('Not scanning!');
+			alert('Not scanning!');
 			return;
 		}
 		centralManager.stopScan();
