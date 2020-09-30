@@ -7,4 +7,3 @@ ios/build/
 ios/dist/
 
 # These should eventually be linted as well
-example/
