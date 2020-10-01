@@ -42,6 +42,7 @@ function deviceWin(peripheral, centralManager, BLE) {
 										alert('Error while subscribing characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 										return;
 									}
+									alert('Subscribed for 2A37 ');
 								});
 								peripheral.subscribeToCharacteristic({
 									characteristic: global.charactersticObject
@@ -121,7 +122,6 @@ function deviceWin(peripheral, centralManager, BLE) {
 	disConnectButton.addEventListener('click', function () {
 		if (peripheral) {
 			centralManager.cancelPeripheralConnection({ peripheral: peripheral });
-			alert('Peripheral Disconnected');
 		} else {
 			alert('No peripheral available to disconnect');
 		}
@@ -129,7 +129,6 @@ function deviceWin(peripheral, centralManager, BLE) {
 	subscribeButton.addEventListener('click', function () {
 		if (peripheral) {
 			peripheral.discoverServices();
-			alert('Subscribed for 2A37 ');
 		} else {
 			alert('No peripheral available to connect');
 		}

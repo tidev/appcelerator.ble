@@ -42,6 +42,7 @@ if (IOS) {
 
 	centralManager.addEventListener('didDisconnectPeripheral', function (e) {
 		Ti.API.info('Disconnected from Peripheral: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid);
+		alert('Peripheral Disconnected');
 	});
 
 	centralManager.addEventListener('didFailToConnectPeripheral', function (e) {
@@ -175,7 +176,7 @@ if (IOS) {
 				btDevicesRow.add(nameLabel, uuidLabel);
 				btDevicesRow.addEventListener('click', function (e) {
 					var periPheralObject;
-					var indexRow = e.source;
+					var indexRow = e.row;
 					if (indexRow.hasChild) {
 						for (var i = 0; i < list.length; i++) {
 							if (indexRow.id === list[i].UUID) {
