@@ -18,13 +18,15 @@ public class BluetoothLowEnergyModule extends KrollModule
 
 	// Standard Debugging variables
 	private static final String LCAT = "BluetoothLowEnergyModule";
-	private static final boolean DBG = TiConfig.LOGD;
-
-	// You can define constants with @Kroll.constant, for example:
-	// @Kroll.constant public static final String EXTERNAL_NAME = value;
 
 	public BluetoothLowEnergyModule()
 	{
 		super();
+	}
+
+	@Override
+	public String getApiName()
+	{
+		return "appcelerator.ble";
 	}
 }
