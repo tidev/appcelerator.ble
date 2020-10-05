@@ -1,6 +1,14 @@
 /* eslint-disable no-alert */
 // require BLE
 var BLE = require('appcelerator.ble');
+var isAndroid = Ti.Platform.osname === 'android';
+if (isAndroid) {
+	var win = Ti.UI.createWindow({
+		backgroundColor: 'white'
+	}).open();
+	alert('Android is in progress');
+	return;
+}
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 if (IOS) {
 	var tbl_data = [];

@@ -5,7 +5,7 @@
 version: 1.0.0
 apiversion: 2
 architectures: armv7 arm64 i386 x86_64
-description: BluetoothLowEnergy is a Swift based Titanium module.
+description: Provides BluetoothLowEnergy module for Titanium applications.
 author: Axway
 license: Proprietary
 copyright: Copyright (c) 2020 by Axway Appcelerator
