@@ -1,8 +1,8 @@
 /**
-* Appcelerator Titanium Mobile - Bluetooth Low Energy (BLE) Module
-* Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
-* Proprietary and Confidential - This source code is not for redistribution
-*/
+ * Appcelerator Titanium Mobile - Bluetooth Low Energy (BLE) Module
+ * Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
+ * Proprietary and Confidential - This source code is not for redistribution
+ */
 
 import Foundation
 import TitaniumKit
@@ -12,11 +12,11 @@ import CoreBluetooth
 public class TiBLEPeripheralProviderProxy: NSObject {
     static let sharedPeripheralProvider = TiBLEPeripheralProviderProxy()
     private var _peripherals = [String: TiBLEPeripheralProxy]()
-    
+
     private override init() {
         super.init()
     }
-    
+
     @objc
     func peripherals() -> [TiBLEPeripheralProxy] {
         var list = [TiBLEPeripheralProxy]()
@@ -25,20 +25,20 @@ public class TiBLEPeripheralProviderProxy: NSObject {
         }
         return list
     }
-    
+
     func hasPeripheral(_ peripheral: TiBLEPeripheralProxy?) -> Bool {
         if let peripheral = peripheral {
             return peripherals().contains(peripheral)
         }
         return false
     }
-    
+
     func addPeripheral(_ peripheral: TiBLEPeripheralProxy?) {
         if let peripheral = peripheral {
             _peripherals[peripheral.UUID()] = peripheral
         }
     }
-    
+
     func removePeripheral(_ peripheral: TiBLEPeripheralProxy?) {
         if let peripheral = peripheral {
             if !hasPeripheral(peripheral) {
@@ -48,13 +48,13 @@ public class TiBLEPeripheralProviderProxy: NSObject {
             _peripherals.removeValue(forKey: peripheral.UUID())
         }
     }
-    
+
     func removeAllPeripheral () {
         _peripherals.removeAll()
     }
-    
+
     func peripheralProxy(from peripheral: CBPeripheral?) -> TiBLEPeripheralProxy? {
-        var result: TiBLEPeripheralProxy? = nil
+        var result: TiBLEPeripheralProxy?
         if let peripheral = peripheral {
             if let availablePPeripheral = _peripherals[peripheral.identifier.uuidString] {
                 result = availablePPeripheral
@@ -62,7 +62,7 @@ public class TiBLEPeripheralProviderProxy: NSObject {
         }
         return result
     }
-    
+
     func checkAddAndGetPeripheralProxy(from peripheral: CBPeripheral, and pageContext: TiEvaluator) -> TiBLEPeripheralProxy? {
         var result = peripheralProxy(from: peripheral)
 
@@ -76,4 +76,3 @@ public class TiBLEPeripheralProviderProxy: NSObject {
         return result
     }
 }
-

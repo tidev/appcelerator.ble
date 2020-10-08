@@ -237,7 +237,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didDiscoverIncludedServices", with: [
-            "sourcePeripheral":self,
+            "sourcePeripheral": self,
             "service": TiBLEServiceProxy(pageContext: pageContext, service: service),
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,

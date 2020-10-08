@@ -12,7 +12,7 @@ import TitaniumKit
 class TiBLECentralManagerProxy: TiProxy {
 
     private var _centralManager: CBCentralManager!
-        
+
     let peripheralProvider = TiBLEPeripheralProviderProxy.sharedPeripheralProvider
 
     private override init() {
@@ -227,7 +227,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         if !self._hasListeners("didDisconnectPeripheral") {
             return
         }
-        
+
         self.fireEvent("didDisconnectPeripheral", with: [
             "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext) as Any,
             "errorCode": (error as NSError?)?.code as Any,
