@@ -27,10 +27,6 @@ describe('appcelerator.service', function () {
 				expect(service.includedServices).toEqual(jasmine.any(Object));
 			});
 
-			it('should have valid peripheral value', () => {
-				expect(service.peripheral).toEqual(jasmine.any(Object));
-			});
-
 			it('should have valid uuid value', () => {
 				expect(service.uuid).toEqual('0C50D390-DC8E-436B-8AD0-A36D1B304B18');
 			});
