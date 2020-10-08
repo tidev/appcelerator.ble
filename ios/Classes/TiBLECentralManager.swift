@@ -11,9 +11,9 @@ import TitaniumKit
 @objc
 class TiBLECentralManagerProxy: TiProxy {
 
-    private var _peripherals = [String: TiBLEPeripheralProxy]()
-
     private var _centralManager: CBCentralManager!
+        
+    let peripheralProvider = TiBLEPeripheralProviderProxy.sharedPeripheralProvider
 
     private override init() {
         super.init()
@@ -46,11 +46,7 @@ class TiBLECentralManagerProxy: TiProxy {
 
     @objc
     func peripherals() -> [TiBLEPeripheralProxy] {
-        var list = [TiBLEPeripheralProxy]()
-        _peripherals.forEach { (_, value) in
-            list.append(value)
-        }
-        return list
+        return peripheralProvider.peripherals()
     }
 
     @objc(startScan:)
@@ -75,7 +71,7 @@ class TiBLECentralManagerProxy: TiProxy {
     @objc(stopScan:)
     func stopScan(arg: Any?) {
         _centralManager.stopScan()
-        _peripherals = [String: TiBLEPeripheralProxy]()
+        peripheralProvider.removeAllPeripheral()
 
     }
 
@@ -129,7 +125,9 @@ class TiBLECentralManagerProxy: TiProxy {
         let cbPeripherals = _centralManager.retrievePeripherals(withIdentifiers: ids)
         var peripherals = [TiBLEPeripheralProxy]()
         cbPeripherals.forEach { (cbPeripheral) in
-            peripherals.append(TiBLEPeripheralProxy(pageContext: pageContext, peripheral: cbPeripheral))
+            if let peripheral = peripheralProvider.checkAddAndGetPeripheralProxy(from: cbPeripheral, and: self.pageContext) {
+                peripherals.append(peripheral)
+            }
         }
         return peripherals
     }
@@ -144,7 +142,9 @@ class TiBLECentralManagerProxy: TiProxy {
         let cbPeripherals = _centralManager.retrieveConnectedPeripherals(withServices: ids)
         var peripherals = [TiBLEPeripheralProxy]()
         cbPeripherals.forEach { (cbPeripheral) in
-            peripherals.append(TiBLEPeripheralProxy(pageContext: pageContext, peripheral: cbPeripheral))
+            if let peripheral = peripheralProvider.checkAddAndGetPeripheralProxy(from: cbPeripheral, and: self.pageContext) {
+                peripherals.append(peripheral)
+            }
         }
         return peripherals
     }
@@ -197,7 +197,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
             return
         }
         self.fireEvent("didConnectPeripheral", with: [
-            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext)
         ])
     }
 
@@ -206,7 +206,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
             return
         }
         self.fireEvent("didUpdateANCSAuthorization", with: [
-            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext)
         ])
     }
 
@@ -214,17 +214,12 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         if !self._hasListeners("didFailToConnectPeripheral") {
             return
         }
-        if let error = error {
-            self.fireEvent("didFailToConnectPeripheral", with: [
-                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
-                "errorCode": (error as NSError).code,
-                "errorDomain": (error as NSError).domain,
-                "errorDescription": error.localizedDescription
-            ])
-            return
-        }
+
         self.fireEvent("didFailToConnectPeripheral", with: [
-            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext) as Any,
+            "errorCode": (error as NSError?)?.code as Any,
+            "errorDomain": (error as NSError?)?.domain as Any,
+            "errorDescription": error?.localizedDescription as Any
         ])
     }
 
@@ -232,19 +227,13 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         if !self._hasListeners("didDisconnectPeripheral") {
             return
         }
-        if let error = error {
-            self.fireEvent("didDisconnectPeripheral", with: [
-                "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
-                "errorCode": (error as NSError).code,
-                "errorDomain": (error as NSError).domain,
-                "errorDescription": error.localizedDescription
-            ])
-            return
-        }
+        
         self.fireEvent("didDisconnectPeripheral", with: [
-            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext) as Any,
+            "errorCode": (error as NSError?)?.code as Any,
+            "errorDomain": (error as NSError?)?.domain as Any,
+            "errorDescription": error?.localizedDescription as Any
         ])
-
     }
 
     func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
@@ -253,7 +242,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         }
 
         self.fireEvent("connectionEventDidOccur", with: [
-            "peripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "peripheral": peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext) as Any,
             "event": NSNumber(value: event.rawValue)
         ])
     }
@@ -269,9 +258,9 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         var objects = [TiBLEPeripheralProxy]()
         if let resotredPeripherals = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] {
             resotredPeripherals.forEach { (peripherals) in
-                let proxy = TiBLEPeripheralProxy(pageContext: self.pageContext, peripheral: peripherals)
-                objects.append(proxy)
-                _peripherals[peripherals.identifier.uuidString] = proxy
+                if let proxy = peripheralProvider.checkAddAndGetPeripheralProxy(from: peripherals, and: self.pageContext) {
+                    objects.append(proxy)
+                }
             }
         }
 
@@ -294,8 +283,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        let proxy = TiBLEPeripheralProxy(pageContext: self.pageContext, peripheral: peripheral)
-        _peripherals[peripheral.identifier.uuidString] = proxy
+        let proxy = peripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext)
 
         if !self._hasListeners("didDiscoverPeripheral") {
             return
@@ -305,7 +293,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         if let optionValue = values[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data] {
             var adsData = [String: TiBuffer]()
             optionValue.forEach { (key, value) in
-                adsData[key.uuidString] = TiBLEUtils.toTiBuffer(from: value)._init(withPageContext: pageContext)
+                adsData[key.uuidString] = TiBLEUtils.toTiBuffer(from: value)._init(withPageContext: self.pageContext)
             }
             values[CBAdvertisementDataServiceDataKey] = adsData
         }
@@ -315,7 +303,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         }
 
         if let optionValue = values[CBAdvertisementDataManufacturerDataKey] as? Data {
-            values[CBAdvertisementDataManufacturerDataKey] = TiBLEUtils.toTiBuffer(from: optionValue)._init(withPageContext: pageContext)
+            values[CBAdvertisementDataManufacturerDataKey] = TiBLEUtils.toTiBuffer(from: optionValue)._init(withPageContext: self.pageContext)
         }
 
         if let optionValue = values[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
@@ -339,7 +327,7 @@ extension TiBLECentralManagerProxy: CBCentralManagerDelegate {
         }
 
         self.fireEvent("didDiscoverPeripheral", with: [
-            "peripheral": proxy,
+            "peripheral": proxy as Any,
             "advertisementData": values,
             "rssi": RSSI
         ])

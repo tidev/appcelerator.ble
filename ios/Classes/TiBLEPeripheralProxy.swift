@@ -211,7 +211,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didDiscoverCharacteristics", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "service": TiBLEServiceProxy(pageContext: pageContext, service: service),
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
@@ -225,7 +225,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didDiscoverDescriptorsForCharacteristics", with: [
             "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -237,7 +237,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didDiscoverIncludedServices", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral":self,
             "service": TiBLEServiceProxy(pageContext: pageContext, service: service),
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
@@ -250,7 +250,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didDiscoverServices", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -263,7 +263,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didReadRSSI", with: [
             "rssi": RSSI,
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -281,7 +281,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
 
         self.fireEvent("didUpdateValueForCharacteristic", with: [
             "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "value": data as TiBuffer,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
@@ -295,7 +295,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didUpdateValueForDescriptor", with: [
             "descriptor": TiBLEDescriptorProxy(pageContext: pageContext, descriptor: descriptor),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -308,7 +308,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didWriteValueForCharacteristic", with: [
             "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -321,7 +321,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didWriteValueForDescriptor", with: [
             "descriptor": TiBLEDescriptorProxy(pageContext: pageContext, descriptor: descriptor),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -334,7 +334,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didUpdateNotificationStateForCharacteristics", with: [
             "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic),
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
@@ -346,7 +346,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didUpdateName", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "sourcePeripheral": self
         ])
     }
 
@@ -355,7 +355,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didModifyServices", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "invalidatedServices": invalidatedServices
         ])
     }
@@ -364,7 +364,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("peripheralIsReadyToSendWriteWithoutResponse", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral)
+            "sourcePeripheral": self
         ])
     }
     @available(iOS 11.0, *)
@@ -373,7 +373,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
             return
         }
         self.fireEvent("didOpenChannel", with: [
-            "sourcePeripheral": TiBLEPeripheralProxy(pageContext: pageContext, peripheral: peripheral),
+            "sourcePeripheral": self,
             "channel": TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel),
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
