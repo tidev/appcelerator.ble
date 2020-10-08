@@ -31,15 +31,6 @@ methods:
    platforms: [iphone, ipad]
    since: "1.0.0"
    parameters:
-      - name: data
-        type: Object
-        summary: The value of the characteristic.
-      - name: properties
-        type: Number
-        summary: The properties of the characteristic. 
-      - name: permissions
-        type: Number
-        summary: The permissions of the characteristic value.
       - name: characteristics
         type: Array<Modules.BLE.Characteristic>
         summary: A list of characteristics of a service.
@@ -48,7 +39,7 @@ methods:
         summary: The Bluetooth-specific UUID of the attribute.
       - name: primary
         type: Number
-        summary: The properties of the characteristic. 
+        summary: The type of the service (primary or secondary). 
    returns:
       type: Modules.BLE.Service
       summary: Object of service which is added.

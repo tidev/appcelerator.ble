@@ -195,4 +195,38 @@ class AppceleratorBleModule: TiModule {
         let peripheralManager = TiBLEPeripheralManagerProxy(pageContext: pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)
         return peripheralManager
     }
+
+    @objc(createMutableCharacteristic:)
+    func createMutableCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
+        if let options = (arg as? [[String: Any]])?.first,
+            let properties = options["properties"] as? [NSNumber],
+            let permission = options["permissions"] as? [NSNumber],
+            let uuid = options["uuid"] as? String {
+            let cbUUID = CBUUID(string: uuid)
+            var characteristicPermission: CBAttributePermissions?
+            for value in permission {
+                if characteristicPermission == nil {
+                    characteristicPermission = CBAttributePermissions(rawValue: value.uintValue)
+                    continue
+                }
+                characteristicPermission?.insert(CBAttributePermissions(rawValue: value.uintValue))
+            }
+            var characteristicProperties: CBCharacteristicProperties?
+            for value in properties {
+                if characteristicProperties == nil {
+                    characteristicProperties = CBCharacteristicProperties(rawValue: value.uintValue)
+                    continue
+                }
+                characteristicProperties?.insert(CBCharacteristicProperties(rawValue: value.uintValue))
+            }
+            let data = options["data"] as? TiBuffer
+            let characteristicData = data?.data as Data?
+            if let characteristicProperties = characteristicProperties,
+                let characteristicPermission = characteristicPermission {
+                let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
+                return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
+            }
+        }
+        return nil
+    }
 }

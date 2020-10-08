@@ -620,3 +620,20 @@ methods:
         summary: A string containing a unique identifier (UID) for the peripheral manager to instantiate.
     returns:
       type: Modules.BLE.PeripheralManager
+
+  - name: createMutableCharacteristic
+    summary: create mutable characteristic.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: properties
+        type: Array<Number>
+        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.
+      - name: permissions
+        type: Array<Number>
+        summary: The permissions of the characteristic value.
+      - name: uuid
+        type: String
+        summary: The Bluetooth-specific UUID of the ccharacteristic.       
+    returns:
+      type: Modules.BLE.MutableCharacteristic

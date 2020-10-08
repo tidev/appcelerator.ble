@@ -17,8 +17,8 @@ class TiBLERequestProxy: TiProxy {
 
     convenience init(pageContext: TiEvaluator, request: CBATTRequest) {
         self.init()
-        _request = request
         _init(withPageContext: pageContext)
+        _request = request
     }
 
     @objc

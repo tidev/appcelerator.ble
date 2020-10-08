@@ -10,6 +10,10 @@ describe('appcelerator.ble', function () {
 			it('should have initCentralManager function', () => {
 				expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
 			});
+
+			it('should have createMutableCharacteristic function', () => {
+				expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
+			});
 		});
 
 		describe('property', () => {

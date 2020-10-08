@@ -57,27 +57,14 @@ class TiBLEPeripheralManagerProxy: TiProxy {
                 return nil
         }
         let cbUUID = CBUUID(string: uuid)
-
         let service = CBMutableService(type: cbUUID, primary: primary)
         var characteristicArray = [CBCharacteristic]()
-
-        if let data = options["data"] as? TiBuffer,
-            let properties = options["properties"] as? NSNumber,
-            let permission = options["permissions"] as? NSNumber {
-            let characteristicData = data.data as Data
-            let characteristicPermission: CBAttributePermissions = CBAttributePermissions(rawValue: permission.uintValue)
-            let characteristicProperties = CBCharacteristicProperties(rawValue: properties.uintValue)
-            let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
-            characteristicArray.append(characteristic)
-        }
         if let characteristics = options["characteristics"] as? [TiBLECharacteristicProxy] {
             for object in characteristics {
                 characteristicArray.append(object.characteristic())
             }
         }
-
         service.characteristics = characteristicArray
-
         _peripheralManager?.add(service)
         return TiBLEServiceProxy(pageContext: self.pageContext, service: service)
     }
@@ -246,7 +233,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
         }
         self.fireEvent("didReceiveWriteRequests",
                        with: [
-                        "requestss": proxyRequests
+                        "requests": proxyRequests
         ])
     }
 
@@ -269,8 +256,8 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "psm": NSNumber(value: PSM)
         ])
     }
-    func peripheralManager(_ peripheral: CBPeripheralManager, didUnpublishL2CAPChannel PSM: CBL2CAPPSM, error: Error?) {
 
+    func peripheralManager(_ peripheral: CBPeripheralManager, didUnpublishL2CAPChannel PSM: CBL2CAPPSM, error: Error?) {
         if !self._hasListeners("didUnpublishL2CAPChannel") {
             return
         }
