@@ -234,7 +234,6 @@ function peripheralManagerWin(BLE) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 		} else {
-			Ti.API.info('Peripheral Manager has stopped advertising');
 			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
 			var buffer = Ti.createBuffer({ value: data });
 			var centrals = [];
