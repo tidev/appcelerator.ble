@@ -44,7 +44,7 @@ methods:
       type: Modules.BLE.Service
       summary: Object of service which is added.
 
- - name: removeServices
+ - name: removeService
    summary: Removes a specified published service from the local GATT database.
    platforms: [iphone, ipad]
    since: "1.0.0"
@@ -143,7 +143,7 @@ events:
     properties:
       - name: state
         type: Number
-        summary:  An integer describing the state of the module's internal peripheral manager. See the PERIPHERAL_MANAGER_STATE_* constants.
+        summary:  An integer describing the state of the module's internal peripheral manager. See the MANAGER_STATE_* constants.
 
   - name: didPublishL2CAPChannel
     summary: Tells the delegate that the peripheral manager created a listener for incoming L2CAP channel connections.

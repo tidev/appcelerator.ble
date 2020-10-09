@@ -17,8 +17,8 @@ if (IOS) {
 				expect(peripheralManager.removeAllServices).toEqual(jasmine.any(Function));
 			});
 
-			it('should have removeServices function', () => {
-				expect(peripheralManager.removeServices).toEqual(jasmine.any(Function));
+			it('should have removeService function', () => {
+				expect(peripheralManager.removeService).toEqual(jasmine.any(Function));
 			});
 		});
 	});

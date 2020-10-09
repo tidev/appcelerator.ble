@@ -244,7 +244,7 @@ properties:
 
   - name: MANAGER_STATE_UNKNOWN
     type: Number
-    summary: The manager’s state is unknown
+    summary: The Peripheral and Central manager’s state is unknown
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
@@ -445,126 +445,126 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_SUCCESS
+  - name: ATT_SUCCESS
     type: Number
     summary: The ATT command or request successfully completed.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INVALID_HANDLE
+  - name: ATT_INVALID_HANDLE_ERROR
     type: Number
     summary: The attribute handle is invalid on this peripheral.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_READ_NOT_PERMITTED
+  - name: ATT_READ_NOT_PERMITTED_ERROR
     type: Number
     summary: The permissions prohibit reading the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_WRITE_NOT_PERMITTED
+  - name: ATT_WRITE_NOT_PERMITTED_ERROR
     type: Number
     summary: The permissions prohibit writing the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INVALID_PDU
+  - name: ATT_INVALID_PDU_ERROR
     type: Number
     summary: The attribute Protocol Data Unit (PDU) is invalid.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INSUFFICIENT_AUTHENTICATION
+  - name: ATT_INSUFFICIENT_AUTHENTICATION_ERROR
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of authentication.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_REQUEEST_NOT_SUPPORTED
+  - name: ATT_REQUEST_NOT_SUPPORTED_ERROR
     type: Number
     summary: The attribute server doesn’t support the request received from the client.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INVALID_OFFSET
+  - name: ATT_INVALID_OFFSET_ERROR
     type: Number
     summary: The specified offset value was past the end of the attribute’s value.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INSUFFICIENT_AUTHORIZATION
+  - name: ATT_INSUFFICIENT_AUTHORIZATION_ERROR
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of authorization.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_PREPARE_QUEUE_FULL
+  - name: ATT_PREPARE_QUEUE_FULL_ERROR
     type: Number
     summary: The prepare queue is full, as a result of there being too many write requests in the queue.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_ATTRIBUTE_NOT_FOUND
+  - name: ATT_ATTRIBUTE_NOT_FOUND_ERROR
     type: Number
     summary: The attribute wasn’t found within the specified attribute handle range.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_ATTRIBUTE_NOT_LONG
+  - name: ATT_ATTRIBUTE_NOT_LONG_ERROR
     type: Number
     summary: The ATT read blob request can’t read or write the attribute.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INSUFFICIENT_ENCRYPTION_KEY_SIZE
+  - name: ATT_INSUFFICIENT_ENCRYPTION_KEY_SIZE_ERROR
     type: Number
     summary: The encryption key size used for encrypting this link is insufficient.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INVALID_ATTRIBUTE_VALUE_LENGTH
+  - name: ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR
     type: Number
     summary: The length of the attribute’s value is invalid for the intended operation.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_UNLIKELY_ERROR
+  - name: ATT_UNLIKELY_ERROR
     type: Number
     summary: The ATT request encountered an unlikely error and wasn’t completed.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INSUFFICIENT_ENCRYPTION
+  - name: ATT_INSUFFICIENT_ENCRYPTION_ERROR
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of encryption.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_UNSUPPORTED_GROUP_TYPE
+  - name: ATT_UNSUPPORTED_GROUP_TYPE_ERROR
     type: Number
     summary: The attribute type isn’t a supported grouping attribute as defined by a higher-layer specification.
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ATT_ERROR_INSUFFICIENT_RESOURCE
+  - name: ATT_INSUFFICIENT_RESOURCES_ERROR
     type: Number
     summary: Resources are insufficient to complete the ATT request.
     permission: read-only

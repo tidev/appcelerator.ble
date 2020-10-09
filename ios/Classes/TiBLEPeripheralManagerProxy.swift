@@ -74,8 +74,8 @@ class TiBLEPeripheralManagerProxy: TiProxy {
         _peripheralManager?.removeAllServices()
     }
 
-    @objc(removeServices:)
-    func removeServices(arg: Any?) {
+    @objc(removeService:)
+    func removeService(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
             let service = options["service"] as? TiBLEServiceProxy else {
                 return
