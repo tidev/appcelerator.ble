@@ -230,7 +230,9 @@ if (IOS) {
 		bottom: 75
 	});
 	buttonPeripheral.addEventListener('click', function () {
-		navCentralWindow.openWindow(peripheralDataWin, { animated: true });
+		var devices = require('peripheralManager.js');
+		var devicePage = new devices.peripheralManagerWin(BLE);
+		devicePage.open();
 	});
 
 	mainWindow.add(buttonPeripheral);
