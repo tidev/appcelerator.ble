@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3152E6BA252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3152E6B9252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift */; };
 		DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */; };
 		DB34CDE1207B998A005F8E8C /* AppceleratorBleModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB34CDE6207B9EBD005F8E8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB34CDE5207B9EBD005F8E8C /* Foundation.framework */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3152E6B9252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralProviderProxy.swift; path = Classes/TiBLEPeripheralProviderProxy.swift; sourceTree = "<group>"; };
 		DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppceleratorBleModuleAssets.m; path = Classes/AppceleratorBleModuleAssets.m; sourceTree = SOURCE_ROOT; };
 		DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppceleratorBleModuleAssets.h; path = Classes/AppceleratorBleModuleAssets.h; sourceTree = SOURCE_ROOT; };
 		DB34CDE5207B9EBD005F8E8C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,6 +86,7 @@
 				E2D656E824DD493D00946B63 /* TiBLEMutableCharacteristicProxy.swift */,
 				F7BEE01A24C95E80005DB480 /* TiBLEDescriptorProxy.swift */,
 				F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */,
+				3152E6B9252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift */,
 				F7BEE01924C95E80005DB480 /* TiBLERequestProxy.swift */,
 				F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */,
 				DB52E2421E9CD0F800AAAEE0 /* AppceleratorBleModule.swift */,
@@ -230,6 +233,7 @@
 				F78D846A24EAA70800189DD7 /* TiBLECentralManager.swift in Sources */,
 				F7BEE02324C95E80005DB480 /* TiBLECharacteristicProxy.swift in Sources */,
 				DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */,
+				3152E6BA252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift in Sources */,
 				DB52E2431E9CD0F800AAAEE0 /* AppceleratorBleModule.swift in Sources */,
 				F7BEE02424C95E80005DB480 /* TiBLEPeripheralProxy.swift in Sources */,
 				E2D656E924DD493D00946B63 /* TiBLEMutableCharacteristicProxy.swift in Sources */,
