@@ -7,20 +7,12 @@ describe('appcelerator.ble', function () {
 	});
 	if (IOS) {
 		describe('methods', function () {
-			it('should have addService function', () => {
-				expect(BLE.addService).toEqual(jasmine.any(Function));
-			});
-
-			it('should have removeAllServices function', () => {
-				expect(BLE.removeAllServices).toEqual(jasmine.any(Function));
-			});
-
-			it('should have removeServices function', () => {
-				expect(BLE.removeServices).toEqual(jasmine.any(Function));
-			});
-
 			it('should have initCentralManager function', () => {
 				expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
+			});
+
+			it('should have createMutableCharacteristic function', () => {
+				expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
 			});
 		});
 

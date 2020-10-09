@@ -242,15 +242,15 @@ properties:
     since: "1.0.0"
     value: 3  
 
-  - name: CENTRAL_MANAGER_STATE_UNKNOWN
+  - name: MANAGER_STATE_UNKNOWN
     type: Number
-    summary: The manager’s state is unknown
+    summary: The Peripheral and Central manager’s state is unknown
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
     value: 0 
 
-  - name: CENTRAL_MANAGER_STATE_RESETTING
+  - name: MANAGER_STATE_RESETTING
     type: Number
     summary: A state that indicates the connection with the system service was momentarily lost.
     permission: read-only
@@ -258,7 +258,7 @@ properties:
     since: "1.0.0"
     value: 1
 
-  - name: CENTRAL_MANAGER_STATE_UNSUPPORTED
+  - name: MANAGER_STATE_UNSUPPORTED
     type: Number
     summary: A state that indicates this device doesn’t support the Bluetooth low energy central or client role.
     permission: read-only
@@ -266,7 +266,7 @@ properties:
     since: "1.0.0"
     value: 2
 
-  - name: CENTRAL_MANAGER_STATE_UNAUTHORIZED
+  - name: MANAGER_STATE_UNAUTHORIZED
     type: Number
     summary: A state that indicates the application isn’t authorized to use the Bluetooth low energy role.
     permission: read-only
@@ -274,7 +274,7 @@ properties:
     since: "1.0.0"
     value: 3
 
-  - name: CENTRAL_MANAGER_STATE_POWERED_OFF
+  - name: MANAGER_STATE_POWERED_OFF
     type: Number
     summary: A state that indicates Bluetooth is currently powered off.
     permission: read-only
@@ -282,7 +282,7 @@ properties:
     since: "1.0.0"
     value: 4
  
-  - name: CENTRAL_MANAGER_STATE_POWERED_ON
+  - name: MANAGER_STATE_POWERED_ON
     type: Number
     summary: A state that indicates Bluetooth is currently powered on and available to use.
     permission: read-only
@@ -445,54 +445,156 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
+  - name: ATT_SUCCESS
+    type: Number
+    summary: The ATT command or request successfully completed.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INVALID_HANDLE_ERROR
+    type: Number
+    summary: The attribute handle is invalid on this peripheral.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_READ_NOT_PERMITTED_ERROR
+    type: Number
+    summary: The permissions prohibit reading the attribute’s value.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_WRITE_NOT_PERMITTED_ERROR
+    type: Number
+    summary: The permissions prohibit writing the attribute’s value.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INVALID_PDU_ERROR
+    type: Number
+    summary: The attribute Protocol Data Unit (PDU) is invalid.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INSUFFICIENT_AUTHENTICATION_ERROR
+    type: Number
+    summary: Reading or writing the attribute’s value failed for lack of authentication.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_REQUEST_NOT_SUPPORTED_ERROR
+    type: Number
+    summary: The attribute server doesn’t support the request received from the client.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INVALID_OFFSET_ERROR
+    type: Number
+    summary: The specified offset value was past the end of the attribute’s value.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INSUFFICIENT_AUTHORIZATION_ERROR
+    type: Number
+    summary: Reading or writing the attribute’s value failed for lack of authorization.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_PREPARE_QUEUE_FULL_ERROR
+    type: Number
+    summary: The prepare queue is full, as a result of there being too many write requests in the queue.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_ATTRIBUTE_NOT_FOUND_ERROR
+    type: Number
+    summary: The attribute wasn’t found within the specified attribute handle range.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_ATTRIBUTE_NOT_LONG_ERROR
+    type: Number
+    summary: The ATT read blob request can’t read or write the attribute.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INSUFFICIENT_ENCRYPTION_KEY_SIZE_ERROR
+    type: Number
+    summary: The encryption key size used for encrypting this link is insufficient.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR
+    type: Number
+    summary: The length of the attribute’s value is invalid for the intended operation.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_UNLIKELY_ERROR
+    type: Number
+    summary: The ATT request encountered an unlikely error and wasn’t completed.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INSUFFICIENT_ENCRYPTION_ERROR
+    type: Number
+    summary: Reading or writing the attribute’s value failed for lack of encryption.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_UNSUPPORTED_GROUP_TYPE_ERROR
+    type: Number
+    summary: The attribute type isn’t a supported grouping attribute as defined by a higher-layer specification.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: ATT_INSUFFICIENT_RESOURCES_ERROR
+    type: Number
+    summary: Resources are insufficient to complete the ATT request.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW
+    type: Number
+    summary: A latency setting indicating that prioritizes rapid communication over battery life.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM
+    type: Number
+    summary: A latency setting that balances communication frequency and battery life.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    
+  - name: PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH
+    type: Number
+    summary: A latency setting that prioritizes extending battery life over rapid communication.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
 methods:
-  - name: addService
-    summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    parameters:
-      - name: data
-        type: Object
-        summary: The value of the characteristic.
-      - name: properties
-        type: Number
-        summary: The properties of the characteristic. 
-      - name: permissions
-        type: Number
-        summary: The permissions of the characteristic value.
-      - name: characteristics
-        type: Array<Modules.BLE.Characteristic>
-        summary: A list of characteristics of a service.
-      - name: uuid
-        type: String
-        summary: The Bluetooth-specific UUID of the attribute.
-      - name: primary
-        type: Number
-        summary: The properties of the characteristic. 
-    returns:
-      type: Modules.BLE.Service
-      summary: Object of service which is added.
-
-  - name: removeServices
-    summary: Removes a specified published service from the local GATT database.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    parameters:
-      - name: service
-        type: Modules.BLE.Service
-        summary: Object of service you want to remove.
-    returns:
-      type: void
-
-  - name: removeAllServices
-    summary: Removes all published services from the local GATT database.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    returns:
-      type: void
-
   - name: initCentralManager
-    summary: Removes all published services from the local GATT database.
+    summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
     platforms: [iphone, ipad]
     since: "1.0.0"
     parameters:
@@ -504,3 +606,34 @@ methods:
         summary: A string containing a unique identifier (UID) for the central manager to instantiate.
     returns:
       type: Modules.BLE.CentralManager
+
+  - name: initPeripheralManager
+    summary: Initializes the module's peripheral manager object. This function must be called in an app that acts as a peripheral before any other function can be used.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: showPowerAlert
+        type: Boolean
+        summary: A Boolean value that specifies whether the system warns the user if the app instantiates the peripheral manager when Bluetooth service isn’t available.
+      - name: restoreIdentifier
+        type: String
+        summary: A string containing a unique identifier (UID) for the peripheral manager to instantiate.
+    returns:
+      type: Modules.BLE.PeripheralManager
+
+  - name: createMutableCharacteristic
+    summary: create mutable characteristic.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: properties
+        type: Array<Number>
+        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.
+      - name: permissions
+        type: Array<Number>
+        summary: The permissions of the characteristic value.
+      - name: uuid
+        type: String
+        summary: The Bluetooth-specific UUID of the ccharacteristic.       
+    returns:
+      type: Modules.BLE.MutableCharacteristic

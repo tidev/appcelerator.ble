@@ -16,27 +16,27 @@ if (IOS) {
 	centralManager.addEventListener('didUpdateState', function (e) {
 		Ti.API.info('didUpdateState');
 		switch (e.state) {
-			case BLE.CENTRAL_MANAGER_STATE_RESETTING:
+			case BLE.MANAGER_STATE_RESETTING:
 				alert('Resetting');
 				break;
 
-			case BLE.CENTRAL_MANAGER_STATE_UNSUPPORTED:
+			case BLE.MANAGER_STATE_UNSUPPORTED:
 				alert('Unsupported');
 				break;
 
-			case BLE.CENTRAL_MANAGER_STATE_UNAUTHORIZED:
+			case BLE.MANAGER_STATE_UNAUTHORIZED:
 				alert('Unauthorized');
 				break;
 
-			case BLE.CENTRAL_MANAGER_STATE_POWERED_OFF:
+			case BLE.MANAGER_STATE_POWERED_OFF:
 				alert('Bluetooth is powered Off');
 				break;
 
-			case BLE.CENTRAL_MANAGER_STATE_POWERED_ON:
+			case BLE.MANAGER_STATE_POWERED_ON:
 				alert('Bluetooth is powered On');
 				break;
 
-			case BLE.CENTRAL_MANAGER_STATE_UNKNOWN:
+			case BLE.MANAGER_STATE_UNKNOWN:
 			default:
 				alert('Unknown');
 				break;
@@ -128,7 +128,7 @@ if (IOS) {
 		if (centralManager.isScanning) {
 			alert('Already scanning, please stop scan first!');
 			return;
-		} else if (centralManager.state !== BLE.CENTRAL_MANAGER_STATE_POWERED_ON) {
+		} else if (centralManager.state !== BLE.MANAGER_STATE_POWERED_ON) {
 			alert('Please check device settings to enable bluetooth');
 			return;
 		}

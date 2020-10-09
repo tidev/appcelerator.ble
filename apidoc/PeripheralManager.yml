@@ -1,0 +1,294 @@
+name: Modules.BLE.PeripheralManager
+summary: An object that manages and advertises peripheral services exposed by this app.
+description: |
+      Core Bluetooth uses PeripheralManager objects to manage published services within the local peripheral’s Generic Attribute Profile (GATT) database and to advertise these services to central devices (represented by Central objects). While a service is in the database, any connected central can see and connect to it.
+      That said, if your app hasn’t specified the bluetooth-peripheral background mode, the contents of its services become disabled when it’s in the background or in a suspended state. In this scenario, any remote central trying to access the service’s characteristic value or characteristic descriptors receives an error.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+since: "1.0.0"
+properties:
+      - name: isAdvertising
+        summary: Whether or not the the module's internal peripheral manager is currently advertising data.
+        type: Boolean
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+      - name: peripheralManagerState
+        summary: State of the module's internal peripheral manager. Its value is one of the MANAGER_STATE_* constants.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+      - name: restoredPeripheralManagerIdentifier
+        summary: string the restoration identifier for a peripheral manager object. this is the same string you assigned to the restoreIdentifier parameter of the initPeripheralManager function.
+        type: String
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+
+methods:
+ - name: addService
+   summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: characteristics
+        type: Array<Modules.BLE.Characteristic>
+        summary: A list of characteristics of a service.
+      - name: uuid
+        type: String
+        summary: The Bluetooth-specific UUID of the attribute.
+      - name: primary
+        type: Number
+        summary: The type of the service (primary or secondary). 
+   returns:
+      type: Modules.BLE.Service
+      summary: Object of service which is added.
+
+ - name: removeService
+   summary: Removes a specified published service from the local GATT database.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: service
+        type: Modules.BLE.Service
+        summary: Object of service you want to remove.
+   returns:
+      type: void
+
+ - name: removeAllServices
+   summary: Removes all published services from the local GATT database.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   returns:
+      type: void
+
+ - name: respondToRequest
+   summary: Used to respond to request(s) received via the didReceiveReadRequest or didReceiveWriteRequests event.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: request
+        type: Modules.BLE.Request
+        summary: The request to which the peripheral is responding.
+      - name: result
+        type: Number
+        summary: The result code; see the ATT_ERROR* constants.      
+   returns:
+      type: void  
+
+ - name: startAdvertising
+   summary: Instructs the module's internal peripheral manager to start advertising.
+   description: |
+    Important: You must call the initPeripheralManager function first!
+    Supported advertising data types are localName and serviceUUIDs. When in the foreground, an application can utilize up to 28 bytes of space in the initial advertisement data for any combination of the supported advertising data types. If this space is used up, there are an additional 10 bytes of space in the scan response that can be used only for the local name.
+    Note that these sizes do not include the 2 bytes of header information that are required for each new data type. Any service UUIDs that do not fit in the allotted space will be added to a special "overflow" area, and can only be discovered by an iOS device that is explicitly scanning for them. While an application is in the background, the local name will not be used and all service UUIDs will be placed in the "overflow" area.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: localName
+        type: String
+        summary: The local name of a peripheral.
+      - name: serviceUUIDs
+        type: Array<String>
+        summary: An array of service UUIDs.  
+   returns:
+      type: void  
+
+ - name: stopAdvertising
+   summary: Instructs the module's internal peripheral manager to start advertising.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   returns:
+      type: void  
+
+ - name: updateValue
+   summary: Instructs the module's internal peripheral manager to send an updated characteristic value to one or more centrals, via a notification or indication.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: characteristic
+        type: Modules.BLE.MutableCharacteristic
+        summary: The value of the characteristic.
+      - name: data
+        type: Titanium.Buffer
+        summary: An array of service UUIDs.  
+      - name: centrals
+        type: Array<Modules.BLE.Central>
+        summary: The list of centrals that need to be updated. If not specified, all subscribed centrals will be updated.
+   returns:
+      type: Boolean
+      summary: True if the update could be sent, or false if the underlying transmit queue is full. If false was returned, the readyToUpdateSubscribers event will be fired once space has become available, and the update should be re-sent if so desired.  
+
+ - name: setDesiredConnectionLatency
+   summary: Sets the desired connection latency for an existing connection on the module's internal peripheral manager.
+   description: |
+       Connection latency changes are not guaranteed, so the resultant latency may vary. If a desired latency is not set, the latency chosen by the central at the time of connection establishment will be used. Typically, it is not necessary to change the latency.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: latency
+        type: Number
+        summary: The desired connection latency. see BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_*
+      - name: central
+        type: Modules.BLE.Central
+        summary: A connected central
+   returns:
+      type: void  
+
+events:
+  - name: didUpdateState
+    summary: Fired whenever the state of the module's internal peripheral manager changes.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: state
+        type: Number
+        summary:  An integer describing the state of the module's internal peripheral manager. See the MANAGER_STATE_* constants.
+
+  - name: didPublishL2CAPChannel
+    summary: Tells the delegate that the peripheral manager created a listener for incoming L2CAP channel connections.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: psm
+        type: Number
+        summary: The Protocol/Service Multiplexer (PSM) of the published channel.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an
+
+  - name: didUnpublishL2CAPChannel
+    summary: Tells the delegate that the peripheral manager removed a published service from the local system.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: psm
+        type: Number
+        summary: The Protocol/Service Multiplexer (PSM) of the published channel.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an
+
+  - name: didOpenL2CAPChannel
+    summary: Tells the delegate that the peripheral manager opened an L2CAP channel.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: channel
+        type: Modules.BLE.CBL2CAPChannel
+        summary: The channel opened by the manager.
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an
+
+  - name: willRestoreState
+    summary: Tells the delegate that the peripheral manager opened an L2CAP channel.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: advertisementData
+        type: Object
+        summary: An object (dictionary) containing the data being advertised at the time the application was terminated by the system. See the startAdvertising method for more detail.
+      - name: services
+        type: Array<String>
+        summary: Array of uuids of Services
+
+  - name: didStartAdvertising
+    summary: This event returns the result of a startAdvertising call. If advertisement could not be started, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an 
+
+  - name: didAddService
+    summary: This event returns the result of a addService call. If advertisement could not be started, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: service
+        type: Modules.BLE.Service
+        summary: An object representing the service that was added.   
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if an      
+
+  - name: didSubscribeToCharacteristic
+    summary:  This event is fired when a central configures a characteristic to notify or indicate. It should be used as a cue to start sending updates as the characteristic value changes.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: central
+        type: Modules.BLE.Central
+        summary: An object representing the central that subscribed.  
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: An object representintg the characteristic to which the central subscribed.
+
+  - name: didUnsubscribeFromCharacteristic
+    summary: This event is fired when a central removes notifications/indications from a characteristic.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: central
+        type: Modules.BLE.Central
+        summary: An object representing the central that unsubscribed.
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: An object representintg the characteristic from which the central unsubscribed.
+
+  - name: didReceiveReadRequest
+    summary: This event is fired when the module's internal peripheral manager receives a read request.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: request
+        type: Modules.BLE.Request
+        summary: An object representing the request.
+
+  - name: didReceiveWriteRequests
+    summary: This event is fired when the module's internal peripheral manager receives a write request for one or more characteristics.
+    description: |
+     For every invocation of this method, respondToRequest should be called exactly once. If the requests parameter contains multiple requests, they must be treated as an atomic unit. If the execution of one of the requests would cause a failure, the request and error reason should be provided and none of the requests should be executed.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: request
+        type: Array<Modules.BLE.Request>
+        summary: request objects describing the incoming write request
+
+  - name: readyToUpdateSubscribers
+    summary: This event is fired when the module's internal peripheral manager receives a write request for one or more characteristics.This event is fired after a failed call to updateValue, when the module's internal peripheral manager is again ready to send characteristic value updates.
+    platforms: [iphone, ipad]
+    since: "1.0.0"

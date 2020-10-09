@@ -14,29 +14,29 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('CENTRAL_MANAGER_STATE_*', () => {
-			it('CENTRAL_MANAGER_STATE_UNKNOWN', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_UNKNOWN).toEqual(jasmine.any(Number));
+		describe('MANAGER_STATE_*', () => {
+			it('MANAGER_STATE_UNKNOWN', () => {
+				expect(BLE.MANAGER_STATE_UNKNOWN).toEqual(jasmine.any(Number));
 			});
 
-			it('CENTRAL_MANAGER_STATE_RESETTING', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_RESETTING).toEqual(jasmine.any(Number));
+			it('MANAGER_STATE_RESETTING', () => {
+				expect(BLE.MANAGER_STATE_RESETTING).toEqual(jasmine.any(Number));
 			});
 
-			it('CENTRAL_MANAGER_STATE_UNSUPPORTED', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_UNSUPPORTED).toEqual(jasmine.any(Number));
+			it('MANAGER_STATE_UNSUPPORTED', () => {
+				expect(BLE.MANAGER_STATE_UNSUPPORTED).toEqual(jasmine.any(Number));
 			});
 
-			it('CENTRAL_MANAGER_STATE_UNAUTHORIZED', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_UNAUTHORIZED).toEqual(jasmine.any(Number));
+			it('MANAGER_STATE_UNAUTHORIZED', () => {
+				expect(BLE.MANAGER_STATE_UNAUTHORIZED).toEqual(jasmine.any(Number));
 			});
 
-			it('CENTRAL_MANAGER_STATE_POWERED_OFF', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_POWERED_OFF).toEqual(jasmine.any(Number));
+			it('MANAGER_STATE_POWERED_OFF', () => {
+				expect(BLE.MANAGER_STATE_POWERED_OFF).toEqual(jasmine.any(Number));
 			});
 
-			it('CENTRAL_MANAGER_STATE_POWERED_ON', () => {
-				expect(BLE.CENTRAL_MANAGER_STATE_POWERED_ON).toEqual(jasmine.any(Number));
+			it('MANAGER_STATE_POWERED_ON', () => {
+				expect(BLE.MANAGER_STATE_POWERED_ON).toEqual(jasmine.any(Number));
 			});
 		});
 

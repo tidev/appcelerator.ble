@@ -28,12 +28,12 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECTION_EVENT_TYPE_PEER_DISCONNECTED = CBConnectionEvent.peerDisconnected.rawValue
     @objc public let CONNECTION_EVENT_TYPE_PEER_CONNECTED =  CBConnectionEvent.peerConnected.rawValue
 
-    @objc public let CENTRAL_MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
-    @objc public let CENTRAL_MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
+    @objc public let MANAGER_STATE_UNKNOWN = CBManagerState.unknown.rawValue
+    @objc public let MANAGER_STATE_RESETTING = CBManagerState.resetting.rawValue
+    @objc public let MANAGER_STATE_UNSUPPORTED = CBManagerState.unsupported.rawValue
+    @objc public let MANAGER_STATE_UNAUTHORIZED = CBManagerState.unauthorized.rawValue
+    @objc public let MANAGER_STATE_POWERED_OFF = CBManagerState.poweredOff.rawValue
+    @objc public let MANAGER_STATE_POWERED_ON = CBManagerState.poweredOn.rawValue
 
     @objc public let AUTHORISATION_STATUS_NOT_DETERMINED = 0
     @objc public let AUTHORISATION_STATUS_RESTRICTED = 1
@@ -87,7 +87,28 @@ class AppceleratorBleModule: TiModule {
     @objc public let CHARACTERISTIC_WRYTE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
     @objc public let CHARACTERISTIC_WRYTE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
 
-    var _peripheralManager: CBPeripheralManager?
+    @objc public let ATT_SUCCESS = CBATTError.success.rawValue
+    @objc public let ATT_INVALID_HANDLE_ERROR = CBATTError.invalidHandle.rawValue
+    @objc public let ATT_READ_NOT_PERMITTED_ERROR = CBATTError.readNotPermitted.rawValue
+    @objc public let ATT_WRITE_NOT_PERMITTED_ERROR = CBATTError.writeNotPermitted.rawValue
+    @objc public let ATT_INVALID_PDU_ERROR = CBATTError.invalidPdu.rawValue
+    @objc public let ATT_INSUFFICIENT_AUTHENTICATION_ERROR = CBATTError.insufficientAuthentication.rawValue
+    @objc public let ATT_REQUEST_NOT_SUPPORTED_ERROR = CBATTError.requestNotSupported.rawValue
+    @objc public let ATT_INVALID_OFFSET_ERROR = CBATTError.invalidOffset.rawValue
+    @objc public let ATT_INSUFFICIENT_AUTHORIZATION_ERROR = CBATTError.insufficientAuthorization.rawValue
+    @objc public let ATT_PREPARE_QUEUE_FULL_ERROR = CBATTError.prepareQueueFull.rawValue
+    @objc public let ATT_ATTRIBUTE_NOT_FOUND_ERROR = CBATTError.attributeNotFound.rawValue
+    @objc public let ATT_ATTRIBUTE_NOT_LONG_ERROR = CBATTError.attributeNotLong.rawValue
+    @objc public let ATT_INSUFFICIENT_ENCRYPTION_KEY_SIZE_ERROR = CBATTError.insufficientEncryptionKeySize.rawValue
+    @objc public let ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR = CBATTError.invalidAttributeValueLength.rawValue
+    @objc public let ATT_UNLIKELY_ERROR = CBATTError.unlikelyError.rawValue
+    @objc public let ATT_INSUFFICIENT_ENCRYPTION_ERROR = CBATTError.insufficientEncryption.rawValue
+    @objc public let ATT_UNSUPPORTED_GROUP_TYPE_ERROR = CBATTError.unsupportedGroupType.rawValue
+    @objc public let ATT_INSUFFICIENT_RESOURCES_ERROR = CBATTError.insufficientResources.rawValue
+
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW = CBPeripheralManagerConnectionLatency.low.rawValue
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM = CBPeripheralManagerConnectionLatency.medium.rawValue
+    @objc public let PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH = CBPeripheralManagerConnectionLatency.high.rawValue
 
     func moduleGUID() -> String {
         return "8d0b486f-27ff-4029-a989-56e4a6755e6f"
@@ -111,53 +132,6 @@ class AppceleratorBleModule: TiModule {
         }
     }
 
-    @objc(addService:)
-    func addService(arg: Any?) -> TiBLEServiceProxy? {
-        guard let values = arg as? [Any],
-            let options = values.first as? [String: Any],
-            let primary = options["primary"] as? Bool,
-            let uuid = options["uuid"] as? String else {
-                return nil
-        }
-        let cbUUID = CBUUID(string: uuid)
-
-        let service = CBMutableService(type: cbUUID, primary: primary)
-        var characteristicArray = [CBCharacteristic]()
-
-        if let data = options["data"] as? TiBuffer,
-            let properties = options["properties"] as? NSNumber,
-            let permission = options["permissions"] as? NSNumber {
-            let characteristicData = data.data as Data
-            let characteristicPermission: CBAttributePermissions = CBAttributePermissions(rawValue: permission.uintValue)
-            let characteristicProperties = CBCharacteristicProperties(rawValue: properties.uintValue)
-            let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
-            characteristicArray.append(characteristic)
-        }
-        if let characteristics = options["characteristics"] as? [TiBLECharacteristicProxy] {
-            for object in characteristics {
-                characteristicArray.append(object.characteristic())
-            }
-        }
-
-        service.characteristics = characteristicArray
-
-        _peripheralManager?.add(service)
-        return TiBLEServiceProxy(pageContext: self.pageContext, service: service)
-    }
-
-    @objc(removeAllServices:)
-    func removeAllServices(arg: Any?) {
-        _peripheralManager?.removeAllServices()
-    }
-
-    @objc(removeServices:)
-    func removeServices(arg: Any?) {
-        guard let options = (arg as? [[String: Any]])?.first,
-            let service = options["service"] as? TiBLEServiceProxy else {
-                return
-        }
-        _peripheralManager?.remove(service.mutableService())
-    }
     // temp method needed for UT's
     @objc(addDescriptor:)
     func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
@@ -213,4 +187,46 @@ class AppceleratorBleModule: TiModule {
         return centralManager
     }
 
+    @objc(initPeripheralManager:)
+    func initPeripheralManager(arg: Any?) -> TiBLEPeripheralManagerProxy? {
+        let options = (arg as? [[String: Any]])?.first
+        let showPowerAlert = options?["showPowerAlert"] as? Bool
+        let restoreIdentifier = options?["restoreIdentifier"] as? String
+        let peripheralManager = TiBLEPeripheralManagerProxy(pageContext: pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)
+        return peripheralManager
+    }
+
+    @objc(createMutableCharacteristic:)
+    func createMutableCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
+        if let options = (arg as? [[String: Any]])?.first,
+            let properties = options["properties"] as? [NSNumber],
+            let permission = options["permissions"] as? [NSNumber],
+            let uuid = options["uuid"] as? String {
+            let cbUUID = CBUUID(string: uuid)
+            var characteristicPermission: CBAttributePermissions?
+            for value in permission {
+                if characteristicPermission == nil {
+                    characteristicPermission = CBAttributePermissions(rawValue: value.uintValue)
+                    continue
+                }
+                characteristicPermission?.insert(CBAttributePermissions(rawValue: value.uintValue))
+            }
+            var characteristicProperties: CBCharacteristicProperties?
+            for value in properties {
+                if characteristicProperties == nil {
+                    characteristicProperties = CBCharacteristicProperties(rawValue: value.uintValue)
+                    continue
+                }
+                characteristicProperties?.insert(CBCharacteristicProperties(rawValue: value.uintValue))
+            }
+            let data = options["data"] as? TiBuffer
+            let characteristicData = data?.data as Data?
+            if let characteristicProperties = characteristicProperties,
+                let characteristicPermission = characteristicPermission {
+                let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
+                return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
+            }
+        }
+        return nil
+    }
 }

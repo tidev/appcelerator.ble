@@ -1,0 +1,7 @@
+---
+name: Modules.BLE.CBL2CAPChannel
+extends: Titanium.Module
+summary: A live L2CAP connection to a remote device.
+since: "1.0.0"
+platforms: [iphone, ipad] 
+
