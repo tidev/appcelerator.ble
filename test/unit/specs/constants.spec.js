@@ -224,7 +224,7 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('ATT_ERROR_*', () => {
+		describe('ATT_*', () => {
 			it('ATT_SUCCESS', () => {
 				expect(BLE.ATT_SUCCESS).toEqual(jasmine.any(Number));
 			});
