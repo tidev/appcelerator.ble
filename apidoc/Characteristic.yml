@@ -44,3 +44,9 @@ properties:
     since: "1.0.0"
     type: Titanium.Buffer
     platforms: [iphone, ipad]
+
+  - name: isNotifying
+    summary: Whether the characteristic is currently notifying or not.
+    since: "1.0.0"
+    type: Boolean
+    platforms: [iphone, ipad]

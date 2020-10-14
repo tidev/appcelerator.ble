@@ -59,4 +59,9 @@ class TiBLECharacteristicProxy: TiProxy {
         return _characteristic
     }
 
+    @objc
+    func isNotifying() -> NSNumber {
+        return NSNumber(value: _characteristic.isNotifying)
+    }
+
 }
