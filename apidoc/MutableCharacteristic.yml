@@ -15,12 +15,6 @@ properties:
     since: "1.0.0"
     type: Modules.BLE.Central
 
-  - name: isNotifying
-    summary: Whether the characteristic is currently notifying or not.
-    since: "1.0.0"
-    type: Boolean
-    platforms: [iphone, ipad]
-
   - name: permissions
     summary: The permissions of the characteristic value. It is only present if this JavaScript object represents a mutable characteristic.
     since: "1.0.0"

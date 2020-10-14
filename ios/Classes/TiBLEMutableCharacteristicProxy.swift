@@ -35,13 +35,6 @@ class TiBLEMutableCharacteristicProxy: TiBLECharacteristicProxy {
     }
 
     @objc
-    func isNotifying() -> NSNumber? {
-        guard let _mutableCharacteristic = characteristic() as? CBMutableCharacteristic else {
-            return nil
-        }
-        return NSNumber(value: _mutableCharacteristic.isNotifying)
-    }
-    @objc
     func permissions() -> NSNumber? {
         guard let _mutableCharacteristic = characteristic() as? CBMutableCharacteristic else {
             return nil
