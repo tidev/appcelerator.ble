@@ -48,17 +48,6 @@ if (IOS) {
 		activityIndicator.hide();
 	});
 
-	centralManager.addEventListener('didDisconnectPeripheral', function (e) {
-		Ti.API.info('Disconnected from Peripheral: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid);
-		alert('Peripheral Disconnected');
-	});
-
-	centralManager.addEventListener('didFailToConnectPeripheral', function (e) {
-		Ti.API.info('didFailToConnectPeripheral');
-		Ti.API.info(e.peripheral);
-		Ti.API.info(e.error.localizedDescription);
-	});
-
 	centralManager.addEventListener('willRestoreState', function (e) {
 		Ti.API.info('willRestoreState');
 		Ti.API.info(e);
