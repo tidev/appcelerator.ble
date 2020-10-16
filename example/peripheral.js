@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 
-var serviceUUID = '180D';
-var characteristicUUID = '2A37';
+let serviceUUID = '180D';
+let characteristicUUID = '2A37';
 
 function deviceWin(peripheral, centralManager, BLE) {
 	// Central event for peripheral connection
@@ -160,8 +160,6 @@ function registerEvents(connectedPeripheral) {
 			return;
 		}
 		Ti.API.info('ValueForCharacteristic ' + e.value);
-		console.log(Buffer.from(e.value));
-		console.log(Buffer.from(e.value).readUInt32BE());
 		let value = e.value.toString();
 		if (value) {
 			alert('didUpdateValueForCharacteristic ' + value);
