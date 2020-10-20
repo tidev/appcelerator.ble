@@ -10,11 +10,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import appcelerator.ble.Receivers.StateBroadcastReceiver;
+import java.util.UUID;
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
@@ -29,6 +32,10 @@ public class AppceleratorBleModule extends KrollModule
 	private final BluetoothAdapter btAdapter;
 	private StateBroadcastReceiver stateReceiver;
 	private final String ACCESS_FINE_LOCATION_ALREADY_GRANTED = "Access fine location permission already been granted";
+
+	//Temp constant for descriptor UUID
+	@Kroll.constant
+	public static final String MOCK_UUID_FOR_DESCRIPTOR_UT = "4f448481-bf5b-49fb-bb84-794303e3dc33";
 
 	@Kroll.constant
 	public static final int MANAGER_STATE_POWERED_OFF = BluetoothAdapter.STATE_OFF;
@@ -126,5 +133,19 @@ public class AppceleratorBleModule extends KrollModule
 			Log.e(LCAT, "onDestroy(): " + e.getMessage());
 		}
 		super.onDestroy(activity);
+	}
+
+	//temporary method for descriptor UT.
+	@Kroll.method
+	public TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
+	{
+		if (dict.containsKey("permission") && dict.containsKey("uuid")) {
+			int permission = (int) dict.get("permission");
+			String uuid = (String) dict.get("uuid");
+
+			BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
+			return new TiBLEDescriptorProxy(descriptor, new TiBLECharacteristicProxy());
+		}
+		return null;
 	}
 }
