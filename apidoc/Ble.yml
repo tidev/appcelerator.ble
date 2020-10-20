@@ -287,17 +287,17 @@ properties:
     type: Number
     summary: A state that indicates Bluetooth is currently powered off.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 4
+    value: 10 in android and 4 in iOS.
  
   - name: MANAGER_STATE_POWERED_ON
     type: Number
     summary: A state that indicates Bluetooth is currently powered on and available to use.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 5
+    value: 12 in android and 5 in iOS.
 
   - name: CONNECTION_EVENT_TYPE_PEER_DISCONNECTED
     type: Number
@@ -601,6 +601,40 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
+  - name: MANAGER_STATE_TURNING_OFF
+    summary: One of the possible values returned by the [state](Modules.BLE.state) property.
+        This value indicates that the local Bluetooth adapter is turning off.
+    description: |
+        Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the
+        local Bluetooth adapter is turning off.
+    since: "1.0.0"
+    platforms: [android]
+    type: Number
+    permission: read-only
+
+  - name: MANAGER_STATE_TURNING_ON
+    summary: One of the possible values returned by the [state](Modules.BLE.state) property.
+        This value indicates that the local Bluetooth adapter is turning on.
+    description: |
+        Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the
+        local Bluetooth adapter is turning on.
+    since: "1.0.0"
+    platforms: [android]
+    type: Number
+    permission: read-only
+
+  - name: state
+    summary: The current state of the local Bluetooth adapter.
+    description: |
+        Possible values are [MANAGER_STATE_POWERED_OFF](Modules.BLE.MANAGER_STATE_POWERED_OFF),
+        [MANAGER_STATE_POWERED_ON](Modules.BLE.MANAGER_STATE_POWERED_ON),
+        [MANAGER_STATE_TURNING_OFF](Modules.BLE.MANAGER_STATE_TURNING_OFF),
+        [MANAGER_STATE_TURNING_ON](Modules.BLE.MANAGER_STATE_TURNING_ON)
+    since: "1.0.0"
+    platforms: [android]
+    type: Number
+    permission: read-only
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
@@ -643,6 +677,88 @@ methods:
         summary: The permissions of the characteristic value.
       - name: uuid
         type: String
-        summary: The Bluetooth-specific UUID of the ccharacteristic.       
+        summary: The Bluetooth-specific UUID of the characteristic.
     returns:
       type: Modules.BLE.MutableCharacteristic
+
+  - name: disable
+    summary: Disables the local Bluetooth adapter.
+    description: |
+        This method requires the BLUETOOTH and BLUETOOTH_ADMIN permissions to successfully work. To check
+        whether these permissions are granted or not, call
+        [isBluetoothAndBluetoothAdminPermissionsGranted](Modules.BLE.isBluetoothAndBluetoothAdminPermissionsGranted) method.
+        Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the local
+        Bluetooth adapter is turning off.
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the process is initiated successfully or when the bluetooth is already off."
+
+  - name: enable
+    summary: Enables the local Bluetooth adapter.
+    description: |
+        This method requires the BLUETOOTH and BLUETOOTH_ADMIN permissions to successfully work. To check
+        whether these permissions are granted or not, call
+        [isBluetoothAndBluetoothAdminPermissionsGranted](Modules.BLE.isBluetoothAndBluetoothAdminPermissionsGranted) method.
+        Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the local
+        Bluetooth adapter is turning on.
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the process is initiated successfully or when the bluetooth is already on."
+
+  - name: isEnabled
+    summary: Determines if Bluetooth is currently enabled and ready for use.
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the local adapter is on."
+
+  - name: isBluetoothAndBluetoothAdminPermissionsGranted
+    summary: Determines whether the BLUETOOTH and BLUETOOTH_ADMIN permissions are granted or not.
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the BLUETOOTH and BLUETOOTH_ADMIN permissions are granted"
+
+  - name: isAccessFineLocationPermissionGranted
+    summary: Determines whether the ACCESS_FINE_LOCATION permission is granted or not.
+    description: |
+        ACCESS_FINE_LOCATION permission is provided at runtime by the app user. To request this permission
+        use [requestAccessFineLocationPermission](Modules.BLE.requestAccessFineLocationPermission) method
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the ACCESS_FINE_LOCATION permission is granted"
+
+  - name: isSupported
+    summary: Determines whether Bluetooth Low Energy feature is supported on the local Bluetooth device.
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if BLE is supported on the device, false otherwise."
+
+  - name: requestAccessFineLocationPermission
+    summary: Request for the `ACCESS_FINE_LOCATION`.
+    description: |
+        This permission is necessary for the Bluetooth device to scan the nearby BLE devices or other Bluetooth operations.
+    since: "1.0.0"
+    platforms: [android]
+
+events:
+  - name: didUpdateState
+    summary: Fired when the state of the local Bluetooth adapter changes.
+    description: |
+        Most possible reason for this event to occur is either bluetooth is turning on or off.
+    since: "1.0.0"
+    platforms: [android]
+    properties:
+      - name: state
+        summary: An integer describing the state of the Bluetooth adapter.
+        type: Number
