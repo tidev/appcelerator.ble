@@ -1,23 +1,31 @@
 name: Modules.BLE.Descriptor
 summary: An object that provides further information about a remote peripheral’s characteristic.
-description: Descriptor objects represent the descriptors of a remote peripheral’s characteristic. Descriptors provide further information about a characteristic’s value. For example, they may describe the value in human-readable form and describe how to format the value for presentation purposes. Characteristic descriptors also indicate whether a characteristic’s value indicates or notifies a client (a central) when the value of the characteristic changes.
+description: |
+    Descriptor objects represent the descriptors of a remote peripheral’s characteristic. Descriptors
+    provide further information about a characteristic’s value. For example, they may describe the
+    value in human-readable form and describe how to format the value for presentation purposes.
+    Characteristic descriptors also indicate whether a characteristic’s value indicates or notifies
+    a client (a central) when the value of the characteristic changes.
 since: "1.0.0"
 properties:
+  - name: characteristic
+    summary: A back-pointer to the characteristic this descriptor belongs to.
+    since: "1.0.0"
+    type: Modules.BLE.Characteristic
+    platforms: [android, iphone, ipad]
 
-      - name: characteristic
-        summary: A back-pointer to the characteristic this descriptor belongs to.
-        since: "1.0.0"
-        type: Modules.BLE.Characteristic
-        platforms: [iphone, ipad]
+  - name: value
+    summary: The value of the descriptor.
+    description: |
+        The return type of this property varies as per the platform. In iphone and ipad, it can have
+        multiple return type as String, Number and Titanium.Buffer. In android, the return type is 
+        Titanium.Buffer only.
+    since: "1.0.0"
+    type: [Titanium.Buffer, String, Number]
+    platforms: [android, iphone, ipad]
 
-      - name: value
-        summary: The value of the descriptor.
-        since: "1.0.0"
-        type: Object
-        platforms: [iphone, ipad]
-
-      - name: uuid
-        summary: The Bluetooth UUID of the descriptor.
-        since: "1.0.0"
-        type: String
-        platforms: [iphone, ipad]
+  - name: uuid
+    summary: The Bluetooth UUID of the descriptor.
+    since: "1.0.0"
+    type: String
+    platforms: [android, iphone, ipad]
