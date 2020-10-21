@@ -68,20 +68,20 @@ function deviceWin(peripheral, centralManager, BLE) {
 		title: 'Connect'
 	});
 	var disConnectButton = Titanium.UI.createButton({
-		top: 240,
+		top: 250,
 		title: 'Disconnect'
 	});
 	var subscribeButton = Titanium.UI.createButton({
-		top: 280,
+		top: 300,
 		title: 'Subscribe to Heart Rate (2A37)'
 	});
 	var unsubscribeButton = Titanium.UI.createButton({
-		top: 320,
+		top: 350,
 		title: 'Unsubscribe'
 	});
 
 	var valueField = Ti.UI.createTextField({
-		top: 360,
+		top: 400,
 		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
 		hintText: 'Enter Value',
 		hintTextColor: '#000000',
@@ -92,12 +92,12 @@ function deviceWin(peripheral, centralManager, BLE) {
 	});
 
 	var writeValue = Titanium.UI.createButton({
-		top: 410,
+		top: 450,
 		title: 'Write Value'
 	});
 
 	var tableView = Titanium.UI.createTableView({
-		top: 450,
+		top: 500,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',
@@ -137,6 +137,7 @@ function deviceWin(peripheral, centralManager, BLE) {
 		if (global.charactersticObject) {
 			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
 			var buffer = Ti.createBuffer({ value: data });
+			// Characteristic needs to have write permission & property
 			peripheral.writeValueForCharacteristic({
 				data: buffer,
 				characteristic: global.charactersticObject,
