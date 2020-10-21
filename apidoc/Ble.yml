@@ -600,7 +600,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.0.0"
-
+    
   - name: MANAGER_STATE_TURNING_OFF
     summary: One of the possible values returned by the [state](Modules.BLE.state) property.
         This value indicates that the local Bluetooth adapter is turning off.
@@ -634,6 +634,20 @@ properties:
     platforms: [android]
     type: Number
     permission: read-only
+
+  - name: CHARACTERISTIC_WRITE_TYPE_WITH_RESPOSNE
+    type: Number
+    summary: Write a characteristic value, without any response from the peripheral to indicate whether the write was successful.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    
+  - name: CHARACTERISTIC_WRITE_TYPE_WITHOUT_RESPOSNE
+    type: Number
+    summary: Write a characteristic value, with a response from the peripheral to indicate whether the write was successful.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.0.0"    
 
 methods:
   - name: initCentralManager
