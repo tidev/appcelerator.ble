@@ -354,9 +354,13 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         if !self._hasListeners("didModifyServices") {
             return
         }
+        var services = [TiBLEServiceProxy]()
+        invalidatedServices.forEach { (invalidatedService) in
+            services.append(TiBLEServiceProxy(pageContext: self.pageContext, service: invalidatedService))
+        }
         self.fireEvent("didModifyServices", with: [
             "sourcePeripheral": self,
-            "invalidatedServices": invalidatedServices
+            "invalidatedServices": services
         ])
     }
     public func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
