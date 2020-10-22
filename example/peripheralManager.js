@@ -8,7 +8,7 @@ function peripheralManagerWin(BLE) {
 	var logs = [];
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
-		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
+		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
 		permissions: [ BLE.ATTRIBUTE_PERMISSION_READABLE, BLE.ATTRIBUTE_PERMISSION_WRITEABLE ]
 	});
 	var heartRateService = null;
@@ -110,28 +110,31 @@ function peripheralManagerWin(BLE) {
 			manager.addEventListener('didSubscribeToCharacteristic', function (e) {
 				Ti.API.info('Peripheral Manager subscribed to characteristic');
 				central = e.central;
-				logs.push('Subscribed to ' + e.characteristic.uuid);
+				logs.push('Central Manager Subscribed to ' + e.characteristic.uuid);
 				setData(logs);
 			});
 
 			manager.addEventListener('didUnsubscribeFromCharacteristic', function (e) {
 				Ti.API.info('Peripheral Manager unsubscribed to characteristic');
 				central = null;
-				logs.push('Unsubscribed to ' + e.characteristic.uuid);
+				logs.push('Central Manager Unsubscribed to ' + e.characteristic.uuid);
 				setData(logs);
 			});
 
 			manager.addEventListener('didReceiveReadRequest', function (e) {
 				Ti.API.info('Peripheral Manager received read request');
-				logs.push('Received Read Request');
+				logs.push('Received Read Request from Central Manager');
 				setData(logs);
 			});
 			manager.addEventListener('didReceiveWriteRequests', function (e) {
 				Ti.API.info('Peripheral Manager received write request');
-				logs.push('Received Write Request');
 				var requests = e.requests;
-				for (var i = 0; i < requests.length; i++) {
-					logs.push('Write Value: ' + requests[i].value);
+				if (requests.length === 0) {
+					for (var i = 0; i < requests.length; i++) {
+						logs.push('Value from Central Manager: ' + requests[i].value);
+					}
+				} else {
+					logs.push('Received Write Request from Central Manager');
 				}
 				setData(logs);
 			});
@@ -260,7 +263,8 @@ function peripheralManagerWin(BLE) {
 	function setData(list) {
 		tbl_data.splice(0, tbl_data.length);
 		if (list.length > 0) {
-			for (var i = 0; i < list.length; i++) {
+			var initalValue = list.length - 1;
+			for (var i = initalValue; i >= 0; i--) {
 				var btDevicesRow = Ti.UI.createTableViewRow({
 					height: 50,
 					row: i,

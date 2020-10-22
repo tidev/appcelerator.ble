@@ -84,8 +84,9 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_START_DELAY = CBConnectPeripheralOptionStartDelayKey
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING = "kCBConnectOptionEnableTransportBridging"
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS = "kCBConnectOptionRequiresANCS"
-    @objc public let CHARACTERISTIC_WRYTE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
-    @objc public let CHARACTERISTIC_WRYTE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
+
+    @objc public let CHARACTERISTIC_WRITE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
+    @objc public let CHARACTERISTIC_WRITE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
 
     @objc public let ATT_SUCCESS = CBATTError.success.rawValue
     @objc public let ATT_INVALID_HANDLE_ERROR = CBATTError.invalidHandle.rawValue
@@ -136,10 +137,10 @@ class AppceleratorBleModule: TiModule {
     @objc(addDescriptor:)
     func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
         guard let values = arg as? [Any],
-            let options = values.first as? [String: Any],
-            let value = options["value"],
-            let uuid = options["uuid"] as? String else {
-                return nil
+              let options = values.first as? [String: Any],
+              let value = options["value"],
+              let uuid = options["uuid"] as? String else {
+            return nil
         }
         var descriptorValue: Any?
         if value is TiBuffer, let data = (value as? TiBuffer)?.data {
@@ -155,12 +156,12 @@ class AppceleratorBleModule: TiModule {
     @objc(addCharacteristic:)
     func addCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
         guard let values = arg as? [Any],
-            let options = values.first as? [String: Any],
-            let value = options["value"] as? String,
-            let properties = options["properties"] as? NSNumber,
-            let permission = options["permissions"] as? NSNumber,
-            let uuid = options["uuid"] as? String else {
-                return nil
+              let options = values.first as? [String: Any],
+              let value = options["value"] as? String,
+              let properties = options["properties"] as? NSNumber,
+              let permission = options["permissions"] as? NSNumber,
+              let uuid = options["uuid"] as? String else {
+            return nil
         }
         let cbUUID = CBUUID(string: uuid)
         var descriptorArray = [CBDescriptor]()
@@ -199,9 +200,9 @@ class AppceleratorBleModule: TiModule {
     @objc(createMutableCharacteristic:)
     func createMutableCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
         if let options = (arg as? [[String: Any]])?.first,
-            let properties = options["properties"] as? [NSNumber],
-            let permission = options["permissions"] as? [NSNumber],
-            let uuid = options["uuid"] as? String {
+           let properties = options["properties"] as? [NSNumber],
+           let permission = options["permissions"] as? [NSNumber],
+           let uuid = options["uuid"] as? String {
             let cbUUID = CBUUID(string: uuid)
             var characteristicPermission: CBAttributePermissions?
             for value in permission {
@@ -222,7 +223,7 @@ class AppceleratorBleModule: TiModule {
             let data = options["data"] as? TiBuffer
             let characteristicData = data?.data as Data?
             if let characteristicProperties = characteristicProperties,
-                let characteristicPermission = characteristicPermission {
+               let characteristicPermission = characteristicPermission {
                 let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
                 return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
             }

@@ -24,8 +24,8 @@ public class TiBLEPeripheralProxy: TiProxy {
     }
 
     @objc
-    func isConnected() -> Bool {
-        return _peripheral.state == CBPeripheralState.connected
+    func isConnected() -> NSNumber {
+        return NSNumber(value: _peripheral.state == CBPeripheralState.connected)
     }
 
     @objc
@@ -86,8 +86,8 @@ public class TiBLEPeripheralProxy: TiProxy {
     func maximumWriteValueLength(arg: Any?) {
         let args = (arg as? [[String: Any]])?.first
         guard let characteristicWriteType = args?["characteristicWriteType"] as? NSNumber,
-            let writeType = CBCharacteristicWriteType(rawValue: Int(truncating: characteristicWriteType)) else {
-                return
+              let writeType = CBCharacteristicWriteType(rawValue: Int(truncating: characteristicWriteType)) else {
+            return
         }
         _peripheral.maximumWriteValueLength(for: writeType)
     }
@@ -167,10 +167,10 @@ public class TiBLEPeripheralProxy: TiProxy {
     func writeValueForCharacteristic(arg: Any?) {
         let args = (arg as? [[String: Any]])?.first
         guard let data = args?["data"] as? TiBuffer,
-            let characteristic = args?["characteristic"] as? TiBLECharacteristicProxy,
-            let type = args?["type"] as? NSNumber,
-            let writeType = CBCharacteristicWriteType(rawValue: Int(truncating: type)) else {
-                return
+              let characteristic = args?["characteristic"] as? TiBLECharacteristicProxy,
+              let type = args?["type"] as? NSNumber,
+              let writeType = CBCharacteristicWriteType(rawValue: Int(truncating: type)) else {
+            return
         }
         let characteristicData = data.data as Data
         _peripheral.writeValue(characteristicData, for: characteristic.characteristic(), type: writeType)
@@ -180,8 +180,8 @@ public class TiBLEPeripheralProxy: TiProxy {
     func writeValueForDescriptor(arg: Any?) {
         let args = (arg as? [[String: Any]])?.first
         guard let data = args?["data"] as? TiBuffer,
-            let descriptor = args?["descriptor"] as? TiBLEDescriptorProxy else {
-                return
+              let descriptor = args?["descriptor"] as? TiBLEDescriptorProxy else {
+            return
         }
         let descriptorData = data.data as Data
         _peripheral.writeValue(descriptorData, for: descriptor.descriptor())
@@ -354,9 +354,13 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         if !self._hasListeners("didModifyServices") {
             return
         }
+        var services = [TiBLEServiceProxy]()
+        invalidatedServices.forEach { (invalidatedService) in
+            services.append(TiBLEServiceProxy(pageContext: self.pageContext, service: invalidatedService))
+        }
         self.fireEvent("didModifyServices", with: [
             "sourcePeripheral": self,
-            "invalidatedServices": invalidatedServices
+            "invalidatedServices": services
         ])
     }
     public func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
