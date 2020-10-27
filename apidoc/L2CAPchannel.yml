@@ -1,4 +1,56 @@
 name: Modules.BLE.L2CAPchannel
-summary: A live L2CAP connection to a remote device.
-description: Live L2CAP connection.
+summary: L2Cap allow us to open a side channel, with it we can directly read and write without any framing limitation, packet size limitations. It’s a direct way to talk between our devices and accessories.
+description: L2Cap Channel on the lowest level is the stream of data between two devices. It’s actually the protocol that has been used underneath for all types of communication between two devices. So L2Cap has been used from the first day of Bluetooth communications. but now with the L2CAP class, we use is directly talk over these channels.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
 since: "1.0.0"
+osver: {ios: {min: "11.0"}}
+properties:
+  - name: peer
+    summary: The peer connected to the channel
+    type: Modules.BLE.Peer
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: psm
+    summary: The PSM of the channel.
+    type: Number
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+
+methods:
+ - name: write
+   summary: write data to channel
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: data
+        type: Titanium.Buffer
+        summary: Titanium.Buffer object to write data on channel
+   returns:
+      type: void
+
+events:
+  - name: onDataReceived
+    summary: Fired whenever new data recived on channel.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: data
+        type: Titanium.Buffer
+        summary: Titanium.Buffer object which represent the read data
+
+  - name: onStreamError
+    summary: Fired whenever there is some error in reading or writing.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    properties:
+      - name: errorCode
+        type: String
+        summary: The error code
+      - name: errorDomain
+        type: String
+        summary: The error domain
+      - name: errorDescription
+        type: String
+        summary: The error description

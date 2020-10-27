@@ -113,6 +113,28 @@ class TiBLEPeripheralManagerProxy: TiProxy {
         _peripheralManager.stopAdvertising()
     }
 
+    @objc(publishL2CAPChannel:)
+    func publishL2CAPChannel(arg: Any?) {
+        guard let options = (arg as? [[String: Any]])?.first,
+              let encryption = options["encryptionRequired"] as? Bool else {
+            return
+        }
+        if #available(iOS 11.0, *) {
+            _peripheralManager.publishL2CAPChannel(withEncryption: encryption)
+        }
+    }
+
+    @objc(unpublishL2CAPChannel:)
+    func unpublishL2CAPChannel(arg: Any?) {
+        guard let options = (arg as? [[String: Any]])?.first,
+              let psm = options["PSM"] as? NSNumber else {
+            return
+        }
+        if #available(iOS 11.0, *) {
+            _peripheralManager.unpublishL2CAPChannel(psm.uint16Value)
+        }
+    }
+
     @objc(updateValue:)
     func updateValue(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
@@ -280,7 +302,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "errorCode": (error as NSError?)?.code as Any,
                         "errorDomain": (error as NSError?)?.domain as Any,
                         "errorDescription": error?.localizedDescription as Any,
-                        "channel": TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel)
+                        "channel": (channel == nil ? nil:TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel!)) as Any
                        ])
     }
 
