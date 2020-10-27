@@ -76,6 +76,30 @@ methods:
    returns:
       type: void  
 
+ - name: publishL2CAPChannel
+   summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   osver: {ios: {min: "11.0"}}
+   parameters:
+      - name: encryptionRequired
+        type: Boolean
+        summary: The bool can be true if the service requires the link to be encrypted before a stream can be established. false if the service can be used over an unsecured link.    
+   returns:
+      type: void  
+
+ - name: unpublishL2CAPChannel
+   summary: The service PSM to be removed from the system.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   osver: {ios: {min: "11.0"}}
+   parameters:
+      - name: PSM
+        type: Number
+        summary: The PSM of the channel along with we can close the particular channel.   
+   returns:
+      type: void  
+
  - name: startAdvertising
    summary: Instructs the module's internal peripheral manager to start advertising.
    description: |

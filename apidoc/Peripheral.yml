@@ -50,7 +50,7 @@ properties:
     type: Boolean
     platforms: [iphone, ipad]
     since: "1.0.0"
-    osver: {ios: {max: "13.0"}}
+    osver: {ios: {min: "13.0"}}
     
 methods:
   - name: readRSSI
@@ -216,7 +216,7 @@ methods:
     summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
     platforms: [iphone, ipad]
     since: "1.0.0"
-    osver: {ios: {max: "11.0"}}
+    osver: {ios: {min: "11.0"}}
     parameters:
       - name: psmIdentifier
         type: Number

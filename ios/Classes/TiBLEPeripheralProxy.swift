@@ -378,7 +378,7 @@ extension TiBLEPeripheralProxy: CBPeripheralDelegate {
         }
         self.fireEvent("didOpenChannel", with: [
             "sourcePeripheral": self,
-            "channel": TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel),
+            "channel": (channel == nil ? nil:TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel!)) as Any,
             "errorCode": (error as NSError?)?.code as Any,
             "errorDomain": (error as NSError?)?.domain as Any,
             "errorDescription": error?.localizedDescription as Any
