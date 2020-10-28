@@ -43,4 +43,13 @@ class TiBLERequestProxy: TiProxy {
     func request() -> CBATTRequest {
         return _request
     }
+
+    @objc(setValue:)
+    func setValue(arg: Any?) {
+        //todo : need to check why we are getting dictionary in place of array.
+        let options = arg as? [String: Any]
+        let value = options?["value"] as? TiBuffer
+
+        _request.value = value?.data as Data?
+    }
 }

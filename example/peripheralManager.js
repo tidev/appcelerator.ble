@@ -2,14 +2,15 @@
 /* eslint-disable no-loop-func */
 
 function peripheralManagerWin(BLE) {
-	var serviceUUID = '180D';
-	var heartRateCharacteristicUUID = '2A37';
 	var central = null;
 	var logs = [];
+	var psmBuffer = null;
+	var serviceUUID = '12E61727-B41A-436F-B64D-4777B35F2294';
+	var heartRateCharacteristicUUID = 'ABDD3056-28FA-441D-A470-55A75A52553A';
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
-		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
-		permissions: [ BLE.ATTRIBUTE_PERMISSION_READABLE, BLE.ATTRIBUTE_PERMISSION_WRITEABLE ]
+		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
+		permissions: [ BLE.ATTRIBUTE_PERMISSION_READABLE ]
 	});
 	var heartRateService = null;
 
@@ -125,6 +126,13 @@ function peripheralManagerWin(BLE) {
 				Ti.API.info('Peripheral Manager received read request');
 				logs.push('Received Read Request from Central Manager');
 				setData(logs);
+				e.request.setValue({
+					value: psmBuffer
+				});
+				manager.respondToRequest({
+					request: e.request,
+					result: 0
+				});
 			});
 			manager.addEventListener('didReceiveWriteRequests', function (e) {
 				Ti.API.info('Peripheral Manager received write request');
@@ -147,17 +155,37 @@ function peripheralManagerWin(BLE) {
 
 			manager.addEventListener('didPublishL2CAPChannel', function (e) {
 				Ti.API.info('Peripheral Manager published L2CAP channel');
-				logs.push('didPublishL2CAPChannel');
+				logs.push('Peripheral Manager published L2CAP channel');
 				setData(logs);
+				psmBuffer = Ti.createBuffer({ value: e.psm + '' });
+				var centrals = [];
+				if (central !== null) {
+					centrals.push(central);
+				}
+				manager.updateValue({
+					characteristic: heartRateCharacteristic,
+					data: psmBuffer,
+					central: centrals
+				});
 			});
 			manager.addEventListener('didUnpublishL2CAPChannel', function (e) {
 				Ti.API.info('Peripheral Manager unpublished L2CAP channel');
-				logs.push('didUnpublishL2CAPChannel');
+				logs.push('Peripheral Manager unpublished L2CAP channel');
 				setData(logs);
 			});
 			manager.addEventListener('didOpenL2CAPChannel', function (e) {
 				Ti.API.info('Peripheral Manager opened L2CAP channel');
-				logs.push('didOpenL2CAPChannel');
+				logs.push('Peripheral Manager opened L2CAP channel');
+				setData(logs);
+			});
+			manager.addEventListener('onDataReceived', function (e) {
+				Ti.API.info('Peripheral Manager received read data from channel');
+				logs.push('Peripheral Manager received read data from channel');
+				setData(logs);
+			});
+			manager.addEventListener('onStreamError', function (e) {
+				Ti.API.info('Peripheral Manager get error');
+				logs.push('Peripheral Manager get error');
 				setData(logs);
 			});
 		} else {
@@ -182,10 +210,14 @@ function peripheralManagerWin(BLE) {
 				alert('Peripheral Manager is already advertising');
 				return;
 			}
+			var encryptionValue = 0;
+			manager.publishL2CAPChannel({
+				encryptionRequired: encryptionValue
+			});
 			var name = 'BLE-Sample';
 			var servicesUUIDs = [];
 			if (heartRateService !== null) {
-				servicesUUIDs.push(heartRateService);
+				servicesUUIDs.push(heartRateService.uuid);
 			}
 			manager.startAdvertising({
 				localName: name,
@@ -230,24 +262,14 @@ function peripheralManagerWin(BLE) {
 
 	var updateValue = Titanium.UI.createButton({
 		top: 300,
-		title: 'Update Value'
+		title: 'Write Value'
 	});
 	updateValue.addEventListener('click', function () {
 		if (manager === null) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 		} else {
-			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
-			var buffer = Ti.createBuffer({ value: data });
-			var centrals = [];
-			if (central !== null) {
-				centrals.push(central);
-			}
-			manager.updateValue({
-				characteristic: heartRateCharacteristic,
-				data: buffer,
-				central: centrals
-			});
+
 		}
 	});
 	win.add(updateValue);
