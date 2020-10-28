@@ -15,4 +15,5 @@ name: BluetoothLowEnergy
 moduleid: appcelerator.ble
 guid: 8d0b486f-27ff-4029-a989-56e4a6755e6f
 platform: iphone
-minsdk: 8.3.1.GA
+minsdk: 9.2.1.GA
+mac: false
