@@ -8,20 +8,12 @@ package appcelerator.ble;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import appcelerator.ble.Receivers.StateBroadcastReceiver;
-import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.Log;
 
 @SuppressLint("MissingPermission")
 @Kroll.module(name = "AppceleratorBleModule", id = "appcelerator.ble")
@@ -31,8 +23,6 @@ public class AppceleratorBleModule extends KrollModule
 	// Standard Debugging variables
 	private static final String LCAT = "BluetoothLowEnergyModule";
 	private final BluetoothAdapter btAdapter;
-	private StateBroadcastReceiver stateReceiver;
-	private final String ACCESS_FINE_LOCATION_ALREADY_GRANTED = "Access fine location permission already been granted";
 
 	//Temp constant for descriptor UUID
 	//TODO Address or remove this temp constant in MOD-2689.
@@ -90,10 +80,6 @@ public class AppceleratorBleModule extends KrollModule
 	{
 		super();
 		btAdapter = BluetoothAdapter.getDefaultAdapter();
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-		stateReceiver = new StateBroadcastReceiver(this);
-		getActivity().registerReceiver(stateReceiver, intentFilter);
 	}
 
 	@Override
@@ -125,13 +111,6 @@ public class AppceleratorBleModule extends KrollModule
 		return btAdapter.isEnabled();
 	}
 
-	@Kroll.getProperty
-	@Kroll.method
-	public int getState()
-	{
-		return btAdapter.getState();
-	}
-
 	@Kroll.method
 	public boolean enable()
 	{
@@ -145,34 +124,9 @@ public class AppceleratorBleModule extends KrollModule
 	}
 
 	@Kroll.method
-	public boolean isAccessFineLocationPermissionGranted()
+	public TiBLECentralManagerProxy initCentralManager(@Kroll.argument(optional = true) KrollDict dict)
 	{
-		return getActivity().getPackageManager().checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-																 getActivity().getPackageName())
-			== PackageManager.PERMISSION_GRANTED;
-	}
-
-	@Kroll.method
-	public void requestAccessFineLocationPermission()
-	{
-		if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-			!= PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-											  1);
-		} else {
-			Log.d(LCAT, "requestAccessFineLocationPermission(): " + ACCESS_FINE_LOCATION_ALREADY_GRANTED);
-		}
-	}
-
-	@Override
-	public void onDestroy(Activity activity)
-	{
-		try {
-			getActivity().unregisterReceiver(stateReceiver);
-		} catch (IllegalArgumentException e) {
-			Log.e(LCAT, "onDestroy(): " + e.getMessage());
-		}
-		super.onDestroy(activity);
+		return new TiBLECentralManagerProxy();
 	}
 
 	//temporary method for descriptor UT.

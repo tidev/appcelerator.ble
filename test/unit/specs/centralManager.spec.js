@@ -1,8 +1,8 @@
 const BLE = require('appcelerator.ble');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
+const android = Ti.Platform.osname === 'android';
+const centralManager = BLE.initCentralManager();
 if (IOS) {
-	const centralManager = BLE.initCentralManager();
-
 	describe('appcelerator.ble.centralManager', function () {
 		it('should be defined', () => {
 			expect(centralManager).toBeDefined();
@@ -51,6 +51,30 @@ if (IOS) {
 				expect(centralManager.connectPeripheral).toEqual(jasmine.any(Function));
 			});
 
+		});
+	});
+}
+
+if (android) {
+	describe('state', () => {
+		it('state is a property', () => {
+			expect(centralManager.state).toEqual(jasmine.any(Number));
+		});
+	});
+
+	describe('.isAccessFineLocationPermissionGranted', () => {
+		it('isAccessFineLocationPermissionGranted is a Function', () => {
+			expect(centralManager.isAccessFineLocationPermissionGranted).toEqual(jasmine.any(Function));
+		});
+
+		it('isAccessFineLocationPermissionGranted returns a boolean', () => {
+			expect(centralManager.isAccessFineLocationPermissionGranted()).toEqual(jasmine.any(Boolean));
+		});
+	});
+
+	describe('.requestAccessFineLocationPermission()', () => {
+		it('is a function', () => {
+			expect(centralManager.requestAccessFineLocationPermission).toEqual(jasmine.any(Function));
 		});
 	});
 }

@@ -7,9 +7,10 @@ platforms: [iphone, ipad]
 since: "1.0.0"
 properties:
       - name: state
-        summary: State of the module's internal central manager. Its value is one of the MANAGER_STATE_* constants.
+        summary: State of the module's internal central manager. For android, it is the current state of the local Bluetooth adapter. Its value is one of the MANAGER_STATE_* constants.
         type: Number
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
+        permission: read-only
         since: "1.0.0"
 
       - name: isScanning
@@ -25,6 +26,24 @@ properties:
         since: "1.0.0"
     
 methods:
+  - name: isAccessFineLocationPermissionGranted
+    summary: Determines whether the ACCESS_FINE_LOCATION permission is granted or not.
+    description: |
+      ACCESS_FINE_LOCATION permission is provided at runtime by the app user. To request this permission
+      use [requestAccessFineLocationPermission](Modules.BLE.CentralManager.requestAccessFineLocationPermission) method
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the ACCESS_FINE_LOCATION permission is granted"
+
+  - name: requestAccessFineLocationPermission
+    summary: Request for the `ACCESS_FINE_LOCATION`.
+    description: |
+      This permission is necessary for the Bluetooth device to scan the nearby BLE devices or other Bluetooth operations.
+    since: "1.0.0"
+    platforms: [android]
+
   - name: startScan
     summary: Starts scanning for peripherals.
     platforms: [iphone, ipad]
