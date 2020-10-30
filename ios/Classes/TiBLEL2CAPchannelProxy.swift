@@ -24,6 +24,7 @@ class TiBLEL2CAPchannelProxy: TiProxy {
         _L2CapChannel = L2CapChannel
         _ioStream = TiBLEIOStream(inputStream: L2CapChannel.inputStream, outputStream: L2CapChannel.outputStream, streamListener: self)
     }
+
     func L2CapChannel() -> CBL2CAPChannel {
         return _L2CapChannel
     }
@@ -46,6 +47,11 @@ class TiBLEL2CAPchannelProxy: TiProxy {
         }
         let writeData = data.data as Data
         _ioStream.write(data: writeData)
+    }
+
+    @objc(close:)
+    func close(arg: Any?) {
+        _ioStream.close()
     }
 }
 

@@ -25,14 +25,17 @@ class TiBLERequestProxy: TiProxy {
     func central() -> TiBLECentralProxy {
         return TiBLECentralProxy(pageContext: self.pageContext, central: _request.central)
     }
+
     @objc
     func characteristic() -> TiBLECharacteristicProxy {
         return TiBLECharacteristicProxy(pageContext: self.pageContext, characteristic: _request.characteristic) as TiBLECharacteristicProxy
     }
+
     @objc
     func offset() -> NSNumber {
         return NSNumber(value: _request.offset)
     }
+
     @objc
     func value() -> TiBuffer? {
         guard let requestValue = _request.value else {
@@ -40,6 +43,16 @@ class TiBLERequestProxy: TiProxy {
         }
         return TiBLEUtils.toTiBuffer(from: requestValue)._init(withPageContext: pageContext)
     }
+
+    @objc(updateValue:)
+    func updateValue(arg: Any?) {
+        guard let options = (arg as? [[String: Any]])?.first,
+              let value = options["value"] as? TiBuffer else {
+            return
+        }
+        _request.value = value.data as Data?
+    }
+
     func request() -> CBATTRequest {
         return _request
     }
