@@ -30,14 +30,6 @@ describe('appcelerator.ble', function () {
 			it('MANAGER_STATE_UNAUTHORIZED', () => {
 				expect(BLE.MANAGER_STATE_UNAUTHORIZED).toEqual(jasmine.any(Number));
 			});
-
-			it('MANAGER_STATE_POWERED_OFF', () => {
-				expect(BLE.MANAGER_STATE_POWERED_OFF).toEqual(jasmine.any(Number));
-			});
-
-			it('MANAGER_STATE_POWERED_ON', () => {
-				expect(BLE.MANAGER_STATE_POWERED_ON).toEqual(jasmine.any(Number));
-			});
 		});
 
 		describe('AUTHORISATION_STATUS_*', () => {
@@ -77,36 +69,8 @@ describe('appcelerator.ble', function () {
 		});
 
 		describe('CHARACTERISTIC_PROPERTIES_*', function () {
-			it('CHARACTERISTIC_PROPERTIES_BROADCAST', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_BROADCAST).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_READ', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_READ).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_WRITE', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_WRITE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_NOTIFY', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_NOTIFY).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_INDICATE', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_INDICATE).toEqual(jasmine.any(Number));
-			});
-
 			it('CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES', () => {
 				expect(BLE.CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES', () => {
-				expect(BLE.CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES).toEqual(jasmine.any(Number));
 			});
 
 			it('CHARACTERISTIC_PROPERTIES_NOTIFY_ENCRYPTION_REQUIRED', () => {
@@ -309,6 +273,92 @@ describe('appcelerator.ble', function () {
 
 			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH', () => {
 				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH).toEqual(jasmine.any(Number));
+			});
+		});
+	}
+
+	describe('CHARACTERISTIC_PROPERTIES_* are constants', function () {
+		it('CHARACTERISTIC_PROPERTIES_BROADCAST', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_BROADCAST).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_READ', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_READ).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_WRITE', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_WRITE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_NOTIFY', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_NOTIFY).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_INDICATE', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_INDICATE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES', () => {
+			expect(BLE.CHARACTERISTIC_PROPERTIES_EXTENDED_PROPERTIES).toEqual(jasmine.any(Number));
+		});
+
+		if (!IOS) {
+			it('CHARACTERISTIC_PROPERTIES_SIGNED_WRITES', () => {
+				expect(BLE.CHARACTERISTIC_PROPERTIES_SIGNED_WRITES).toEqual(jasmine.any(Number));
+			});
+
+			describe('CHARACTERISTIC_TYPE_WRITE_*', () => {
+				it('CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE', () => {
+					expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE).toEqual(jasmine.any(Number));
+				});
+
+				it('CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE', () => {
+					expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE).toEqual(jasmine.any(Number));
+				});
+			});
+		}
+	});
+
+	describe('MANAGER_STATE_* are constants', () => {
+		it('MANAGER_STATE_POWERED_OFF', () => {
+			expect(BLE.MANAGER_STATE_POWERED_OFF).toEqual(jasmine.any(Number));
+		});
+
+		it('MANAGER_STATE_POWERED_ON', () => {
+			expect(BLE.MANAGER_STATE_POWERED_ON).toEqual(jasmine.any(Number));
+		});
+
+		if (!IOS) {
+			it('MANAGER_STATE_TURNING_OFF', () => {
+				expect(BLE.MANAGER_STATE_TURNING_OFF).toEqual(jasmine.any(Number));
+			});
+
+			it('MANAGER_STATE_TURNING_ON', () => {
+				expect(BLE.MANAGER_STATE_TURNING_ON).toEqual(jasmine.any(Number));
+			});
+		}
+	});
+
+	if (!IOS) {
+		describe('CHARACTERISTIC_PERMISSION_*', function () {
+			it('CHARACTERISTIC_PERMISSION_READABLE', () => {
+				expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
+			});
+
+			it('CHARACTERISTIC_PERMISSION_WRITEABLE', () => {
+				expect(BLE.CHARACTERISTIC_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
+			});
+
+			it('CHARACTERISTIC_PERMISSION_READ_ENCRYPTED', () => {
+				expect(BLE.CHARACTERISTIC_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
+			});
+
+			it('CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED', () => {
+				expect(BLE.CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
 			});
 		});
 	}

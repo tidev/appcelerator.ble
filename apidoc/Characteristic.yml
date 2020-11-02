@@ -2,7 +2,9 @@
 name: Modules.BLE.Characteristic
 summary: A characteristic of a remote peripheral’s service.
 description: |
-    It represent the characteristics of a remote peripheral’s service. A characteristic contains a single value and any number of descriptors describing that value. The properties of a characteristic determine how you can use a characteristic’s value, and how you access the descriptors.
+    It represent the characteristics of a remote peripheral’s service. A characteristic contains a
+    single value and any number of descriptors describing that value. The properties of a characteristic
+    determine how you can use a characteristic’s value, and how you access the descriptors.
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
 since: "1.0.0"
@@ -13,37 +15,47 @@ properties:
     summary: A list of the Descriptor* objects that have so far been discovered in this characteristic. It is writeable if this JavaScript object represents a mutable characteristic.
     since: "1.0.0"
     type: Array<Modules.BLE.Descriptor>
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
 
   - name: isMutable
     summary: Indicates whether this characteristic is mutable.
+    description: |
+        Since android does not supports peripheral role, this property always returns false on android. 
     since: "1.0.0"
     type: Boolean
-    platforms: [iphone, ipad]
+    platforms: [android,iphone, ipad]
 
   - name: properties
-    summary: The properties of the characteristic as a bitfield. See also the CHAR_PROP_* constants attached to the module object.
+    summary: The properties of the characteristic as a bitfield.
+    description: |
+        See also CHARACTERISTIC_PROPERTY_* module constants for the possible return values of this property.
     since: "1.0.0"
     type: Number
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
+
+  - name: permissions
+    summary: The permissions for this characteristic.
+    since: "1.0.0"
+    type: Number
+    platforms: [android]
 
   - name: service
     summary: The service this characteristic belongs to.
     since: "1.0.0"
     type: Modules.BLE.Service
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
 
   - name: uuid
     summary: The Bluetooth-specific UUID of the attribute.
     since: "1.0.0"  
     type: String
-    platforms: [iphone, ipad] 
+    platforms: [android, iphone, ipad] 
   
   - name: value
     summary: The value of the descriptor.
     since: "1.0.0"
     type: Titanium.Buffer
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
 
   - name: isNotifying
     summary: Whether the characteristic is currently notifying or not.
