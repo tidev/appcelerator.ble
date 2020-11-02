@@ -149,14 +149,21 @@ function deviceWin(peripheral, centralManager, BLE) {
 	});
 
 	connectButton.addEventListener('click', function () {
-		if (peripheral) {
-			centralManager.connectPeripheral({
-				peripheral: peripheral,
-				options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
-			});
-		} else {
-			alert('No peripheral available to connect');
+		if (!peripheral) {
+			logs.push('No peripheral available to connect');
+			setData(logs);
+			return;
 		}
+		if (peripheral.isConnected) {
+			logs.push('Peripheral already connect');
+			setData(logs);
+			return;
+		}
+
+		centralManager.connectPeripheral({
+			peripheral: peripheral,
+			options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
+		});
 	});
 
 	disConnectButton.addEventListener('click', function () {
