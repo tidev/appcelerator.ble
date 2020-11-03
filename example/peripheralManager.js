@@ -1,9 +1,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-loop-func */
 
-function peripheralManagerWin(BLE) {
-	var serviceUUID = '180D';
-	var heartRateCharacteristicUUID = '2A37';
+function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	var central = null;
 	var logs = [];
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
@@ -129,7 +127,7 @@ function peripheralManagerWin(BLE) {
 			manager.addEventListener('didReceiveWriteRequests', function (e) {
 				Ti.API.info('Peripheral Manager received write request');
 				var requests = e.requests;
-				if (requests.length === 0) {
+				if (requests.length !== 0) {
 					for (var i = 0; i < requests.length; i++) {
 						logs.push('Value from Central Manager: ' + requests[i].value);
 					}

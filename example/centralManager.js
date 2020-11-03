@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-function centralManagerWin(BLE, title, peripheralPage) {
+function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characteristicUUID) {
 	var tbl_data = [];
 	var centralManager = BLE.initCentralManager();
 	centralManager.addEventListener('didUpdateState', function (e) {
@@ -155,7 +155,7 @@ function centralManagerWin(BLE, title, peripheralPage) {
 								break;
 							}
 						}
-						var devicePage = new peripheralPage.deviceWin(periPheralObject, centralManager, BLE);
+						var devicePage = new peripheralPage.deviceWin(periPheralObject, centralManager, BLE, serviceUUID, characteristicUUID);
 						devicePage.open();
 					}
 				});

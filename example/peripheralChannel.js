@@ -1,8 +1,6 @@
 /* eslint-disable no-alert */
 
-function deviceWin(peripheral, centralManager, BLE) {
-	var serviceUUID = '12E61727-B41A-436F-B64D-4777B35F2294';
-	var characteristicUUID = BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING;
+function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicUUID) {
 	var channelPSMID = null;
 	var channel = null;
 	var logs = [];
