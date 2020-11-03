@@ -34,7 +34,6 @@ class TiBLEIOStream: NSObject {
     }
 
     func write(data: Data) {
-        output.write(data: data)
         queueQueue.sync {
             self.outputData.append(data)
         }
