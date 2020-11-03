@@ -1,9 +1,6 @@
 /* eslint-disable no-alert */
 
-let serviceUUID = '180D';
-let characteristicUUID = '2A37';
-
-function deviceWin(peripheral, centralManager, BLE) {
+function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicUUID) {
 	var logs = [];
 	// Central event for peripheral connection
 	centralManager.addEventListener('didConnectPeripheral', function (e) {

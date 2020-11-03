@@ -1,6 +1,10 @@
 /* eslint-disable no-alert */
 // require BLE
 var BLE = require('appcelerator.ble');
+let serviceUUID = '180D';
+let characteristicUUID = '2A37';
+let channelCharacteristicUUID = BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING;
+
 var isAndroid = Ti.Platform.osname === 'android';
 if (isAndroid) {
 	var win = Ti.UI.createWindow({
@@ -27,7 +31,7 @@ if (IOS) {
 	buttonCentral.addEventListener('click', function () {
 		var devices = require('centralManager.js');
 		var peripheralPage = require('peripheral.js');
-		var devicePage = new devices.centralManagerWin(BLE, 'Central', peripheralPage);
+		var devicePage = new devices.centralManagerWin(BLE, 'Central', peripheralPage, serviceUUID, characteristicUUID);
 		navCentralWindow.openWindow(devicePage, { animated: true });
 	});
 	mainWindow.add(buttonCentral);
@@ -40,7 +44,7 @@ if (IOS) {
 	centralWithChannel.addEventListener('click', function () {
 		var devices = require('centralManager.js');
 		var peripheralPage = require('peripheralChannel.js');
-		var devicePage = new devices.centralManagerWin(BLE, 'Central With Channel', peripheralPage);
+		var devicePage = new devices.centralManagerWin(BLE, 'Central With Channel', peripheralPage, serviceUUID, channelCharacteristicUUID);
 		navCentralWindow.openWindow(devicePage, { animated: true });
 	});
 	mainWindow.add(centralWithChannel);
@@ -52,7 +56,7 @@ if (IOS) {
 	});
 	buttonPeripheral.addEventListener('click', function () {
 		var devices = require('peripheralManager.js');
-		var devicePage = new devices.peripheralManagerWin(BLE);
+		var devicePage = new devices.peripheralManagerWin(BLE, serviceUUID, characteristicUUID);
 		devicePage.open();
 	});
 	mainWindow.add(buttonPeripheral);
@@ -64,7 +68,7 @@ if (IOS) {
 	});
 	buttonPeripheralChannel.addEventListener('click', function () {
 		var devices = require('peripheralManagerChannel.js');
-		var devicePage = new devices.peripheralManagerWin(BLE);
+		var devicePage = new devices.peripheralManagerWin(BLE, serviceUUID, channelCharacteristicUUID);
 		devicePage.open();
 	});
 	mainWindow.add(buttonPeripheralChannel);

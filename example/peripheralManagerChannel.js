@@ -1,13 +1,11 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-loop-func */
 
-function peripheralManagerWin(BLE) {
+function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	var central = null;
 	var channel = null;
 	var logs = [];
 	var psmBuffer = null;
-	var serviceUUID = '180D';
-	var heartRateCharacteristicUUID = BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING;
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
 		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
