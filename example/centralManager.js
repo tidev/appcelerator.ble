@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-function centralManagerWin(BLE) {
+function centralManagerWin(BLE, title, peripheralPage) {
 	var tbl_data = [];
 	var centralManager = BLE.initCentralManager();
 	centralManager.addEventListener('didUpdateState', function (e) {
@@ -43,7 +43,7 @@ function centralManagerWin(BLE) {
 
 	var centralDataWin = Ti.UI.createWindow({
 		backgroundColor: 'White',
-		title: 'Central',
+		title: title,
 		titleAttributes: { color: 'blue' }
 	});
 
@@ -155,8 +155,7 @@ function centralManagerWin(BLE) {
 								break;
 							}
 						}
-						var devices = require('peripheral.js');
-						var devicePage = new devices.deviceWin(periPheralObject, centralManager, BLE);
+						var devicePage = new peripheralPage.deviceWin(periPheralObject, centralManager, BLE);
 						devicePage.open();
 					}
 				});
