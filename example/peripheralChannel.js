@@ -72,7 +72,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	var valueField = Ti.UI.createTextField({
-		top: 400,
+		top: 300,
 		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
 		hintText: 'Enter Value',
 		hintTextColor: '#000000',
@@ -83,12 +83,12 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	var writeValue = Titanium.UI.createButton({
-		top: 450,
+		top: 350,
 		title: 'Write Value'
 	});
 
 	var tableView = Titanium.UI.createTableView({
-		top: 500,
+		top: 400,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',
