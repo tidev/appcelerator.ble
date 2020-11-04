@@ -83,53 +83,85 @@ properties:
     since: "1.0.0"
     value: 3
 
+  - name: CHARACTERISTIC_PERMISSION_READABLE
+    type: Number
+    summary: A permission that indicates a peripheral can read the characteristic's value.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 1
+
+  - name: CHARACTERISTIC_PERMISSION_READ_ENCRYPTED
+    type: Number
+    summary: A permission that indicates only trusted devices can read the characteristic's value.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 2
+    
+  - name: CHARACTERISTIC_PERMISSION_WRITEABLE
+    type: Number
+    summary: A permission that indicates a peripheral can write the characteristic's value.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 16
+
+  - name: CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED
+    type: Number
+    summary: A permission that indicates only trusted devices can write the characteristic's value.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 32
+
   - name: CHARACTERISTIC_PROPERTIES_BROADCAST
     type: Number
     summary: A property that indicates the characteristic can broadcast its value using a characteristic configuration descriptor.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 0
+    value: 1 in android and 0 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_READ
     type: Number
     summary: A property that indicates a peripheral can read the characteristic’s value.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 1
+    value: 2 in android and 1 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE
     type: Number
     summary: A property that indicates a peripheral can write the characteristic's value, without a response to indicate that the write succeeded.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 2
+    value: 4 in android and 2 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_WRITE
     type: Number
     summary: A property that indicates a peripheral can write the characteristic’s value, with a response to indicate that the write succeeded.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 3
+    value: 8 in android and 3 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_NOTIFY
     type: Number
     summary: A property that indicates the peripheral permits notifications of the characteristic’s value, without a response from the central to indicate receipt of the notification.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 4
+    value: 16 in android and 4 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_INDICATE
     type: Number
     summary: A property that indicates the peripheral permits notifications of the characteristic’s value, with a response from the central to indicate receipt of the notification.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 5
+    value: 32 in android and 5 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES
     type: Number
@@ -143,9 +175,9 @@ properties:
     type: Number
     summary: A property that indicates the characteristic defines additional properties in the extended properties descriptor.A property that indicates the characteristic defines additional properties in the extended properties descriptor.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
-    value: 7
+    value: 128 in android and 7 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_NOTIFY_ENCRYPTION_REQUIRED
     type: Number
@@ -162,6 +194,22 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
     value: 9
+
+  - name: CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE
+    type: Number
+    summary: Write characteristic with requiring a response by the remote device
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 2
+
+  - name: CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
+    type: Number
+    summary: Write characteristic without requiring a response by the remote device
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+    value: 1
 
   - name: CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING
     type: String
