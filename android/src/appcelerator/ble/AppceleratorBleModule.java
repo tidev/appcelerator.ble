@@ -180,7 +180,12 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
-		return TiBLEDescriptorProxy.mockDescriptorForUT(dict);
+		KrollDict charInfo = new KrollDict();
+		charInfo.put("properties", 0);
+		charInfo.put("uuid", AppceleratorBleModule.MOCK_UUID_FOR_CHARACTERISTIC_UT);
+		charInfo.put("permissions", 0);
+
+		return TiBLEDescriptorProxy.mockDescriptorForUT(dict, mockCharacteristicForUT(charInfo));
 	}
 
 	//temporary method for Characteristic UT.
@@ -188,6 +193,18 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
 	{
-		return TiBLECharacteristicProxy.mockCharacteristicForUT(dict);
+		KrollDict serviceInfo = new KrollDict();
+		serviceInfo.put("primary", true);
+		serviceInfo.put("uuid", "4b08819f-d2fc-4d09-82f4-806e07702397");
+
+		return TiBLECharacteristicProxy.mockCharacteristicForUT(dict, mockServiceForUT(serviceInfo));
+	}
+
+	//temporary method for Service UT.
+	//TODO: Address or remove this temp method in MOD-2689.
+	@Kroll.method
+	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
+	{
+		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy());
 	}
 }

@@ -5,35 +5,35 @@ description: |
     represent services of a remote peripheral. Services are either primary or secondary and may contain multiple characteristics 
     or included services (references to other services).
 extends: Titanium.Proxy
-platforms: [iphone, ipad]
+platforms: [android, iphone, ipad]
 since: "1.0.0"
 properties:
   - name: characteristics
     summary: A list of characteristics discovered in this service.
     type: Array<Modules.BLE.Characteristic>
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: includedServices
     summary: A list of included services discovered in this service.
     type: Array<Modules.BLE.Service>
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: isPrimary
     summary: A Boolean value that indicates whether the type of service is primary or secondary.
     type: Boolean
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: peripheral
     summary: The peripheral to which this service belongs.
     type: Modules.BLE.Peripheral
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
   
   - name: uuid
     summary: The Bluetooth-specific UUID of the attribute.
     type: String
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
