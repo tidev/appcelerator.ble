@@ -138,10 +138,14 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 
 	connectButton.addEventListener('click', function () {
 		if (peripheral) {
-			centralManager.connectPeripheral({
-				peripheral: peripheral,
-				options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
-			});
+			if (!peripheral.isConnected) {
+				centralManager.connectPeripheral({
+					peripheral: peripheral,
+					options: { [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true }
+				});
+			} else {
+				alert('Device already connected');
+			}
 		} else {
 			alert('No peripheral available to connect');
 		}
