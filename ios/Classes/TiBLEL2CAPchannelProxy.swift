@@ -57,6 +57,14 @@ class TiBLEL2CAPchannelProxy: TiProxy {
 
 @available(iOS 11.0, *)
 extension TiBLEL2CAPchannelProxy: IOStreamListener {
+
+    func onStreamEndEncountered() {
+        if !self._hasListeners("onStreamEndEncountered") {
+            return
+        }
+        self.fireEvent("onStreamEndEncountered")
+    }
+
     func onDataReceived(data: Data) {
         if !self._hasListeners("onDataReceived") {
             return

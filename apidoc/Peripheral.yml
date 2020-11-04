@@ -497,7 +497,7 @@ events:
         type: Modules.BLE.Peripheral
         summary: The peripheral sending the event.
       - name: channel
-        type: Modules.BLE.L2CAPchannel
+        type: Modules.BLE.L2CAPChannel
         summary: A live L2CAP connection to a remote device.
       - name: errorCode
         type: String

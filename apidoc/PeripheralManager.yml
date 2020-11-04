@@ -211,7 +211,7 @@ events:
     since: "1.0.0"
     properties:
       - name: channel
-        type: Modules.BLE.CBL2CAPChannel
+        type: Modules.BLE.L2CAPChannel
         summary: The channel opened by the manager.
       - name: errorCode
         type: String

@@ -9,6 +9,7 @@ import UIKit
 protocol IOStreamListener: class {
     func onDataReceived(data: Data)
     func onStreamError(error: Error)
+    func onStreamEndEncountered()
 }
 
 class TiBLEIOStream: NSObject {
@@ -67,9 +68,11 @@ class TiBLEIOStream: NSObject {
             buffer.deallocate()
         }
         let bytesRead = stream.read(buffer, maxLength: bufLength)
-        var returnData = Data()
-        returnData.append(buffer, count: bytesRead)
-        self.listener.onDataReceived(data: returnData)
+        if bytesRead != 0 {
+            var returnData = Data()
+            returnData.append(buffer, count: bytesRead)
+            self.listener.onDataReceived(data: returnData)
+        }
         if stream.hasBytesAvailable {
             self.readBytes(from: stream)
         }
@@ -83,6 +86,7 @@ extension TiBLEIOStream: StreamDelegate {
             print("Stream is open")
         case Stream.Event.endEncountered:
             print("End Encountered")
+            listener.onStreamEndEncountered()
         case Stream.Event.hasBytesAvailable:
             print("Bytes are available")
             if let stream = aStream as? InputStream {
