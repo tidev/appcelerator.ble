@@ -26,19 +26,14 @@ public class TiBLEDescriptorProxy extends KrollProxy
 
 	//temporary method for descriptor UT.
 	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
+	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict, TiBLECharacteristicProxy characteristicProxy)
 	{
 		if (dict.containsKey("permission") && dict.containsKey("uuid")) {
 			int permission = (int) dict.get("permission");
 			String uuid = (String) dict.get("uuid");
 
-			BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
-			KrollDict charInfo = new KrollDict();
-			charInfo.put("properties", 0);
-			charInfo.put("uuid", AppceleratorBleModule.MOCK_UUID_FOR_CHARACTERISTIC_UT);
-			charInfo.put("permissions", 0);
-			TiBLECharacteristicProxy characteristicProxy = TiBLECharacteristicProxy.mockCharacteristicForUT(charInfo);
-			return new TiBLEDescriptorProxy(descriptor, characteristicProxy);
+			return new TiBLEDescriptorProxy(new BluetoothGattDescriptor(UUID.fromString(uuid), permission),
+											characteristicProxy);
 		}
 		return null;
 	}

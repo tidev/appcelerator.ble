@@ -28,7 +28,7 @@ public class TiBLECharacteristicProxy extends KrollProxy
 
 	//temporary method for Characteristic UT.
 	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
+	public static TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict, TiBLEServiceProxy serviceProxy)
 	{
 		if (dict.containsKey("properties") && dict.containsKey("uuid") && dict.containsKey("permissions")) {
 			int properties = (int) dict.get("properties");
@@ -37,7 +37,7 @@ public class TiBLECharacteristicProxy extends KrollProxy
 
 			BluetoothGattCharacteristic characteristic =
 				new BluetoothGattCharacteristic(UUID.fromString(uuid), properties, permissions);
-			return new TiBLECharacteristicProxy(characteristic, new TiBLEServiceProxy());
+			return new TiBLECharacteristicProxy(characteristic, serviceProxy);
 		}
 		return null;
 	}
