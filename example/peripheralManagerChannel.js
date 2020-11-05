@@ -72,8 +72,8 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 						alert('Unknown');
 						break;
 				}
-				if (e.state === BLE.MANAGER_STATE_POWERED_ON) {
-					manager.addService({
+				if (e.state === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
+					heartRateService = manager.addService({
 						uuid: serviceUUID,
 						primary: true,
 						characteristics: [ heartRateCharacteristic ]
