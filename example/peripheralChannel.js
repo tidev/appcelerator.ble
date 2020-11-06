@@ -204,7 +204,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			Ti.API.info('ValueForCharacteristic ' + e.value);
 			let value = e.value.toString();
 			if (value) {
-				logs.push('Value from Peripheral Manager: ' + value);
+				logs.push('PSM ID From Peripheral Manager: ' + value);
 				setData(logs);
 				e.sourcePeripheral.openL2CAPChannel({
 					psmIdentifier: Number(e.value.toString())
@@ -335,16 +335,16 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 				Ti.API.info('Found channel characteristic');
 				logs.push('Found channel characteristic!');
 				setData(logs);
-				requestChannelPSMID(characteristic);
+				requestChannelPSMID();
 			}
 		});
 	}
-	function requestChannelPSMID(characteristic) {
+	function requestChannelPSMID() {
 		peripheral.subscribeToCharacteristic({
 			characteristic: global.charactersticObject
 		});
 		peripheral.readValueForCharacteristic({
-			characteristic: characteristic
+			characteristic: global.charactersticObject
 		});
 		logs.push('Request Channel PSM from characteristic');
 		setData(logs);
