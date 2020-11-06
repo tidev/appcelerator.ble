@@ -13,6 +13,8 @@ protocol IOStreamListener: class {
 }
 
 class TiBLEIOStream: NSObject {
+    var bufLength = 1024
+
     private var queueQueue = DispatchQueue(label: "BLE Channel Queue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
     private var input: InputStream
@@ -62,7 +64,6 @@ class TiBLEIOStream: NSObject {
         }
     }
     private func readBytes(from stream: InputStream) {
-        let bufLength = 1024
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufLength)
         defer {
             buffer.deallocate()

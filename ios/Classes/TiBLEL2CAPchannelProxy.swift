@@ -53,6 +53,21 @@ class TiBLEL2CAPchannelProxy: TiProxy {
     func close(arg: Any?) {
         _ioStream.close()
     }
+
+    @objc(setReadBufferSize:)
+    func setReadBufferSize(arg: Any?) {
+        let args = (arg as? [[String: Any]])?.first
+        guard let data = args?["size"] as? NSNumber else {
+            return
+        }
+        _ioStream.bufLength = data.intValue
+    }
+
+    @objc(getReadBufferSize:)
+    func setReadBufferSize(arg: Any?) -> NSNumber {
+        return NSNumber(value: _ioStream.bufLength )
+    }
+
 }
 
 @available(iOS 11.0, *)

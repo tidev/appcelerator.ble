@@ -30,6 +30,26 @@ methods:
    returns:
       type: void
 
+ - name: getReadBufferSize
+   summary: Get the size of the read buffer in bytes.
+   since: "1.0.0"
+   platforms: [iphone, ipad]
+   returns: 
+     type: Number 
+     summary: "Size of the read buffer in bytes."
+
+ - name: setReadBufferSize
+   summary: Sets the size of the read buffer in bytes.
+   description: |
+      You can set the read buffer size at any time, but it will only take effect during the next read.
+      By default, the buffer size is 1024 bytes.
+   since: "1.0.0"
+   platforms: [iphone, ipad]
+   parameters:
+     - name: size
+       summary: The desired size of the read buffer in bytes.
+       type: Number      
+
 events:
   - name: onDataReceived
     summary: Fired whenever new data recived on channel.
