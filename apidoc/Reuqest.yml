@@ -30,3 +30,15 @@ properties:
         platforms: [iphone, ipad]
         since: "1.0.0"
         type: Modules.BLE.Characteristic
+
+methods:
+ - name: updateValue
+   summary: update the data of value field
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: value
+        type: Titanium.Buffer
+        summary: Titanium.Buffer object to update data on value
+   returns:
+      type: void
