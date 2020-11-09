@@ -25,6 +25,14 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 				alert('Bluetooth is powered On');
 				break;
 
+			case BLE.MANAGER_STATE_TURNING_ON:
+				alert('Bluetooth is turning on');
+				break;
+
+			case BLE.MANAGER_STATE_TURNING_OFF:
+				alert('Bluetooth is turning off');
+				break;
+
 			case BLE.MANAGER_STATE_UNKNOWN:
 			default:
 				alert('Unknown');
@@ -32,20 +40,36 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 		}
 	});
 	centralManager.addEventListener('didDiscoverPeripheral', function (e) {
-		Ti.API.info('Peripheral Name: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid + ' and number of services: ' + e.peripheral.services.length);
+		if (IOS) {
+			Ti.API.info('didDiscoverPeripheral:- Peripheral Name: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid + ' and number of services: ' + e.peripheral.services.length);
+		} else {
+			Ti.API.info('didDiscoverPeripheral:- Peripheral Name: ' + e.peripheral.name + ' with address: ' + e.peripheral.address);
+		}
 		setData(centralManager.peripherals);
 		activityIndicator.hide();
 	});
-	centralManager.addEventListener('willRestoreState', function (e) {
-		Ti.API.info('willRestoreState');
-		Ti.API.info(e);
-	});
+
+	if (IOS) {
+		centralManager.addEventListener('willRestoreState', function (e) {
+			Ti.API.info('willRestoreState');
+			Ti.API.info(e);
+		});
+	}
 
 	var centralDataWin = Ti.UI.createWindow({
 		backgroundColor: 'White',
 		title: title,
 		titleAttributes: { color: 'blue' }
 	});
+
+	// req. location permission button.
+	var reqLocPermissionBtn = Ti.UI.createButton({
+		font: { fontSize: 20 },
+		title: 'Req Location Perm.',
+		visible: isAndroid,
+		bottom: 150
+	});
+	centralDataWin.add(reqLocPermissionBtn);
 
 	// Scan button added to scan peripherals
 	var scanButton = Ti.UI.createButton({
@@ -59,7 +83,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 	var stopScanButton = Ti.UI.createButton({
 		font: { fontSize: 20 },
 		title: 'Stop Scan',
-		left: 20,
+		left: 5,
 		bottom: 30
 	});
 	centralDataWin.add(stopScanButton);
@@ -68,7 +92,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 	var checkConnection = Ti.UI.createButton({
 		font: { fontSize: 20 },
 		title: 'Check Connection',
-		right: 20,
+		right: 5,
 		bottom: 30
 	});
 	centralDataWin.add(checkConnection);
@@ -93,8 +117,27 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 	});
 	centralDataWin.add(tableView);
 
+	// request access fine location permission.
+	reqLocPermissionBtn.addEventListener('click', function () {
+		if (centralManager.isAccessFineLocationPermissionGranted()) {
+			alert('Access fine location permission already been granted.');
+		} else {
+			centralManager.requestAccessFineLocationPermission();
+		}
+	});
+
 	// scan button functionality
 	scanButton.addEventListener('click', function () {
+		// android permission checks.
+		if (isAndroid) {
+			if (!BLE.isBluetoothAndBluetoothAdminPermissionsGranted()) {
+				alert('Bluetooth admin permission not granted.');
+				return;
+			} else if (!centralManager.isAccessFineLocationPermissionGranted()) {
+				alert('Access fine location permission not granted.');
+				return;
+			}
+		}
 		Ti.API.info(centralManager.state);
 		if (centralManager.isScanning) {
 			alert('Already scanning, please stop scan first!');
@@ -103,17 +146,30 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 			alert('Please check device settings to enable bluetooth');
 			return;
 		}
+		tableView.setData(tbl_data);
 		centralManager.startScan();
 		activityIndicator.show();
 	});
 
 	checkConnection.addEventListener('click', function () {
 		Ti.API.info('Checking Bluetooth status');
-		var connection = BLE.authorizationState;
-		if (connection === BLE.AUTHORISATION_STATUS_ALLOWED_ALWAYS) {
-			alert('Bluetooth enabled in settings');
+		if (IOS) {
+			var connection = BLE.authorizationState;
+			if (connection === BLE.AUTHORISATION_STATUS_ALLOWED_ALWAYS) {
+				alert('Bluetooth enabled in settings');
+			} else {
+				alert('Bluetooth is disabled, Please allow it in settings');
+			}
 		} else {
-			alert('Bluetooth is disabled, Please allow it in settings');
+			// permission for android.
+			/* eslint-disable no-lonely-if */
+			if (!BLE.isBluetoothAndBluetoothAdminPermissionsGranted()) {
+				alert('Bluetooth admin permission not been granted.');
+			} else if (!centralManager.isAccessFineLocationPermissionGranted()) {
+				alert('Access fine location permission not been granted.');
+			} else {
+				alert('Bluetooth Permissions have been granted.');
+			}
 		}
 	});
 
@@ -124,7 +180,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 			for (var i = 0; i < list.length; i++) {
 				var btDevicesRow = Ti.UI.createTableViewRow({
 					height: 70,
-					id: list[i].UUID,
+					id: IOS ? list[i].UUID : list[i].address,
 					row: i,
 					hasChild: true
 				});
@@ -136,16 +192,21 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 					font: { fontSize: 14 },
 					text: 'Name - ' + list[i].name
 				});
-				var uuidLabel = Ti.UI.createLabel({
+				var idLabel = Ti.UI.createLabel({
 					left: 10,
 					color: 'blue',
 					bottom: 0,
 					width: 250,
 					font: { fontSize: 11 },
-					text: 'UUID - ' + list[i].UUID
+					text: (IOS ? ('UUID - ' + list[i].UUID) : ('ADDRESS - ' + list[i].address))
 				});
-				btDevicesRow.add(nameLabel, uuidLabel);
+				btDevicesRow.add(nameLabel);
+				btDevicesRow.add(idLabel);
 				btDevicesRow.addEventListener('click', function (e) {
+					if (isAndroid) {
+						alert('Android work in progress.');
+						return;
+					}
 					var periPheralObject;
 					var indexRow = e.row;
 					if (indexRow.hasChild) {
