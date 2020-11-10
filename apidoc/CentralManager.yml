@@ -3,31 +3,61 @@ summary: An object that scans for, discovers, connects to, and manages periphera
 description: |
       CentralManager objects manage discovered or connected remote peripheral devices (represented by Peripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
 extends: Titanium.Proxy
-platforms: [iphone, ipad]
+platforms: [android, iphone, ipad]
 since: "1.0.0"
 properties:
       - name: state
-        summary: State of the module's internal central manager. Its value is one of the MANAGER_STATE_* constants.
+        summary: State of the module's internal central manager. For android, it is the current state of the local Bluetooth adapter. Its value is one of the MANAGER_STATE_* constants.
         type: Number
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
+        permission: read-only
         since: "1.0.0"
 
       - name: isScanning
         summary: A Boolean value that indicates whether the central is currently scanning.
         type: Boolean
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
         since: "1.0.0"
 
       - name: peripherals
         summary: All discovered peripherals
         type: Array<Modules.BLE.Peripheral>
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
         since: "1.0.0"
     
 methods:
+  - name: isAccessFineLocationPermissionGranted
+    summary: Determines whether the ACCESS_FINE_LOCATION permission is granted or not.
+    description: |
+      ACCESS_FINE_LOCATION permission is provided at runtime by the app user. To request this permission
+      use [requestAccessFineLocationPermission](Modules.BLE.CentralManager.requestAccessFineLocationPermission) method
+    since: "1.0.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if the ACCESS_FINE_LOCATION permission is granted"
+
+  - name: requestAccessFineLocationPermission
+    summary: Request for the `ACCESS_FINE_LOCATION`.
+    description: |
+      This permission is necessary for the Bluetooth device to scan the nearby BLE devices or other Bluetooth operations.
+    since: "1.0.0"
+    platforms: [android]
+
+  - name: createPeripheral
+    summary: Creates a Modules.BLE.Peripheral class object with the given address.
+    since: "1.0.0"
+    parameters:
+      - name: address
+        type: String
+        summary: address of the remote bluetooth device.
+    platforms: [android]
+    returns:
+      type: Modules.BLE.Peripheral
+
   - name: startScan
     summary: Starts scanning for peripherals.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: services
@@ -43,7 +73,7 @@ methods:
 
   - name: stopScan
     summary:  Stops scanning for peripherals.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     returns:
       type: void
@@ -163,7 +193,7 @@ events:
          This method is invoked while scanning, upon the discovery of peripheral by central. A discovered peripheral must
          be retained in order to use it; otherwise, it is assumed to not be of interest and will be cleaned up by the central manager. For
          a list of discovered peripherals, see peripherals property
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: peripheral

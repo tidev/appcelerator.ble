@@ -6,12 +6,13 @@ describe('appcelerator.ble', function () {
 	it('can be required', () => {
 		expect(BLE).toBeDefined();
 	});
+
+	it('should have initCentralManager function', () => {
+		expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
+	});
+
 	if (IOS) {
 		describe('methods', function () {
-			it('should have initCentralManager function', () => {
-				expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
-			});
-
 			it('should have createMutableCharacteristic function', () => {
 				expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
 			});
@@ -67,16 +68,6 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('.isAccessFineLocationPermissionGranted', () => {
-			it('isAccessFineLocationPermissionGranted is a Function', () => {
-				expect(BLE.isAccessFineLocationPermissionGranted).toEqual(jasmine.any(Function));
-			});
-
-			it('isAccessFineLocationPermissionGranted returns a boolean', () => {
-				expect(BLE.isAccessFineLocationPermissionGranted()).toEqual(jasmine.any(Boolean));
-			});
-		});
-
 		describe('.isBluetoothAndBluetoothAdminPermissionsGranted', () => {
 			it('isBluetoothAndBluetoothAdminPermissionsGranted is a Function', () => {
 				expect(BLE.isBluetoothAndBluetoothAdminPermissionsGranted).toEqual(jasmine.any(Function));
@@ -84,26 +75,6 @@ describe('appcelerator.ble', function () {
 
 			it('isBluetoothAndBluetoothAdminPermissionsGranted returns a boolean', () => {
 				expect(BLE.isBluetoothAndBluetoothAdminPermissionsGranted()).toEqual(jasmine.any(Boolean));
-			});
-		});
-
-		describe('get state', () => {
-			it('getState is a function', () => {
-				expect(BLE.getState).toEqual(jasmine.any(Function));
-			});
-
-			it('getState returns a number', () => {
-				expect(BLE.getState()).toEqual(jasmine.any(Number));
-			});
-
-			it('state is a property', () => {
-				expect(BLE.state).toEqual(jasmine.any(Number));
-			});
-		});
-
-		describe('.requestAccessFineLocationPermission()', () => {
-			it('is a function', () => {
-				expect(BLE.requestAccessFineLocationPermission).toEqual(jasmine.any(Function));
 			});
 		});
 	}
