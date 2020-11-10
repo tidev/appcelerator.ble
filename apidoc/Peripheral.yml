@@ -3,10 +3,10 @@ name: Modules.BLE.Peripheral
 summary: A remote peripheral device.
 description: |
     The CBPeripheral class represents remote peripheral devices that your app discovers with a central manager (an instance of CentralManager).
-    Peripherals use universally unique identifiers (UUIDs), to identify themselves. 
+    In iOS, Peripherals use universally unique identifiers (UUIDs), to identify themselves. For Android, Peripherals use address to be uniqely identified.
     Peripherals may contain one or more services or provide useful information about their connected signal strength.
 extends: Titanium.Proxy
-platforms: [iphone, ipad]
+platforms: [android, iphone, ipad]
 since: "1.0.0"
 properties:
   - name: isConnected
@@ -18,7 +18,7 @@ properties:
   - name: name
     summary: The name of the peripheral.
     type: String
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: services
@@ -37,6 +37,12 @@ properties:
     summary: Once a peripheral has been connected at least once by the system, it is assigned a UUID. This UUID can be stored and later provided to the retrievePeripherals method.
     type: String
     platforms: [iphone, ipad]
+    since: "1.0.0"
+
+  - name: address
+    summary: Returns the hardware address of the peripheral device.
+    type: String
+    platforms: [android]
     since: "1.0.0"
 
   - name: canSendWriteWithoutResponse

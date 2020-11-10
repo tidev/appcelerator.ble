@@ -159,6 +159,6 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
 	{
-		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy());
+		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy(null));
 	}
 }
