@@ -242,9 +242,16 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 				return;
 			}
 			Ti.API.info('ValueForCharacteristic ' + e.value);
-			let value = e.value.toString();
-			if (value) {
-				logs.push('Value from Peripheral Manager: ' + value);
+			const buffer = e.value;
+			if (buffer) {
+				var firstBitValue = buffer[0] & 0x01;
+				if (firstBitValue === 0) {
+					// Heart Rate Value Format is in the 2nd byte
+					logs.push('Value from Peripheral Manager: ' + buffer[1]);
+				} else {
+					// Heart Rate Value Format is in the 2nd and 3rd bytes
+					logs.push('Value from Peripheral Manager: ' + ((buffer[1] << 8) +  buffer[2]));
+				}
 				setData(logs);
 			}
 		});

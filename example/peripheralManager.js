@@ -235,8 +235,20 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 		} else {
-			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
-			var buffer = Ti.createBuffer({ value: data });
+			var data = valueField.value === '' || valueField.value === null ? '60' : valueField.value;
+			if (isNaN(data)) {
+				alert('Value should be number only');
+				return;
+			}
+			const parsed = Number.parseInt(data, 10);
+			if (parsed > 255 || parsed < 0) {
+				alert('Value should be between 0 to 255 only');
+				return;
+			}
+			var buffer = Ti.createBuffer({ length: 4 });
+			buffer[0] = 0;
+			buffer[1] = parsed;
+
 			var centrals = [];
 			if (central !== null) {
 				centrals.push(central);
