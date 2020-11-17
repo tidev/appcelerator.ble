@@ -56,8 +56,9 @@ public class TiBLEPeripheralProviderProxy: NSObject {
     func peripheralProxy(from peripheral: CBPeripheral?) -> TiBLEPeripheralProxy? {
         var result: TiBLEPeripheralProxy?
         if let peripheral = peripheral {
-            if let availablePPeripheral = _peripherals[peripheral.identifier.uuidString] {
-                result = availablePPeripheral
+            if let availablePeripheral = _peripherals[peripheral.identifier.uuidString] {
+                result = availablePeripheral
+                result?.setPeripheral(peripheral: peripheral)
             }
         }
         return result
