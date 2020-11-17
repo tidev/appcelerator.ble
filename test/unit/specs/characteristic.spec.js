@@ -1,7 +1,8 @@
 const BLE = require('appcelerator.ble');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 let UUID = IOS ? BLE.CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING : BLE.MOCK_UUID_FOR_CHARACTERISTIC_UT;
-const characteristic = IOS ? BLE.addCharacteristic({ properties: 0, permissions: 0, descriptors: [], value: 'some', uuid: UUID })
+const characteristic = IOS ? BLE.createMutableCharacteristic({ properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
+	permissions: [ BLE.ATTRIBUTE_PERMISSION_READABLE ], descriptors: [], uuid: UUID })
 	: BLE.mockCharacteristicForUT({ properties: 0, permissions: 0, uuid: UUID });
 
 describe('appcelerator.ble.characteristic', function () {
@@ -21,10 +22,6 @@ describe('appcelerator.ble.characteristic', function () {
 
 		it('should have valid service object', () => {
 			expect(characteristic.service).toEqual(jasmine.any(Object));
-		});
-
-		it('should have valid value', () => {
-			expect(characteristic.value).toEqual(jasmine.any(Object));
 		});
 
 		if (!IOS) {

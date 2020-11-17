@@ -739,6 +739,20 @@ methods:
     returns:
       type: Modules.BLE.PeripheralManager
 
+  - name: createDescriptor
+    summary: create descriptor.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
+      - name: value
+        type: Object
+        summary: The value of descriptor.
+      - name: uuid
+        type: String
+        summary: The Bluetooth-specific UUID of the characteristic.
+    returns:
+      type: Modules.BLE.MutableCharacteristic
+
   - name: createMutableCharacteristic
     summary: create mutable characteristic.
     platforms: [iphone, ipad]
@@ -753,6 +767,9 @@ methods:
       - name: uuid
         type: String
         summary: The Bluetooth-specific UUID of the characteristic.
+      - name: descriptors
+        type: Array<Modules.BLE.Descriptor>
+        summary: An array of the characteristic’s descriptors.
     returns:
       type: Modules.BLE.MutableCharacteristic
 
