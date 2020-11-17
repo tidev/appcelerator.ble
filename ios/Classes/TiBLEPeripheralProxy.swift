@@ -82,6 +82,11 @@ public class TiBLEPeripheralProxy: TiProxy {
         return _peripheral
     }
 
+    func setPeripheral(peripheral: CBPeripheral) {
+        _peripheral = peripheral
+        peripheral.delegate = self
+    }
+
     @objc(maximumWriteValueLength:)
     func maximumWriteValueLength(arg: Any?) {
         let args = (arg as? [[String: Any]])?.first
