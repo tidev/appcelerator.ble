@@ -749,9 +749,9 @@ methods:
         summary: The value of descriptor.
       - name: uuid
         type: String
-        summary: The Bluetooth-specific UUID of the characteristic.
+        summary: The Bluetooth-specific UUID of the descriptor.
     returns:
-      type: Modules.BLE.MutableCharacteristic
+      type: Modules.BLE.Descriptor
 
   - name: createMutableCharacteristic
     summary: create mutable characteristic.
