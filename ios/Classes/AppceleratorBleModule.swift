@@ -133,52 +133,6 @@ class AppceleratorBleModule: TiModule {
         }
     }
 
-    // temp method needed for UT's
-    @objc(addDescriptor:)
-    func addDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
-        guard let values = arg as? [Any],
-              let options = values.first as? [String: Any],
-              let value = options["value"],
-              let uuid = options["uuid"] as? String else {
-            return nil
-        }
-        var descriptorValue: Any?
-        if value is TiBuffer, let data = (value as? TiBuffer)?.data {
-            descriptorValue = data
-        } else {
-            descriptorValue = value
-        }
-        let cbUUID = CBUUID(string: uuid)
-        let mutableDescriptor = CBMutableDescriptor(type: cbUUID, value: descriptorValue)
-        return TiBLEDescriptorProxy(pageContext: pageContext, descriptor: mutableDescriptor)
-    }
-
-    @objc(addCharacteristic:)
-    func addCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
-        guard let values = arg as? [Any],
-              let options = values.first as? [String: Any],
-              let value = options["value"] as? String,
-              let properties = options["properties"] as? NSNumber,
-              let permission = options["permissions"] as? NSNumber,
-              let uuid = options["uuid"] as? String else {
-            return nil
-        }
-        let cbUUID = CBUUID(string: uuid)
-        var descriptorArray = [CBDescriptor]()
-        let characteristicData = value.data(using: .utf8)
-        let characteristicPermission: CBAttributePermissions = CBAttributePermissions(rawValue: permission.uintValue)
-        let characteristicProperties = CBCharacteristicProperties(rawValue: properties.uintValue)
-        let mutablecharacteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
-        let descriptor = CBMutableDescriptor(type: cbUUID, value: value)
-        descriptorArray.append(descriptor)
-        if let descriptor = options["descriptor"] as? [TiBLEDescriptorProxy] {
-            for object in descriptor {
-                descriptorArray.append(object.descriptor())
-            }
-        }
-        mutablecharacteristic.descriptors = descriptorArray
-        return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: mutablecharacteristic)
-    }
     @objc(initCentralManager:)
     func initCentralManager(arg: Any?) -> TiBLECentralManagerProxy? {
         let options = (arg as? [[String: Any]])?.first
@@ -195,6 +149,25 @@ class AppceleratorBleModule: TiModule {
         let restoreIdentifier = options?["restoreIdentifier"] as? String
         let peripheralManager = TiBLEPeripheralManagerProxy(pageContext: pageContext, showPowerAlert: showPowerAlert, restoreIdentifier: restoreIdentifier)
         return peripheralManager
+    }
+
+    @objc(createDescriptor:)
+    func createDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
+        guard let values = arg as? [Any],
+              let options = values.first as? [String: Any],
+              let value = options["value"],
+              let uuid = options["uuid"] as? String else {
+            return nil
+        }
+        var descriptorValue: Any?
+        if value is TiBuffer, let data = (value as? TiBuffer)?.data {
+            descriptorValue = data
+        } else {
+            descriptorValue = value
+        }
+        let cbUUID = CBUUID(string: uuid)
+        let mutableDescriptor = CBMutableDescriptor(type: cbUUID, value: descriptorValue)
+        return TiBLEDescriptorProxy(pageContext: pageContext, descriptor: mutableDescriptor)
     }
 
     @objc(createMutableCharacteristic:)
@@ -225,6 +198,13 @@ class AppceleratorBleModule: TiModule {
             if let characteristicProperties = characteristicProperties,
                let characteristicPermission = characteristicPermission {
                 let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
+                var descriptorArray = [CBDescriptor]()
+                if let descriptors = options["descriptors"] as? [TiBLEDescriptorProxy] {
+                    for descriptor in descriptors {
+                        descriptorArray.append(descriptor.descriptor())
+                    }
+                }
+                characteristic.descriptors = descriptorArray
                 return TiBLEMutableCharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
             }
         }
