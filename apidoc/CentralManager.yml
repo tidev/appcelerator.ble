@@ -6,24 +6,24 @@ extends: Titanium.Proxy
 platforms: [android, iphone, ipad]
 since: "1.0.0"
 properties:
-      - name: state
-        summary: State of the module's internal central manager. For android, it is the current state of the local Bluetooth adapter. Its value is one of the MANAGER_STATE_* constants.
-        type: Number
-        platforms: [android, iphone, ipad]
-        permission: read-only
-        since: "1.0.0"
+  - name: state
+    summary: State of the module's internal central manager. For android, it is the current state of the local Bluetooth adapter. Its value is one of the MANAGER_STATE_* constants.
+    type: Number
+    platforms: [android, iphone, ipad]
+    permission: read-only
+    since: "1.0.0"
 
-      - name: isScanning
-        summary: A Boolean value that indicates whether the central is currently scanning.
-        type: Boolean
-        platforms: [android, iphone, ipad]
-        since: "1.0.0"
+  - name: isScanning
+    summary: A Boolean value that indicates whether the central is currently scanning.
+    type: Boolean
+    platforms: [android, iphone, ipad]
+    since: "1.0.0"
 
-      - name: peripherals
-        summary: All discovered peripherals
-        type: Array<Modules.BLE.Peripheral>
-        platforms: [android, iphone, ipad]
-        since: "1.0.0"
+  - name: peripherals
+    summary: All discovered peripherals
+    type: Array<Modules.BLE.Peripheral>
+    platforms: [android, iphone, ipad]
+    since: "1.0.0"
     
 methods:
   - name: isAccessFineLocationPermissionGranted
@@ -274,5 +274,4 @@ events:
     properties:
       - name: peripheral
         type: Modules.BLE.Peripheral
-        summary: object of peripheral which disconnected.    
-          
+        summary: object of peripheral which disconnected.
