@@ -8,7 +8,7 @@ package appcelerator.ble;
 import android.bluetooth.BluetoothDevice;
 import java.util.Hashtable;
 
-public class PeripheralProvider
+public class TiBLEPeripheralProvider
 {
 
 	private Hashtable<String, TiBLEPeripheralProxy> peripherals = new Hashtable<>();

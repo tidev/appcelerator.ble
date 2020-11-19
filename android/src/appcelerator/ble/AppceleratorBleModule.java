@@ -8,12 +8,14 @@ package appcelerator.ble;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.pm.PackageManager;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.titanium.TiApplication;
 
 @SuppressLint("MissingPermission")
 @Kroll.module(name = "AppceleratorBleModule", id = "appcelerator.ble")
@@ -23,6 +25,7 @@ public class AppceleratorBleModule extends KrollModule
 	// Standard Debugging variables
 	private static final String LCAT = "BluetoothLowEnergyModule";
 	private final BluetoothAdapter btAdapter;
+	private TiBLECentralManagerProxy centralManagerProxy;
 
 	//Temp constant for descriptor UUID
 	//TODO Address or remove this temp constant in MOD-2689.
@@ -126,7 +129,16 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLECentralManagerProxy initCentralManager(@Kroll.argument(optional = true) KrollDict dict)
 	{
-		return new TiBLECentralManagerProxy();
+		return centralManagerProxy = new TiBLECentralManagerProxy();
+	}
+
+	@Override
+	public void onDestroy(Activity activity)
+	{
+		super.onDestroy(activity);
+		if (centralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
+			centralManagerProxy.cleanup();
+		}
 	}
 
 	//temporary method for descriptor UT.

@@ -5,13 +5,18 @@
  */
 package appcelerator.ble;
 
+import static android.content.Context.BIND_AUTO_CREATE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.IBinder;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
@@ -20,6 +25,7 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
 import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
@@ -29,12 +35,15 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	private final BluetoothAdapter btAdapter;
 	private final ScanManager scanManager;
 	private final StateBroadcastReceiver stateReceiver;
-	private PeripheralProvider peripheralProvider;
+	private TiBLEPeripheralProvider peripheralProvider;
+	private TiBLEManageCentralService bleService;
+	private Intent serviceIntent = new Intent(TiApplication.getInstance(), TiBLEManageCentralService.class);
+	private boolean isServiceBound;
 
 	public TiBLECentralManagerProxy()
 	{
 		btAdapter = BluetoothAdapter.getDefaultAdapter();
-		peripheralProvider = new PeripheralProvider();
+		peripheralProvider = new TiBLEPeripheralProvider();
 		scanManager = ScanManager.build(btAdapter, scanListener);
 
 		IntentFilter intentFilter = new IntentFilter();
@@ -44,6 +53,24 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	}
 
 	private static final String LCAT = "TiBLECentralManager";
+
+	private final ServiceConnection bleServiceConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service)
+		{
+			bleService = ((TiBLEManageCentralService.LocalBinder) service).getService();
+			isServiceBound = true;
+			Log.d(LCAT, "onServiceConnected(): Service is Binded");
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name)
+		{
+			isServiceBound = false;
+			bleService = null;
+			Log.d(LCAT, "onServiceDisconnected(): Service is unBinded");
+		}
+	};
 
 	@Kroll.method
 	public boolean isAccessFineLocationPermissionGranted()
@@ -111,15 +138,36 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		return peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice);
 	}
 
-	@Override
-	public void onDestroy(Activity activity)
+	public void cleanup()
 	{
 		try {
 			getActivity().unregisterReceiver(stateReceiver);
 		} catch (IllegalArgumentException e) {
-			Log.e(LCAT, "onDestroy(): " + e.getMessage());
+			Log.e(LCAT, "cleanup(): " + e.getMessage());
 		}
-		super.onDestroy(activity);
+		stopAndUnbindService();
+	}
+
+	private void startAndBindService()
+	{
+		TiApplication.getInstance().startService(serviceIntent);
+		Log.d(LCAT, "startAndBindService(): starting the service");
+		TiApplication.getInstance().bindService(serviceIntent, bleServiceConnection, BIND_AUTO_CREATE);
+		Log.d(LCAT, "startAndBindService(): binding the service ");
+	}
+
+	private void stopAndUnbindService()
+	{
+		if (isServiceBound) {
+			TiApplication.getInstance().unbindService(bleServiceConnection);
+			isServiceBound = false;
+			Log.d(LCAT, "stopAndUnbindService(): service unbinding initiated");
+		}
+		if (bleService != null) {
+			TiApplication.getInstance().stopService(serviceIntent);
+			Log.d(LCAT, "stopAndUnbindService(): service stopping..");
+			bleService = null;
+		}
 	}
 
 	private ScanManager.IScanDeviceFoundListener scanListener = (bluetoothDevice, i, bytes) ->
