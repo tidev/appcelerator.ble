@@ -62,3 +62,21 @@ properties:
     since: "1.0.0"
     type: Boolean
     platforms: [iphone, ipad]
+
+  - name: isMutable
+    summary: Indicates whether this characteristic is mutable.
+    since: "1.0.0"
+    type: Boolean
+    platforms: [iphone, ipad]
+
+methods:
+ - name: equal
+   summary: tests weather two characteristics are same or not.
+   platforms: [iphone, ipad, android]
+   since: "1.0.0"
+   parameters:
+      - name: characteristic
+        type: Object
+        summary: the characteristic that will be compared.
+   returns:
+      type: Number

@@ -138,7 +138,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			peripheral.writeValueForCharacteristic({
 				data: buffer,
 				characteristic: global.charactersticObject,
-				type: BLE.CHARACTERISTIC_WRITE_TYPE_WITHOUT_RESPOSNE
+				type: BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
 			});
 		} else {
 			alert('No heart rate characteristic (2A37) available to write value');

@@ -33,7 +33,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
   
-  - name: UUID
+  - name: address
     summary: Once a peripheral has been connected at least once by the system, it is assigned a UUID. This UUID can be stored and later provided to the retrievePeripherals method.
     type: String
     platforms: [iphone, ipad]

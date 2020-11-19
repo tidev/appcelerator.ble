@@ -76,69 +76,37 @@ properties:
     since: "1.0.0"
     value: 3
 
-  - name: ATTRIBUTE_PERMISSION_READABLE
+  - name: CHARACTERISTIC_PERMISSION_READABLE
     type: Number
     summary: A permission that indicates a peripheral can read the attribute’s value.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
     value: 0
     
-  - name: ATTRIBUTE_PERMISSION_WRITEABLE
+  - name: CHARACTERISTIC_PERMISSION_WRITEABLE
     type: Number
     summary: A permission that indicates a peripheral can write the attribute’s value.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    value: 1
-
-  - name: ATTRIBUTE_PERMISSION_READ_ENCRYPTION_REQUIRED
-    type: Number
-    summary: A permission that indicates only trusted devices can read the attribute’s value.
-    permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    value: 2
-
-  - name: ATTRIBUTE_PERMISSION_WRITE_ENCRYPTION_REQUIRED
-    type: Number
-    summary: A permission that indicates only trusted devices can write the attribute’s value.
-    permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    value: 3
-
-  - name: CHARACTERISTIC_PERMISSION_READABLE
-    type: Number
-    summary: A permission that indicates a peripheral can read the characteristic's value.
-    permission: read-only
-    platforms: [android]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
     value: 1
 
   - name: CHARACTERISTIC_PERMISSION_READ_ENCRYPTED
     type: Number
-    summary: A permission that indicates only trusted devices can read the characteristic's value.
+    summary: A permission that indicates only trusted devices can read the attribute’s value.
     permission: read-only
-    platforms: [android]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
     value: 2
 
-  - name: CHARACTERISTIC_PERMISSION_WRITEABLE
-    type: Number
-    summary: A permission that indicates a peripheral can write the characteristic's value.
-    permission: read-only
-    platforms: [android]
-    since: "1.0.0"
-    value: 16
-
   - name: CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED
     type: Number
-    summary: A permission that indicates only trusted devices can write the characteristic's value.
+    summary: A permission that indicates only trusted devices can write the attribute’s value.
     permission: read-only
-    platforms: [android]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
-    value: 32
+    value: 3
 
   - name: CHARACTERISTIC_PROPERTIES_BROADCAST
     type: Number
@@ -219,22 +187,6 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
     value: 9
-
-  - name: CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE
-    type: Number
-    summary: Write characteristic with requiring a response by the remote device
-    permission: read-only
-    platforms: [android]
-    since: "1.0.0"
-    value: 2
-
-  - name: CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
-    type: Number
-    summary: Write characteristic without requiring a response by the remote device
-    permission: read-only
-    platforms: [android]
-    since: "1.0.0"
-    value: 1
 
   - name: CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING
     type: String
@@ -453,7 +405,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_SERVICE_DATA
+  - name: ADVERT_DATA_KEY_SERVICE_DATA
     type: String
     summary: A dictionary that contains service-specific advertisement data.
     description: |
@@ -462,7 +414,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY
+  - name: ADVERT_DATA_KEY_LOCAL_NAME
     type: String
     summary: The local name of a peripheral.
     description: |
@@ -471,7 +423,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA
+  - name: ADVERT_DATA_KEY_MANUFACTURER_DATA
     type: String
     summary: The manufacturer data of a peripheral.
     description: |
@@ -480,7 +432,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS
+  - name: ADVERT_DATA_KEY_SERVICE_UUIDS
     type: String
     summary: An array of service UUIDs.
     description: |
@@ -489,7 +441,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS
+  - name: ADVERT_DATA_KEY_OVERFLOW_SERVICE_UUIDS
     type: String
     summary: An array of UUIDs found in the overflow area of the advertisement data.
     description: |
@@ -499,7 +451,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL
+  - name: ADVERT_DATA_KEY_TX_POWER_LEVEL
     type: String
     summary: The transmit power of a peripheral.
     description: |
@@ -509,7 +461,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE
+  - name: ADVERT_DATA_KEY_IS_CONNECTABLE
     type: String
     summary: A Boolean value that indicates whether the advertising event type is connectable.
     description: |
@@ -518,7 +470,7 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-  - name: ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS
+  - name: ADVERT_DATA_KEY_SOLICITED_SERVICE_UUIDS
     type: String
     summary: An array of solicited service UUIDs.
     description: |
@@ -696,18 +648,18 @@ properties:
     type: Number
     permission: read-only
 
-  - name: CHARACTERISTIC_WRITE_TYPE_WITH_RESPOSNE
+  - name: CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE
     type: Number
     summary: Write a characteristic value, without any response from the peripheral to indicate whether the write was successful.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
 
-  - name: CHARACTERISTIC_WRITE_TYPE_WITHOUT_RESPOSNE
+  - name: CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
     type: Number
     summary: Write a characteristic value, with a response from the peripheral to indicate whether the write was successful.
     permission: read-only
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
 
 methods:
