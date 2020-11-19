@@ -50,24 +50,6 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('ATTRIBUTE_PERMISSION_*', function () {
-			it('CHARACTERISTIC_PERMISSION_READABLE', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_WRITEABLE', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_READ_ENCRYPTED', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
-			});
-		});
-
 		describe('CHARACTERISTIC_PROPERTIES_*', function () {
 			it('CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES', () => {
 				expect(BLE.CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES).toEqual(jasmine.any(Number));
@@ -129,7 +111,7 @@ describe('appcelerator.ble', function () {
 				expect(BLE.PERIPHERAL_STATE_DISCONNECTING).toEqual(jasmine.any(Number));
 			});
 		});
-		describe('ADVERTISEMENT_DATA_KEY_*', () => {
+		describe('ADVERT_DATA_KEY_*', () => {
 			it('ADVERT_DATA_KEY_SERVICE_DATA', () => {
 				expect(BLE.ADVERT_DATA_KEY_SERVICE_DATA).toEqual(jasmine.any(String));
 			});
@@ -276,6 +258,24 @@ describe('appcelerator.ble', function () {
 			});
 		});
 	}
+
+	describe('CHARACTERISTIC_PERMISSION_*', function () {
+		it('CHARACTERISTIC_PERMISSION_READABLE', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_WRITEABLE', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_READ_ENCRYPTED', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
+		});
+	});
 
 	describe('CHARACTERISTIC_PROPERTIES_* are constants', function () {
 		it('CHARACTERISTIC_PROPERTIES_BROADCAST', () => {

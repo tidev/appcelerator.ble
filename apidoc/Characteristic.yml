@@ -71,12 +71,12 @@ properties:
 
 methods:
  - name: equal
-   summary: tests weather two characteristics are same or not.
-   platforms: [iphone, ipad, android]
+   summary: tests whether two characteristics are same or not.
+   platforms: [iphone, ipad]
    since: "1.0.0"
    parameters:
       - name: characteristic
-        type: Object
+        type: Modules.BLE.Characteristic
         summary: the characteristic that will be compared.
    returns:
-      type: Number
+      type: Boolean

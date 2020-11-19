@@ -82,7 +82,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad, android]
     since: "1.0.0"
-    value: 0
+    value: 1 in android and 0 in iOS.
     
   - name: CHARACTERISTIC_PERMISSION_WRITEABLE
     type: Number
@@ -90,7 +90,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad, android]
     since: "1.0.0"
-    value: 1
+    value: 16 in android and 1 in iOS.
 
   - name: CHARACTERISTIC_PERMISSION_READ_ENCRYPTED
     type: Number
@@ -106,7 +106,7 @@ properties:
     permission: read-only
     platforms: [iphone, ipad, android]
     since: "1.0.0"
-    value: 3
+    value: 32 in android and 3 in iOS.
 
   - name: CHARACTERISTIC_PROPERTIES_BROADCAST
     type: Number

@@ -42,7 +42,7 @@ public class TiBLEPeripheralProviderProxy: NSObject {
     func removePeripheral(_ peripheral: TiBLEPeripheralProxy?) {
         if let peripheral = peripheral {
             if !hasPeripheral(peripheral) {
-                print("[ERROR] Trying to remove a peripheral with UUID = \(peripheral.address()) that doesn't exist in the provider.")
+                print("[ERROR] Trying to remove a peripheral with address = \(peripheral.address()) that doesn't exist in the provider.")
                 return
             }
             _peripherals.removeValue(forKey: peripheral.address())
