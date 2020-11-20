@@ -9,7 +9,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
 		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
-		permissions: [ BLE.ATTRIBUTE_PERMISSION_READABLE ]
+		permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE ]
 	});
 	var heartRateService = null;
 

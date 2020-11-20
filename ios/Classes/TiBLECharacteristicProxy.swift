@@ -64,4 +64,24 @@ class TiBLECharacteristicProxy: TiProxy {
         return NSNumber(value: _characteristic.isNotifying)
     }
 
+    @objc
+    func isMutable() -> NSNumber {
+        if self is TiBLEMutableCharacteristicProxy {
+            return NSNumber(true)
+        }
+        return NSNumber(false)
+    }
+
+    @objc(equal:)
+    func equal(arg: Any?) -> NSNumber {
+        guard let options = (arg as? [[String: Any]])?.first,
+              let characteristic = options["characteristic"] as? TiBLECharacteristicProxy else {
+            return NSNumber(false)
+        }
+        if self.uuid() == characteristic.uuid() {
+            return NSNumber(true)
+        }
+        return NSNumber(false)
+    }
+
 }

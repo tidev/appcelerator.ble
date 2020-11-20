@@ -62,3 +62,21 @@ properties:
     since: "1.0.0"
     type: Boolean
     platforms: [iphone, ipad]
+
+  - name: isMutable
+    summary: Indicates whether this characteristic is mutable.
+    since: "1.0.0"
+    type: Boolean
+    platforms: [iphone, ipad]
+
+methods:
+ - name: equal
+   summary: tests whether two characteristics are same or not.
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: characteristic
+        type: Modules.BLE.Characteristic
+        summary: the characteristic that will be compared.
+   returns:
+      type: Boolean

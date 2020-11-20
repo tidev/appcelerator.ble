@@ -35,17 +35,17 @@ public class TiBLEPeripheralProviderProxy: NSObject {
 
     func addPeripheral(_ peripheral: TiBLEPeripheralProxy?) {
         if let peripheral = peripheral {
-            _peripherals[peripheral.UUID()] = peripheral
+            _peripherals[peripheral.address()] = peripheral
         }
     }
 
     func removePeripheral(_ peripheral: TiBLEPeripheralProxy?) {
         if let peripheral = peripheral {
             if !hasPeripheral(peripheral) {
-                print("[ERROR] Trying to remove a peripheral with UUID = \(peripheral.UUID()) that doesn't exist in the provider.")
+                print("[ERROR] Trying to remove a peripheral with address = \(peripheral.address()) that doesn't exist in the provider.")
                 return
             }
-            _peripherals.removeValue(forKey: peripheral.UUID())
+            _peripherals.removeValue(forKey: peripheral.address())
         }
     }
 

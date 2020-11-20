@@ -50,24 +50,6 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('ATTRIBUTE_PERMISSION_*', function () {
-			it('ATTRIBUTE_PERMISSION_READABLE', () => {
-				expect(BLE.ATTRIBUTE_PERMISSION_READABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('ATTRIBUTE_PERMISSION_WRITEABLE', () => {
-				expect(BLE.ATTRIBUTE_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('ATTRIBUTE_PERMISSION_READ_ENCRYPTION_REQUIRED', () => {
-				expect(BLE.ATTRIBUTE_PERMISSION_READ_ENCRYPTION_REQUIRED).toEqual(jasmine.any(Number));
-			});
-
-			it('ATTRIBUTE_PERMISSION_WRITE_ENCRYPTION_REQUIRED', () => {
-				expect(BLE.ATTRIBUTE_PERMISSION_WRITE_ENCRYPTION_REQUIRED).toEqual(jasmine.any(Number));
-			});
-		});
-
 		describe('CHARACTERISTIC_PROPERTIES_*', function () {
 			it('CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES', () => {
 				expect(BLE.CHARACTERISTIC_PROPERTIES_AUTHENTICATED_SIGNED_WRITES).toEqual(jasmine.any(Number));
@@ -129,37 +111,37 @@ describe('appcelerator.ble', function () {
 				expect(BLE.PERIPHERAL_STATE_DISCONNECTING).toEqual(jasmine.any(Number));
 			});
 		});
-		describe('ADVERTISEMENT_DATA_KEY_*', () => {
-			it('ADVERTISEMENT_DATA_KEY_SERVICE_DATA', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_SERVICE_DATA).toEqual(jasmine.any(String));
+		describe('ADVERT_DATA_KEY_*', () => {
+			it('ADVERT_DATA_KEY_SERVICE_DATA', () => {
+				expect(BLE.ADVERT_DATA_KEY_SERVICE_DATA).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_LOCAL_NAME', () => {
+				expect(BLE.ADVERT_DATA_KEY_LOCAL_NAME).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_MANUFACTURER_DATA', () => {
+				expect(BLE.ADVERT_DATA_KEY_MANUFACTURER_DATA).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERT_DATA_KEY_SERVICE_UUIDS).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_OVERFLOW_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERT_DATA_KEY_OVERFLOW_SERVICE_UUIDS).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_TX_POWER_LEVEL', () => {
+				expect(BLE.ADVERT_DATA_KEY_TX_POWER_LEVEL).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_IS_CONNECTABLE', () => {
+				expect(BLE.ADVERT_DATA_KEY_IS_CONNECTABLE).toEqual(jasmine.any(String));
 			});
 
-			it('ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS', () => {
-				expect(BLE.ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS).toEqual(jasmine.any(String));
+			it('ADVERT_DATA_KEY_SOLICITED_SERVICE_UUIDS', () => {
+				expect(BLE.ADVERT_DATA_KEY_SOLICITED_SERVICE_UUIDS).toEqual(jasmine.any(String));
 			});
 		});
 		describe('CONNECT_PERIPHERAL_OPTIONS_KEY_*', () => {
@@ -277,6 +259,24 @@ describe('appcelerator.ble', function () {
 		});
 	}
 
+	describe('CHARACTERISTIC_PERMISSION_*', function () {
+		it('CHARACTERISTIC_PERMISSION_READABLE', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_WRITEABLE', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_READ_ENCRYPTED', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED', () => {
+			expect(BLE.CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
+		});
+	});
+
 	describe('CHARACTERISTIC_PROPERTIES_* are constants', function () {
 		it('CHARACTERISTIC_PROPERTIES_BROADCAST', () => {
 			expect(BLE.CHARACTERISTIC_PROPERTIES_BROADCAST).toEqual(jasmine.any(Number));
@@ -342,25 +342,5 @@ describe('appcelerator.ble', function () {
 			});
 		}
 	});
-
-	if (!IOS) {
-		describe('CHARACTERISTIC_PERMISSION_*', function () {
-			it('CHARACTERISTIC_PERMISSION_READABLE', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_WRITEABLE', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_WRITEABLE).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_READ_ENCRYPTED', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
-			});
-
-			it('CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED', () => {
-				expect(BLE.CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
-			});
-		});
-	}
 });
 

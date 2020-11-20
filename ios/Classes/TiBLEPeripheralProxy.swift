@@ -51,7 +51,7 @@ public class TiBLEPeripheralProxy: TiProxy {
     }
 
     @objc
-    func UUID() -> String {
+    func address() -> String {
         return _peripheral.identifier.uuidString
     }
 

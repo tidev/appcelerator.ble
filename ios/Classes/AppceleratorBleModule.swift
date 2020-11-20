@@ -40,10 +40,10 @@ class AppceleratorBleModule: TiModule {
     @objc public let AUTHORISATION_STATUS_DENIED = 2
     @objc public let AUTHORISATION_STATUS_ALLOWED_ALWAYS = 3
 
-    @objc public let ATTRIBUTE_PERMISSION_READABLE = CBAttributePermissions.readable.rawValue
-    @objc public let ATTRIBUTE_PERMISSION_WRITEABLE = CBAttributePermissions.writeable.rawValue
-    @objc public let ATTRIBUTE_PERMISSION_READ_ENCRYPTION_REQUIRED = CBAttributePermissions.readEncryptionRequired.rawValue
-    @objc public let ATTRIBUTE_PERMISSION_WRITE_ENCRYPTION_REQUIRED = CBAttributePermissions.writeEncryptionRequired.rawValue
+    @objc public let CHARACTERISTIC_PERMISSION_READABLE = CBAttributePermissions.readable.rawValue
+    @objc public let CHARACTERISTIC_PERMISSION_WRITEABLE = CBAttributePermissions.writeable.rawValue
+    @objc public let CHARACTERISTIC_PERMISSION_READ_ENCRYPTED = CBAttributePermissions.readEncryptionRequired.rawValue
+    @objc public let CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED = CBAttributePermissions.writeEncryptionRequired.rawValue
 
     @objc public let CHARACTERISTIC_PROPERTIES_BROADCAST = CBCharacteristicProperties.broadcast.rawValue
     @objc public let CHARACTERISTIC_PROPERTIES_READ = CBCharacteristicProperties.read.rawValue
@@ -69,14 +69,14 @@ class AppceleratorBleModule: TiModule {
     @objc public let PERIPHERAL_STATE_DISCONNECTED = CBPeripheralState.disconnected.rawValue
     @objc public let PERIPHERAL_STATE_DISCONNECTING = CBPeripheralState.disconnecting.rawValue
 
-    @objc public let ADVERTISEMENT_DATA_KEY_SERVICE_DATA = CBAdvertisementDataServiceDataKey
-    @objc public let ADVERTISEMENT_DATA_KEY_LOCAL_NAME_KEY = CBAdvertisementDataLocalNameKey
-    @objc public let ADVERTISEMENT_DATA_KEY_MANUFACTURER_DATA = CBAdvertisementDataManufacturerDataKey
-    @objc public let ADVERTISEMENT_DATA_KEY_SERVICE_UUIDS = CBAdvertisementDataServiceUUIDsKey
-    @objc public let ADVERTISEMENT_DATA_KEY_OVERFLOW_SERVICE_UUIDS = CBAdvertisementDataOverflowServiceUUIDsKey
-    @objc public let ADVERTISEMENT_DATA_KEY_TX_POWER_LEVEL = CBAdvertisementDataTxPowerLevelKey
-    @objc public let ADVERTISEMENT_DATA_KEY_IS_CONNECTABLE = CBAdvertisementDataIsConnectable
-    @objc public let ADVERTISEMENT_DATA_KEY_SOLICITED_SERVICE_UUIDS = CBAdvertisementDataSolicitedServiceUUIDsKey
+    @objc public let ADVERT_DATA_KEY_SERVICE_DATA = CBAdvertisementDataServiceDataKey
+    @objc public let ADVERT_DATA_KEY_LOCAL_NAME = CBAdvertisementDataLocalNameKey
+    @objc public let ADVERT_DATA_KEY_MANUFACTURER_DATA = CBAdvertisementDataManufacturerDataKey
+    @objc public let ADVERT_DATA_KEY_SERVICE_UUIDS = CBAdvertisementDataServiceUUIDsKey
+    @objc public let ADVERT_DATA_KEY_OVERFLOW_SERVICE_UUIDS = CBAdvertisementDataOverflowServiceUUIDsKey
+    @objc public let ADVERT_DATA_KEY_TX_POWER_LEVEL = CBAdvertisementDataTxPowerLevelKey
+    @objc public let ADVERT_DATA_KEY_IS_CONNECTABLE = CBAdvertisementDataIsConnectable
+    @objc public let ADVERT_DATA_KEY_SOLICITED_SERVICE_UUIDS = CBAdvertisementDataSolicitedServiceUUIDsKey
 
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION = CBConnectPeripheralOptionNotifyOnConnectionKey
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION = CBConnectPeripheralOptionNotifyOnDisconnectionKey
@@ -85,8 +85,8 @@ class AppceleratorBleModule: TiModule {
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_ENABLE_TRANSPORT_BRIDGING = "kCBConnectOptionEnableTransportBridging"
     @objc public let CONNECT_PERIPHERAL_OPTIONS_KEY_REQUIRES_ANCS = "kCBConnectOptionRequiresANCS"
 
-    @objc public let CHARACTERISTIC_WRITE_TYPE_WITH_RESPOSNE  = CBCharacteristicWriteType.withResponse.rawValue
-    @objc public let CHARACTERISTIC_WRITE_TYPE_WITHOUT_RESPOSNE  = CBCharacteristicWriteType.withoutResponse.rawValue
+    @objc public let CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE  = CBCharacteristicWriteType.withResponse.rawValue
+    @objc public let CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE  = CBCharacteristicWriteType.withoutResponse.rawValue
 
     @objc public let ATT_SUCCESS = CBATTError.success.rawValue
     @objc public let ATT_INVALID_HANDLE_ERROR = CBATTError.invalidHandle.rawValue
