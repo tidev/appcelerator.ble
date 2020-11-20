@@ -28,6 +28,7 @@
 		F7BEE02224C95E80005DB480 /* TiBLEServiceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */; };
 		F7BEE02324C95E80005DB480 /* TiBLECharacteristicProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */; };
 		F7BEE02424C95E80005DB480 /* TiBLEPeripheralProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */; };
+		000000000000000000000002 /* TitaniumKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 000000000000000000000001 /* TitaniumKit.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEServiceProxy.swift; path = Classes/TiBLEServiceProxy.swift; sourceTree = "<group>"; };
 		F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLECharacteristicProxy.swift; path = Classes/TiBLECharacteristicProxy.swift; sourceTree = "<group>"; };
 		F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralProxy.swift; path = Classes/TiBLEPeripheralProxy.swift; sourceTree = "<group>"; };
+		000000000000000000000001 /* TitaniumKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "TitaniumKit.xcframework"; path = "$(TITANIUM_SDK)/iphone/Frameworks/TitaniumKit.xcframework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 			files = (
 				DBB66221208481A800EAD6D9 /* TitaniumKit.framework in Frameworks */,
 				DB34CDE6207B9EBD005F8E8C /* Foundation.framework in Frameworks */,
+				000000000000000000000002 /* TitaniumKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				DB34CDE5207B9EBD005F8E8C /* Foundation.framework */,
+				000000000000000000000001 /* TitaniumKit.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -192,7 +196,7 @@
 				TargetAttributes = {
 					DB52E2291E9CCD7000AAAEE0 = {
 						CreatedOnToolsVersion = 8.3;
-						LastSwiftMigration = 0940;
+						LastSwiftMigration = 940;
 						ProvisioningStyle = Automatic;
 					};
 				};
