@@ -1,14 +1,15 @@
 /* eslint-disable no-alert */
 // require BLE
-var BLE = require('appcelerator.ble');
-let serviceUUID = '180D';
-let characteristicUUID = '2A37';
-let channelCharacteristicUUID = BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING;
-
 var isAndroid = Ti.Platform.osname === 'android';
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 global.isAndroid = isAndroid;
 global.IOS = IOS;
+
+var BLE = require('appcelerator.ble');
+let serviceUUID = (global.IOS ? ('180D') : ('0000180D-0000-1000-8000-00805f9b34fb'));
+let characteristicUUID = (global.IOS ? ('2A37') : ('00002A37-0000-1000-8000-00805f9b34fb'));
+let channelCharacteristicUUID = BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING;
+
 var mainWindow = Ti.UI.createWindow({
 	backgroundColor: 'White',
 	titleAttributes: { color: 'blue' }
