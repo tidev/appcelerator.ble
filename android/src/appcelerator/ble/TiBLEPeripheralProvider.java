@@ -28,22 +28,23 @@ public class TiBLEPeripheralProvider
 		return peripherals.get(address);
 	}
 
-	private TiBLEPeripheralProxy addPeripheral(BluetoothDevice device)
+	private TiBLEPeripheralProxy addPeripheral(BluetoothDevice device, TiBLEPeripheralProxy.IOperationHandler listener)
 	{
-		TiBLEPeripheralProxy peripheralProxy = new TiBLEPeripheralProxy(device);
+		TiBLEPeripheralProxy peripheralProxy = new TiBLEPeripheralProxy(device, listener);
 
 		peripherals.put(device.getAddress(), peripheralProxy);
 
 		return peripheralProxy;
 	}
 
-	public TiBLEPeripheralProxy checkAddAndGetPeripheralProxy(BluetoothDevice device)
+	public TiBLEPeripheralProxy checkAddAndGetPeripheralProxy(BluetoothDevice device,
+															  TiBLEPeripheralProxy.IOperationHandler listener)
 	{
 		if (hasPeripheral(device.getAddress())) {
 			return getPeripheral(device.getAddress());
 		}
 
-		return addPeripheral(device);
+		return addPeripheral(device, listener);
 	}
 
 	public void removeAllPeripheral()

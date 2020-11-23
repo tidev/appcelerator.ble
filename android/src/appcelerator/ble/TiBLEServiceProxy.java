@@ -21,10 +21,16 @@ public class TiBLEServiceProxy extends KrollProxy
 	private final BluetoothGattService service;
 	private final TiBLEPeripheralProxy peripheralProxy;
 
+	private TiBLEServiceProxy[] includedServiceProxyArr;
+	private TiBLECharacteristicProxy[] characteristicProxyArr;
+
 	public TiBLEServiceProxy(BluetoothGattService service, TiBLEPeripheralProxy peripheralProxy)
 	{
 		this.service = service;
 		this.peripheralProxy = peripheralProxy;
+
+		initIncludedServicesProxies();
+		initCharacteristicsProxies();
 	}
 
 	public static TiBLEServiceProxy mockServiceForUT(KrollDict dict, TiBLEPeripheralProxy peripheralProxy)
@@ -43,30 +49,36 @@ public class TiBLEServiceProxy extends KrollProxy
 		return null;
 	}
 
-	@Kroll.getProperty
-	public TiBLECharacteristicProxy[] characteristics()
+	private void initCharacteristicsProxies()
 	{
 		List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-		TiBLECharacteristicProxy[] characteristicProxyArr = new TiBLECharacteristicProxy[characteristics.size()];
+		characteristicProxyArr = new TiBLECharacteristicProxy[characteristics.size()];
 
 		for (int i = 0; i < characteristics.size(); i++) {
 			characteristicProxyArr[i] = new TiBLECharacteristicProxy(characteristics.get(i), this);
 		}
+	}
 
+	@Kroll.getProperty
+	public TiBLECharacteristicProxy[] characteristics()
+	{
 		return characteristicProxyArr;
+	}
+
+	private void initIncludedServicesProxies()
+	{
+		List<BluetoothGattService> includedServices = service.getIncludedServices();
+		includedServiceProxyArr = new TiBLEServiceProxy[includedServices.size()];
+
+		for (int i = 0; i < includedServices.size(); i++) {
+			includedServiceProxyArr[i] = new TiBLEServiceProxy(includedServices.get(i), peripheralProxy);
+		}
 	}
 
 	@Kroll.getProperty
 	public TiBLEServiceProxy[] includedServices()
 	{
-		List<BluetoothGattService> includedServices = service.getIncludedServices();
-		TiBLEServiceProxy[] serviceProxyArr = new TiBLEServiceProxy[includedServices.size()];
-
-		for (int i = 0; i < includedServices.size(); i++) {
-			serviceProxyArr[i] = new TiBLEServiceProxy(includedServices.get(i), peripheralProxy);
-		}
-
-		return serviceProxyArr;
+		return includedServiceProxyArr;
 	}
 
 	@Kroll.getProperty

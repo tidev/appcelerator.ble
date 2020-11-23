@@ -20,10 +20,14 @@ public class TiBLECharacteristicProxy extends KrollProxy
 	private TiBLEServiceProxy serviceProxy;
 	private BluetoothGattCharacteristic characteristic;
 
+	private TiBLEDescriptorProxy[] descriptorProxies;
+
 	public TiBLECharacteristicProxy(BluetoothGattCharacteristic characteristic, TiBLEServiceProxy serviceProxy)
 	{
 		this.serviceProxy = serviceProxy;
 		this.characteristic = characteristic;
+
+		initDescriptorsProxies();
 	}
 
 	//temporary method for Characteristic UT.
@@ -72,16 +76,20 @@ public class TiBLECharacteristicProxy extends KrollProxy
 		return characteristic.getProperties();
 	}
 
-	@Kroll.getProperty
-	public TiBLEDescriptorProxy[] descriptors()
+	private void initDescriptorsProxies()
 	{
 		List<BluetoothGattDescriptor> bluetoothGattDescriptors = characteristic.getDescriptors();
-		TiBLEDescriptorProxy[] descriptorProxies = new TiBLEDescriptorProxy[bluetoothGattDescriptors.size()];
+		this.descriptorProxies = new TiBLEDescriptorProxy[bluetoothGattDescriptors.size()];
 		int i = 0;
 		for (BluetoothGattDescriptor gattDescriptor : bluetoothGattDescriptors) {
 			descriptorProxies[i] = new TiBLEDescriptorProxy(gattDescriptor, this);
 			i++;
 		}
+	}
+
+	@Kroll.getProperty
+	public TiBLEDescriptorProxy[] descriptors()
+	{
 		return descriptorProxies;
 	}
 

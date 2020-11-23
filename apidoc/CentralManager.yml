@@ -122,7 +122,7 @@ methods:
   - name: cancelPeripheralConnection
     summary: Cancels an active or pending connection to peripheral. Note that this is non-blocking, and any Peripheral
              commands that are still pending to peripheral may or may not complete.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: peripheral
@@ -136,7 +136,7 @@ methods:
     summary: Initiates a connection to peripheral. Connection attempts never time out and, depending on the outcome, will result
               in a call to either didConnectPeripheral or didFailToConnectPeripheral event.
               Pending attempts are cancelled automatically upon deallocation of peripheral, and explicitly via Modules.BLE.CentralManager.cancelPeripheralConnection}.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: peripheral
@@ -145,7 +145,7 @@ methods:
         optional: false
       - name: options
         type: Object
-        summary: An optional dictionary specifying connection behavior options. 
+        summary: This parameter is specific for the iphone, ipad platforms. An optional dictionary specifying connection behavior options.
          all available dictionary keys are defined as Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_*
         optional: true
     returns:
@@ -205,7 +205,7 @@ events:
     summary: This event is called when a connection initiated by connectPeripheral has succeeded.
     description: |
         This event is called when a connection initiated by connectPeripheral has succeeded.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: peripheral
@@ -239,7 +239,7 @@ events:
         This event is called upon the disconnection of a peripheral that was connected by connectPeripheral If the disconnection
         was not initiated by cancelPeripheralConnection, the cause will be detailed in the error parameter. Once this method has been
         called, no more event will be invoked on peripheral.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: peripheral

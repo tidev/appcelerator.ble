@@ -663,6 +663,27 @@ properties:
     platforms: [iphone, ipad, android]
     since: "1.0.0"
 
+  - name: CONNECTION_PRIORITY_HIGH
+    type: Number
+    summary: For a high priority, low latency connection.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
+  - name: CONNECTION_PRIORITY_BALANCED
+    type: Number
+    summary: Connection parameter recommended by the Bluetooth SIG.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
+  - name: CONNECTION_PRIORITY_LOW_POWER
+    type: Number
+    summary: For a low power, reduced data rate connection.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
