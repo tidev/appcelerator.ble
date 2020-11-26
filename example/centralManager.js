@@ -40,11 +40,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 		}
 	});
 	centralManager.addEventListener('didDiscoverPeripheral', function (e) {
-		if (IOS) {
-			Ti.API.info('didDiscoverPeripheral:- Peripheral Name: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid + ' and number of services: ' + e.peripheral.services.length);
-		} else {
-			Ti.API.info('didDiscoverPeripheral:- Peripheral Name: ' + e.peripheral.name + ' with address: ' + e.peripheral.address);
-		}
+		Ti.API.info('didDiscoverPeripheral:- Peripheral Name: ' + e.peripheral.name + ' with address: ' + e.peripheral.address);
 		setData(centralManager.peripherals);
 		activityIndicator.hide();
 	});
@@ -180,7 +176,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 			for (var i = 0; i < list.length; i++) {
 				var btDevicesRow = Ti.UI.createTableViewRow({
 					height: 70,
-					id: IOS ? list[i].UUID : list[i].address,
+					id: list[i].address,
 					row: i,
 					hasChild: true
 				});
@@ -198,7 +194,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 					bottom: 0,
 					width: 250,
 					font: { fontSize: 11 },
-					text: (IOS ? ('UUID - ' + list[i].UUID) : ('ADDRESS - ' + list[i].address))
+					text: ('ADDRESS - ' + list[i].address)
 				});
 				btDevicesRow.add(nameLabel);
 				btDevicesRow.add(idLabel);
@@ -211,7 +207,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 					var indexRow = e.row;
 					if (indexRow.hasChild) {
 						for (var i = 0; i < list.length; i++) {
-							if (indexRow.id === list[i].UUID) {
+							if (indexRow.id === list[i].address) {
 								periPheralObject = list[i];
 								break;
 							}

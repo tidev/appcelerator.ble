@@ -57,7 +57,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		top: 170,
 		width: 250,
 		font: { fontSize: 11 },
-		text: 'UUID - ' + peripheral.UUID
+		text: 'UUID - ' + peripheral.address
 	});
 
 	var connectButton = Titanium.UI.createButton({

@@ -78,7 +78,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 						primary: true,
 						characteristics: [ heartRateCharacteristic ]
 					});
-					logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+					logs.push('Adding Service (uuid: 180D) with characteristic (uuid: ' + heartRateCharacteristicUUID + ')');
 				}
 				setData(logs);
 			});
@@ -104,7 +104,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				}
 				heartRateService = e.service;
 				Ti.API.info('Peripheral Manager added service');
-				logs.push('Did Added Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+				logs.push('Did Added Service (uuid: 180D) with characteristic (uuid: ' + heartRateCharacteristicUUID + ')');
 				setData(logs);
 			});
 			manager.addEventListener('didSubscribeToCharacteristic', function (e) {
@@ -249,21 +249,9 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	});
 	win.add(stopAdvertisingButton);
 
-	var valueField = Ti.UI.createTextField({
-		top: 260,
-		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
-		hintText: 'Enter Value',
-		hintTextColor: '#000000',
-		backgroundColor: '#fafafa',
-		color: 'black',
-		width: 250,
-		height: 40
-	});
-	win.add(valueField);
-
 	var updateValue = Titanium.UI.createButton({
-		top: 300,
-		title: 'Write Value On Channel'
+		top: 260,
+		title: 'Send Image On Channel'
 	});
 	updateValue.addEventListener('click', function () {
 		if (manager === null) {
@@ -274,17 +262,31 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				alert('Channel is not opened yet');
 				return;
 			}
-			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
-			var buffer = Ti.createBuffer({ value: data });
-			channel.write({
-				data: buffer
+			Ti.Media.openPhotoGallery({
+				allowMultiple: false,
+				mediaTypes: [ Titanium.Media.MEDIA_TYPE_PHOTO ],
+				success: function (e) {
+					var myBlob = e.media;
+					var blobStream = Ti.Stream.createStream({ source: myBlob, mode: Ti.Stream.MODE_READ });
+					var newBuffer = Ti.createBuffer({ length: myBlob.length });
+					var bytes = 0;
+					do {
+						bytes = blobStream.read(newBuffer);
+					} while (bytes > 0);
+					channel.write({
+						data: newBuffer
+					});
+				},
+				error: function (e) {
+					alert('error opening image: ' + e);
+				}
 			});
 		}
 	});
 	win.add(updateValue);
 
 	var tableView = Titanium.UI.createTableView({
-		top: 350,
+		top: 300,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',

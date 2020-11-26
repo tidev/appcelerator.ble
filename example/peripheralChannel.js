@@ -1,6 +1,22 @@
 /* eslint-disable no-alert */
 
 function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicUUID) {
+	var imageFile = null;
+	function createImage() {
+		var imageDir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,
+			'downloaded_images');
+		if (!imageDir.exists()) {
+			imageDir.createDirectory();
+		}
+		imageFile = Ti.Filesystem.getFile(imageDir.resolve(), 'image.png');
+		if (imageFile.exists()) {
+			imageFile.deleteFile();
+		}
+		if (!imageFile.exists()) {
+			imageFile.createFile();
+		}
+	}
+	createImage();
 	var channelPSMID = null;
 	var channel = null;
 	var logs = [];
@@ -59,7 +75,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		top: 170,
 		width: 250,
 		font: { fontSize: 11 },
-		text: 'UUID - ' + peripheral.UUID
+		text: 'UUID - ' + peripheral.address
 	});
 
 	var connectButton = Titanium.UI.createButton({
@@ -71,24 +87,22 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		title: 'Disconnect'
 	});
 
-	var valueField = Ti.UI.createTextField({
+	var imageView = Ti.UI.createImageView({
 		top: 300,
-		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
-		hintText: 'Enter Value',
-		hintTextColor: '#000000',
-		backgroundColor: '#fafafa',
-		color: 'black',
-		width: 250,
-		height: 40
+		width: 100,
+		height: 100,
+		borderWidth: 1.0
 	});
-
-	var writeValue = Titanium.UI.createButton({
-		top: 350,
-		title: 'Write Value'
+	var showImage = Titanium.UI.createButton({
+		top: 430,
+		title: 'Show Downloaded Image'
 	});
-
+	var deleteImage = Titanium.UI.createButton({
+		top: 480,
+		title: 'Delete Downloaded Image'
+	});
 	var tableView = Titanium.UI.createTableView({
-		top: 400,
+		top: 530,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',
@@ -121,21 +135,26 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	}
 	setData(logs);
 
-	navDeviceWindow.add(connectButton, backButton, nameLabel, uuidLabel, disConnectButton, tableView, valueField, writeValue);
+	navDeviceWindow.add(connectButton, backButton, nameLabel, uuidLabel, disConnectButton, imageView, showImage, deleteImage, tableView);
 
-	// Buttoon click events
-	writeValue.addEventListener('click', function () {
-		if (channel) {
-			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
-			var buffer = Ti.createBuffer({ value: data });
-			channel.write({
-				data: buffer
-			});
+	showImage.addEventListener('click', function () {
+		var blob = imageFile.read();
+		if (imageFile !== null && blob.length !== 0) {
+			imageFile.resolve();
+			imageView.image = imageFile;
 		} else {
-			alert('No Channel open for write value');
+			alert('No image found');
 		}
 	});
-
+	deleteImage.addEventListener('click', function () {
+		var blob = imageFile.read();
+		if (imageFile !== null && blob.length !== 0) {
+			createImage();
+			alert('Downloaded image delete');
+		} else {
+			alert('No image found');
+		}
+	});
 	connectButton.addEventListener('click', function () {
 		if (peripheral) {
 			if (!peripheral.isConnected) {
@@ -293,7 +312,10 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 				channel = e.channel;
 				e.channel.addEventListener('onDataReceived', function (e) {
 					Ti.API.info('Peripheral Manager received read data from channel');
-					logs.push('Data Received from channel: ' + e.data);
+					logs.push('Data Received from channel (length: ' + e.data.length + ')');
+					if (imageFile.write(e.data.toBlob(), true) === false) {
+						logs.push('Got error while writting file');
+					}
 					setData(logs);
 				});
 				e.channel.addEventListener('onStreamError', function (e) {
@@ -329,15 +351,15 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		characteristics = global.serviceObject.characteristics;
 		Ti.API.info('characteristics ' + characteristics);
 		characteristics.forEach(function (characteristic) {
-			Ti.API.info('Discovered characteristic ' + characteristic.UUID);
+			logs.push('Discovered characteristic ' + characteristic.uuid);
 			if (characteristic.uuid === characteristicUUID) {
 				global.charactersticObject = characteristic;
 				Ti.API.info('Found channel characteristic');
 				logs.push('Found channel characteristic!');
-				setData(logs);
 				requestChannelPSMID();
 			}
 		});
+		setData(logs);
 	}
 	function requestChannelPSMID() {
 		peripheral.subscribeToCharacteristic({
