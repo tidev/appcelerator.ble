@@ -1,107 +1,396 @@
-# Appcelerator Titanium Mobile Module Project
+# Appcelerator Bluetooth Low Energy Module
 
-This is a skeleton Titanium Mobile Mobile module project.
-
-## Module Naming
-
-Choose a unique module id for your module.  This ID usually follows a namespace
-convention using DNS notation.  For example, com.appcelerator.module.test.  This
-ID can only be used once by all public modules in Titanium.
+- This module brings Low Energy Bluetooth into the mobile apps for titanium app developers.
+- Using Low Energy Bluetooth module, developers can bring feature like:
+- Act as BLE Central :
+  - Central can scan nearby peripheral, connect and exchange data with the peripherals
+  - Central can subscribe with peripheral to get latest updates for peripheral
+- Act as BLE Peripheral:
+  - Peripheral can advertise services, connect and exchange data with multiple central
+- Use L2CAP Channel:
+  - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
+peripheral at real time
+- Main use case addressed by this module is Exchange of Data and Communicating with Central and
+Peripherals that supports Low Energy Bluetooth.
 
 ## Getting Started
 
-1. Edit the `manifest` with the appropriate details about your module.
-2. Edit the `LICENSE` to add your license details.
-3. Place any assets (such as PNG files) that are required anywhere in the module folder.
-4. Edit the `timodule.xml` and configure desired settings.
-5. Code and build.
+ - Edit the `plist` with following `uses-permission` element to the ios plist section of the
+  tiapp.xml file.
+  ```
+  <ti:app>
+    <ios>
+      <plist>
+            <key>NSBluetoothAlwaysUsageDescription</key>
+				  <string>usage description string</string>
+	        <key>NSBluetoothPeripheralUsageDescription</key>
+				  <string>usage description string</string>
+      </plist>
+    </ios>
+  </ti:app>
+  ```
 
-## Documentation
------------------------------
+- Set the ``` <module> ``` element in tiapp.xml, such as this: 
+```
+<modules>
+    <module platform="ios">appcelerator.ble</module>
+</modules>
+```
 
-You should provide at least minimal documentation for your module in `documentation` folder using the Markdown syntax.
+- To access this module from JavaScript, you would do the following:
 
-For more information on the Markdown syntax, refer to this documentation at:
+```
+var BLE = require("appcelerator.ble");
+```
+The BLE variable is a reference to the Module object.
 
-<http://daringfireball.net/projects/markdown/>
+# Act As Central
+
+## Follow basic steps to create Central application:
+
+- Use `initCentralManager` to create Central Manager
+    ```
+    var centralManager = BLE.initCentralManager();
+    ```
+- Check for `didUpdateState` event for `centralManager` status
+- Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for perpherals using `startScan`
+    ```
+    centralManager.startScan();
+    ```
+- Use `peripherals` property to get all discovered peripherals
+    ```
+    var peripherals = centralManager.peripherals;
+    ```
+- Use `connect` to connect to peripheral
+    ```
+    centralManager.connectPeripheral({
+            peripheral: peripheral,
+            options: {
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+            }
+    });
+    ```
+- Use `isConnected` to check if connected
+    ```
+    peripheral.isConnected
+    ```
+
+- Use `discoverServices` to discover services
+    ```
+    peripheral.discoverServices();
+    ```
+   result will be return in `didDiscoverServices` event
+
+    ```
+    peripheral.addEventListener('didDiscoverServices', function (e) {});
+    ```
+
+- Use `discoverCharacteristics`
+    ```
+    peripheral.discoverCharacteristics({
+        service: service
+    });
+    ```
+    
+    result will be return in `didDiscoverCharacteristics` event
+    
+    ```
+    connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
+    ```    
+- Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
+    ```  
+    peripheral.subscribeToCharacteristic({
+        characteristic: charactersticObject
+    });
+    peripheral.unsubscribeFromCharacteristic({
+        characteristic: charactersticObject
+    });
+    ```
+
+- Use `cancelPeripheralConnection` to disconnect the connection
+    ```
+    centralManager.cancelPeripheralConnection({ peripheral: peripheral });
+    ```
+
+## Follow basic steps to create Central application and use Channal for communication:
+
+- Use `initCentralManager` to create Central Manager
+    ```
+    var centralManager = BLE.initCentralManager();
+    ```
+- Check for `didUpdateState` event for `centralManager` status
+
+- Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for perpherals using `startScan`
+    ```
+    centralManager.startScan();
+    ```
+- Use `peripherals` property to get all discovered peripherals
+    ```
+    var peripherals = centralManager.peripherals;
+    ```
+- Use `connect` to connect to peripheral
+    ```
+    centralManager.connectPeripheral({
+        peripheral: peripheral,
+        options: {
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+        }
+    });
+    ```
+
+- Use `isConnected` to check if connected
+    ```
+    peripheral.isConnected
+    ```
+
+- Use `discoverServices` to discover services
+    ```
+    peripheral.discoverServices();
+    ```
+   result will be return in `didDiscoverServices` event
+
+    ```
+    peripheral.addEventListener('didDiscoverServices', function (e) {});
+    ```
+
+- Use `discoverCharacteristics`
+    ```
+    peripheral.discoverCharacteristics({
+        service: service
+    });
+    ```
+    
+    result will be return in `didDiscoverCharacteristics` event
+    
+    ```
+    connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
+    ```   
+
+- Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
+
+    ```  
+    peripheral.subscribeToCharacteristic({
+        characteristic: charactersticObject
+    });
+    peripheral.unsubscribeFromCharacteristic({
+        characteristic: charactersticObject
+    });
+    ```
+
+- Get `psmIdentifier` from `didUpdateValueForCharacteristic` event and open `channel`
+
+    ```
+    peripheral.addEventListener('didUpdateValueForCharacteristic', function (e) {
+        if (e.errorCode !== null) {
+            alert('Error while didUpdateValueForCharacteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+            return;
+        }
+        let value = e.value.toString();
+        if (value) {
+            e.sourcePeripheral.openL2CAPChannel({
+                 psmIdentifier: Number(e.value.toString())
+            });
+        }
+    });
+    ```
+
+- Get `channel` object from `didOpenChannel` event and set event `onDataReceived` for received data and `onStreamError` for stream errors
+
+    ```
+    connectedPeripheral.addEventListener('didOpenChannel', function (e) {
+        if (e.errorCode !== null) {
+            alert('Error while opening channel' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+                return;
+        } 
+        channel = e.channel;
+        channel.addEventListener('onDataReceived', function (e) {
+            var data = e.data;
+        });
+        channel.addEventListener('onStreamError', function (e) {
+                  alert('Error ' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+        });
+    });
+    ```
+
+- Use `write` function from channel to write values
+
+    ```                   
+    var newBuffer = Ti.createBuffer({ value: 'hello world' });
+    channel.write({
+        data: newBuffer
+    });
+    ```
+
+- Use `cancelPeripheralConnection` to disconnect the connection
+
+    ```
+    centralManager.cancelPeripheralConnection({ peripheral: peripheral });
+    ```
+
+- Use `close` function to close channel
+
+  ```
+  channel.close();
+  ```
+
+# Act As Peripheral
+
+## Follow basic steps to create Peripheral application:
+
+- Use `initPeripheralManager` to create Peripheral Manager
+
+    ```
+    var peripheralManager = BLE.initPeripheralManager();
+    ```
+
+- Use `createMutableCharacteristic` to create charracteristic
+ 
+    ```
+    var characteristic = BLE.createMutableCharacteristic({
+            uuid: characteristicUUID,
+            properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
+            permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ]
+    });
+    ```
+
+- Use `addService` to add service
+
+    ```
+    service = peripheralManager.addService({
+        uuid: serviceUUID,
+        primary: true,
+        characteristics: [ characteristic ]
+    });
+    ```
+
+- Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
+    
+    ```
+    peripheralManager.startAdvertising({
+        localName: name,
+        serviceUUIDs: servicesUUIDs
+    });
+    ```
+
+- Use `updateValue` to update charracteristic value
+
+    ```
+    var buffer = Ti.createBuffer({ value: 'hello world' });
+        peripheralManager.updateValue({
+        characteristic: characteristic,
+        data: buffer,
+        central: centrals
+    });
+    ```
+
+- Use `stopAdvertising` to stop advertising
+    ```
+        peripheralManager.stopAdvertising();
+    ```
+
+## Follow basic steps to create Peripheral application which use channels for communication:
+
+- Use `initPeripheralManager` to create Peripheral Manager
+
+    ```
+    var peripheralManager = BLE.initPeripheralManager();
+    ```
+
+- Use `createMutableCharacteristic` to create charracteristic
+ 
+    ```
+     var characteristic = BLE.createMutableCharacteristic({
+        uuid: BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING,
+        properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
+        permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE ]
+    });
+    ```
+
+- Use `addService` to add service
+
+    ```
+    var service = peripheralManager.addService({
+        uuid: serviceUUID,
+        primary: true,
+        characteristics: [ characteristic ]
+    });
+
+    ```
+
+- Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, use `publishL2CAPChannel` to publish channel and start advertising using `startAdvertising`
+    ```
+    peripheralManager.publishL2CAPChannel({
+         encryptionRequired: false
+    });
+          
+    peripheralManager.startAdvertising({
+        localName: name,
+        serviceUUIDs: servicesUUIDs
+    });
+    ```
+
+- Update `psmIdentifier` to characteristic in `didPublishL2CAPChannel` event
+
+    ```
+    peripheralManager.addEventListener('didPublishL2CAPChannel', function (e) {
+        var psmBuffer = Ti.createBuffer({ value: e.psm + '' });
+        manager.updateValue({
+            characteristic: characteristic,
+            data: psmBuffer,
+            central: centrals
+        });
+    });
+    ```
+
+- Get Channel from `didOpenL2CAPChannel` event and set `onDataReceived` event to read values and `onStreamError` event for check stream errors
+
+    ```
+    peripheralManager.addEventListener('didOpenL2CAPChannel', function (e) {
+        var channel = e.channel;
+        channel.addEventListener('onDataReceived', function (e) {
+            var data = e.data;
+        });
+        channel.addEventListener('onStreamError', function (e) {});
+    });
+    ```
+- Use `write` function from channel to write values
+
+    ```                   
+    var newBuffer = Ti.createBuffer({ value: 'hello world' });
+    channel.write({
+        data: newBuffer
+    });
+    ```
+      
+- Use `close` function to close channel
+
+    ```
+    channel.close();
+    ```
+      
+- Use `stopAdvertising` to stop advertising
+    ```
+    peripheralManager.stopAdvertising();
+    ```
 
 ## Example
 
-The `example` directory contains a skeleton application test harness that can be
-used for testing and providing an example of usage to the users of your module.
+Please see the `example/` folder.
+
 
 ## Building
 
-Simply run `appc run -p [ios|android] --build-only` which will compile and package your module.
+Simply run `appc run -p ios --build-only` which will compile and package your module. 
 
-## Linting
+Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. /Library/Application Support/Titanium).
 
-You can use `clang` to lint your code. A default Axway linting style is included inside the module main folder.
-Run `clang-format -style=file -i SRC_FILE` in the module root to lint the `SRC_FILE`. You can also patterns,
-like `clang-format -style=file -i Classes/*` 
 
-## Install
+## Author
 
-To use your module locally inside an app you can copy the zip file into the app root folder and compile your app.
-The file will automatically be extracted and copied into the correct `modules/` folder.
+Axway
 
-If you want to use your module globally in all your apps you have to do the following:
+## License
 
-### macOS
-
-Copy the distribution zip file into the `~/Library/Application Support/Titanium` folder
-
-### Linux
-
-Copy the distribution zip file into the `~/.titanium` folder
-
-### Windows
-Copy the distribution zip file into the `C:\ProgramData\Titanium` folder
-
-## Project Usage
-
-Register module with your application by editing `tiapp.xml` and adding module.
-Example:
-
-<modules>
-  <module version="1.0.0">appcelerator.ble</module>
-</modules>
-
-When you run your project, the compiler will combine your module along with its dependencies
-and assets into the application.
-
-## Example Usage
-
-To use your module in code, you will need to require it.
-
-### ES6+ (recommended)
-
-```js
-import MyModule from 'appcelerator.ble';
-MyModule.foo();
-```
-
-### ES5
-
-```js
-var MyModule = require('appcelerator.ble');
-MyModule.foo();
-```
-
-## Testing
-
-To test your module with the example, use:
-
-```js
-appc run -p [ios|android]
-```
-
-This will execute the app.js in the example/ folder as a Titanium application.
-
-## Distribution
-
-You have a variety of choises for distributing your module
-- [Gitt.io](http://gitt.io/)
-- [Axway Marketplace](https://marketplace.axway.com/home)
-
-Code strong!
+Copyright (c) 2020 by Axway, Inc. Please see the LICENSE file for further details.  
