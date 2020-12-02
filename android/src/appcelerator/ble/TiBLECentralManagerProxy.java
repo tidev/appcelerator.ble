@@ -256,6 +256,44 @@ public class TiBLECentralManagerProxy extends KrollProxy
 			{
 				bleService.discoverDescriptorsForCharacteristic(characteristicProxy);
 			}
+
+			@Override
+			public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
+			{
+				bleService.readValueForCharacteristic(characteristicProxy);
+			}
+
+			@Override
+			public void writeValueForCharacteristic(TiBLECharacteristicProxy charProxy, byte[] buffer, int writeType)
+			{
+				bleService.writeValueForCharacteristic(charProxy, buffer, writeType);
+			}
+
+			@Override
+			public void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy)
+			{
+				bleService.readValueForDescriptor(descriptorProxy);
+			}
+
+			@Override
+			public void writeValueForDescriptor(TiBLEDescriptorProxy descriptorProxy, byte[] buffer)
+			{
+				bleService.writeValueForDescriptor(descriptorProxy, buffer);
+			}
+
+			@Override
+			public void subscribeToCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+												  BufferProxy enableValue)
+			{
+				bleService.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+			}
+
+			@Override
+			public void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+													  BufferProxy disableValue)
+			{
+				bleService.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+			}
 		};
 
 	private ScanManager.IScanDeviceFoundListener scanListener = (bluetoothDevice, i, bytes) ->

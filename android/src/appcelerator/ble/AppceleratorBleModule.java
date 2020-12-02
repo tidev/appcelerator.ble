@@ -10,22 +10,21 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.content.pm.PackageManager;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
+import ti.modules.titanium.BufferProxy;
 
 @SuppressLint("MissingPermission")
 @Kroll.module(name = "AppceleratorBleModule", id = "appcelerator.ble")
 public class AppceleratorBleModule extends KrollModule
 {
 
-	// Standard Debugging variables
-	private static final String LCAT = "BluetoothLowEnergyModule";
 	private final BluetoothAdapter btAdapter;
 	private TiBLECentralManagerProxy centralManagerProxy;
 
@@ -89,6 +88,15 @@ public class AppceleratorBleModule extends KrollModule
 	@SuppressLint("InlinedApi")
 	@Kroll.constant
 	public static final int CONNECTION_PRIORITY_LOW_POWER = BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER;
+	@Kroll.constant
+	public static final BufferProxy ENABLE_NOTIFICATION_VALUE =
+		new BufferProxy(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+	@Kroll.constant
+	public static final BufferProxy ENABLE_INDICATION_VALUE =
+		new BufferProxy(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+	@Kroll.constant
+	public static final BufferProxy DISABLE_NOTIFICATION_VALUE =
+		new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
 
 	public AppceleratorBleModule()
 	{
@@ -157,12 +165,7 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
-		KrollDict charInfo = new KrollDict();
-		charInfo.put("properties", 0);
-		charInfo.put("uuid", AppceleratorBleModule.MOCK_UUID_FOR_CHARACTERISTIC_UT);
-		charInfo.put("permissions", 0);
-
-		return TiBLEDescriptorProxy.mockDescriptorForUT(dict, mockCharacteristicForUT(charInfo));
+		return TiBLEDescriptorProxy.mockDescriptorForUT(dict);
 	}
 
 	//temporary method for Characteristic UT.
@@ -174,7 +177,7 @@ public class AppceleratorBleModule extends KrollModule
 		serviceInfo.put("primary", true);
 		serviceInfo.put("uuid", "4b08819f-d2fc-4d09-82f4-806e07702397");
 
-		return TiBLECharacteristicProxy.mockCharacteristicForUT(dict, mockServiceForUT(serviceInfo));
+		return TiBLECharacteristicProxy.mockCharacteristicForUT(dict);
 	}
 
 	//temporary method for Service UT.
@@ -182,7 +185,6 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
 	{
-		BluetoothDevice mockBluetoothDevice = btAdapter.getRemoteDevice("00:11:22:AA:BB:CC");
-		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy(mockBluetoothDevice, null));
+		return TiBLEServiceProxy.mockServiceForUT(dict);
 	}
 }

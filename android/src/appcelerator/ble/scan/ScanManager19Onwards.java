@@ -8,6 +8,7 @@ package appcelerator.ble.scan;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.util.Log;
 import java.util.UUID;
 
 @SuppressLint({ "MissingPermission" })
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class ScanManager19Onwards extends ScanManager implements BluetoothAdapter.LeScanCallback
 {
 
+	public static final String LCAT = "ScanManager19Onwards";
 	protected ScanManager19Onwards(BluetoothAdapter adapter, IScanDeviceFoundListener listener)
 	{
 		super(adapter, listener);
@@ -30,7 +32,11 @@ public class ScanManager19Onwards extends ScanManager implements BluetoothAdapte
 			for (int i = 0; i < servicesUUIDs.length; i++) {
 				uuids[i] = UUID.fromString(servicesUUIDs[i]);
 			}
-			adapter.startLeScan(uuids, this);
+			boolean isScanStarted = adapter.startLeScan(uuids, this);
+			if (!isScanStarted) {
+				Log.e(LCAT, "doScan(): failed to start the scan.");
+			}
+			isScanningInProgress = isScanStarted;
 		}
 	}
 

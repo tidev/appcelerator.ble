@@ -13,6 +13,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 import android.os.ParcelUuid;
+import android.util.Log;
 import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ScanManagerAPI21Onwards extends ScanManager
 {
 
+	public static final String LCAT = "ScanManagerAPI21Onwards";
 	private final ScanSettings scanSetting;
 
 	protected ScanManagerAPI21Onwards(BluetoothAdapter adapter, IScanDeviceFoundListener listener)
@@ -47,6 +49,7 @@ public class ScanManagerAPI21Onwards extends ScanManager
 		}
 
 		adapter.getBluetoothLeScanner().startScan(filterList, scanSetting, scanCallback);
+		isScanningInProgress = true;
 	}
 
 	@Override
@@ -56,6 +59,35 @@ public class ScanManagerAPI21Onwards extends ScanManager
 	}
 
 	private ScanCallback scanCallback = new ScanCallback() {
+		@Override
+		public void onScanFailed(int errorCode)
+		{
+			super.onScanFailed(errorCode);
+			String errorMsg;
+			switch (errorCode) {
+				case ScanCallback.SCAN_FAILED_ALREADY_STARTED:
+					errorMsg = "Fails to start scan as the BLE scan is already started by the app.";
+					break;
+				case ScanCallback.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
+					errorMsg = "Fails to start scan as app cannot be registered.";
+					isScanningInProgress = false;
+					break;
+				case ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED:
+					errorMsg = "Fails to start scan as this feature is not supported.";
+					isScanningInProgress = false;
+					break;
+				case ScanCallback.SCAN_FAILED_INTERNAL_ERROR:
+					errorMsg = "Fails to start scan due an internal error.";
+					isScanningInProgress = false;
+					break;
+				default:
+					errorMsg = "Fails to start the scan.";
+					isScanningInProgress = false;
+					break;
+			}
+			Log.e(LCAT, "onScanFailed(): errorMessage - " + errorMsg + ", errorCode - " + errorCode);
+		}
+
 		@Override
 		public void onScanResult(int callbackType, ScanResult result)
 		{

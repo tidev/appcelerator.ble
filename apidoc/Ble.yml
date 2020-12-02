@@ -686,6 +686,27 @@ properties:
     platforms: [android]
     since: "1.0.0"
 
+  - name: ENABLE_NOTIFICATION_VALUE
+    type: Titanium.Buffer
+    summary: Value used to enable notification for a client configuration descriptor. You may pass this constant to the subscribeToCharacteristic method.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
+  - name: ENABLE_INDICATION_VALUE
+    type: Titanium.Buffer
+    summary: Value used to enable indication for a client configuration descriptor. You may pass this constant to the subscribeToCharacteristic method.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
+  - name: DISABLE_NOTIFICATION_VALUE
+    type: Titanium.Buffer
+    summary: Value used to disable notifications or indications for a client configuration descriptor. You may pass this constant to the unsubscribeFromCharacteristic method.
+    permission: read-only
+    platforms: [android]
+    since: "1.0.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.

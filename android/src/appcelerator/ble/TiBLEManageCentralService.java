@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import org.appcelerator.kroll.common.Log;
+import ti.modules.titanium.BufferProxy;
 
 public class TiBLEManageCentralService extends Service
 {
@@ -135,6 +136,38 @@ public class TiBLEManageCentralService extends Service
 	public void handleBluetoothTurnedOff()
 	{
 		centralOperationManager.handleDisconnection(BluetoothGatt.GATT_FAILURE);
+	}
+
+	public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
+	{
+		centralOperationManager.readValueForCharacteristic(characteristicProxy);
+	}
+
+	public void writeValueForCharacteristic(TiBLECharacteristicProxy charProxy, byte[] buffer, int writeType)
+	{
+		centralOperationManager.writeValueForCharacteristic(charProxy, buffer, writeType);
+	}
+
+	public void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy)
+	{
+		centralOperationManager.readValueForDescriptor(descriptorProxy);
+	}
+
+	public void writeValueForDescriptor(TiBLEDescriptorProxy descriptorProxy, byte[] buffer)
+	{
+		centralOperationManager.writeValueForDescriptor(descriptorProxy, buffer);
+	}
+
+	public void subscribeToCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+										  BufferProxy enableValue)
+	{
+		centralOperationManager.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+	}
+
+	public void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+											  BufferProxy disableValue)
+	{
+		centralOperationManager.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
 	}
 
 	public class LocalBinder extends Binder

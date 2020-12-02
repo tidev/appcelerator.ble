@@ -7,12 +7,14 @@ package appcelerator.ble;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.util.Log;
 import java.util.List;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
 public class TiBLEPeripheralProxy extends KrollProxy
@@ -21,7 +23,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 
 	private final BluetoothDevice device;
 	private final IOperationHandler handler;
-	private TiBLEServiceProxy[] serviceProxies = new TiBLEServiceProxy[0];
+	private List<BluetoothGattService> services;
 
 	public TiBLEPeripheralProxy(BluetoothDevice bluetoothDevice, IOperationHandler handler)
 	{
@@ -51,15 +53,16 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.getProperty
 	public TiBLEServiceProxy[] services()
 	{
+		TiBLEServiceProxy[] serviceProxies = new TiBLEServiceProxy[services.size()];
+		for (int i = 0; i < services.size(); i++) {
+			serviceProxies[i] = new TiBLEServiceProxy(services.get(i));
+		}
 		return serviceProxies;
 	}
 
 	public void addServices(List<BluetoothGattService> services)
 	{
-		serviceProxies = new TiBLEServiceProxy[services.size()];
-		for (int i = 0; i < services.size(); i++) {
-			serviceProxies[i] = new TiBLEServiceProxy(services.get(i), this);
-		}
+		this.services = services;
 	}
 
 	@Kroll.method
@@ -116,6 +119,125 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		handler.discoverDescriptorsForCharacteristic(characteristicProxy);
 	}
 
+	@Kroll.method
+	public void readValueForCharacteristic(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("characteristic")) {
+			Log.e(LCAT, "readValueForCharacteristic(): unable to read value as characteristic proxy not provided.");
+			return;
+		}
+		TiBLECharacteristicProxy characteristicProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+		handler.readValueForCharacteristic(characteristicProxy);
+	}
+
+	@Kroll.method
+	public void writeValueForCharacteristic(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("characteristic")) {
+			Log.e(LCAT, "writeValueForCharacteristic(): unable to write value as characteristic proxy not provided.");
+			return;
+		}
+		if (!dict.containsKey("data")) {
+			Log.e(LCAT, "writeValueForCharacteristic(): unable to write value as buffer proxy not provided.");
+			return;
+		}
+
+		TiBLECharacteristicProxy charProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+		BufferProxy bufferProxy = (BufferProxy) dict.get("data");
+
+		int writeType = AppceleratorBleModule.CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE;
+		if (dict.containsKey("type")) {
+			writeType = dict.getInt("type");
+		}
+
+		handler.writeValueForCharacteristic(charProxy, bufferProxy.getBuffer(), writeType);
+	}
+
+	@Kroll.method
+	public void readValueForDescriptor(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("descriptor")) {
+			Log.e(LCAT, "readValueForDescriptor(): unable to read value as descriptor proxy not provided.");
+			return;
+		}
+
+		TiBLEDescriptorProxy descriptorProxy = (TiBLEDescriptorProxy) dict.get("descriptor");
+
+		handler.readValueForDescriptor(descriptorProxy);
+	}
+
+	@Kroll.method
+	public void writeValueForDescriptor(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("descriptor")) {
+			Log.e(LCAT, "writeValueForDescriptor(): unable to write value as descriptor proxy not provided.");
+			return;
+		}
+		if (!dict.containsKey("data")) {
+			Log.e(LCAT, "writeValueForDescriptor(): unable to write value as buffer proxy not provided.");
+			return;
+		}
+
+		TiBLEDescriptorProxy descriptorProxy = (TiBLEDescriptorProxy) dict.get("descriptor");
+		BufferProxy bufferProxy = (BufferProxy) dict.get("data");
+
+		handler.writeValueForDescriptor(descriptorProxy, bufferProxy.getBuffer());
+	}
+
+	@Kroll.method
+	public void subscribeToCharacteristic(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("characteristic")) {
+			Log.e(LCAT, "subscribeToCharacteristic(): unable to subscribe as characteristic proxy not provided.");
+			return;
+		}
+
+		TiBLECharacteristicProxy charProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+
+		String descriptorUUID = null;
+		if (dict.containsKey("descriptorUUID")) {
+			descriptorUUID = dict.getString("descriptorUUID");
+		}
+
+		BufferProxy enableValue = null;
+		if (descriptorUUID != null && !descriptorUUID.isEmpty()) {
+			enableValue = new BufferProxy(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+			if (dict.containsKey("descriptorValue")) {
+				enableValue = (BufferProxy) dict.get("descriptorValue");
+			}
+		}
+
+		handler.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+	}
+
+	@Kroll.method
+	public void unsubscribeFromCharacteristic(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("characteristic")) {
+			Log.e(
+				LCAT,
+				"unsubscribeFromCharacteristic(): unable to unsubscribeFromCharacteristic as characteristic proxy not provided.");
+			return;
+		}
+
+		TiBLECharacteristicProxy charProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+
+		String descriptorUUID = null;
+		if (dict.containsKey("descriptorUUID")) {
+			descriptorUUID = dict.getString("descriptorUUID");
+		}
+
+		BufferProxy disableValue = null;
+		if (descriptorUUID != null && !descriptorUUID.isEmpty()) {
+			disableValue = new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
+			if (dict.containsKey("descriptorValue")) {
+				disableValue = (BufferProxy) dict.get("descriptorValue");
+			}
+		}
+
+		handler.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+	}
+
 	public BluetoothDevice getDevice()
 	{
 		return device;
@@ -129,5 +251,13 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		void discoverIncludedServices(TiBLEServiceProxy serviceProxy);
 		void discoverCharacteristics(TiBLEServiceProxy serviceProxy);
 		void discoverDescriptorsForCharacteristic(TiBLECharacteristicProxy characteristicProxy);
+		void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy);
+		void writeValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy, byte[] buffer, int writeType);
+		void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy);
+		void writeValueForDescriptor(TiBLEDescriptorProxy descriptorProxy, byte[] buffer);
+		void subscribeToCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+									   BufferProxy enableValue);
+		void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
+										   BufferProxy disableValue);
 	}
 }

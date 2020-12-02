@@ -33,8 +33,6 @@ public abstract class ScanManager
 			return;
 		}
 
-		isScanningInProgress = true;
-
 		doScan(servicesUUIDs);
 	}
 

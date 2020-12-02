@@ -7,7 +7,6 @@ package appcelerator.ble;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
@@ -17,23 +16,14 @@ import org.appcelerator.kroll.annotations.Kroll;
 @Kroll.proxy
 public class TiBLEServiceProxy extends KrollProxy
 {
-
 	private final BluetoothGattService service;
-	private final TiBLEPeripheralProxy peripheralProxy;
 
-	private TiBLEServiceProxy[] includedServiceProxyArr;
-	private TiBLECharacteristicProxy[] characteristicProxyArr;
-
-	public TiBLEServiceProxy(BluetoothGattService service, TiBLEPeripheralProxy peripheralProxy)
+	public TiBLEServiceProxy(BluetoothGattService service)
 	{
 		this.service = service;
-		this.peripheralProxy = peripheralProxy;
-
-		initIncludedServicesProxies();
-		initCharacteristicsProxies();
 	}
 
-	public static TiBLEServiceProxy mockServiceForUT(KrollDict dict, TiBLEPeripheralProxy peripheralProxy)
+	public static TiBLEServiceProxy mockServiceForUT(KrollDict dict)
 	{
 		//temporary method for service UT.
 		//TODO: Address or remove this temp method in MOD-2689.
@@ -44,40 +34,32 @@ public class TiBLEServiceProxy extends KrollProxy
 			int serviceType =
 				isPrimary ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
 
-			return new TiBLEServiceProxy(new BluetoothGattService(id, serviceType), peripheralProxy);
+			return new TiBLEServiceProxy(new BluetoothGattService(id, serviceType));
 		}
 		return null;
-	}
-
-	private void initCharacteristicsProxies()
-	{
-		List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-		characteristicProxyArr = new TiBLECharacteristicProxy[characteristics.size()];
-
-		for (int i = 0; i < characteristics.size(); i++) {
-			characteristicProxyArr[i] = new TiBLECharacteristicProxy(characteristics.get(i), this);
-		}
 	}
 
 	@Kroll.getProperty
 	public TiBLECharacteristicProxy[] characteristics()
 	{
-		return characteristicProxyArr;
-	}
+		List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
+		TiBLECharacteristicProxy[] characteristicProxyArr = new TiBLECharacteristicProxy[characteristics.size()];
 
-	private void initIncludedServicesProxies()
-	{
-		List<BluetoothGattService> includedServices = service.getIncludedServices();
-		includedServiceProxyArr = new TiBLEServiceProxy[includedServices.size()];
-
-		for (int i = 0; i < includedServices.size(); i++) {
-			includedServiceProxyArr[i] = new TiBLEServiceProxy(includedServices.get(i), peripheralProxy);
+		for (int i = 0; i < characteristics.size(); i++) {
+			characteristicProxyArr[i] = new TiBLECharacteristicProxy(characteristics.get(i));
 		}
+		return characteristicProxyArr;
 	}
 
 	@Kroll.getProperty
 	public TiBLEServiceProxy[] includedServices()
 	{
+		List<BluetoothGattService> includedServices = service.getIncludedServices();
+		TiBLEServiceProxy[] includedServiceProxyArr = new TiBLEServiceProxy[includedServices.size()];
+
+		for (int i = 0; i < includedServices.size(); i++) {
+			includedServiceProxyArr[i] = new TiBLEServiceProxy(includedServices.get(i));
+		}
 		return includedServiceProxyArr;
 	}
 
@@ -85,12 +67,6 @@ public class TiBLEServiceProxy extends KrollProxy
 	public boolean isPrimary()
 	{
 		return service.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY;
-	}
-
-	@Kroll.getProperty
-	public TiBLEPeripheralProxy peripheral()
-	{
-		return peripheralProxy;
 	}
 
 	@Kroll.getProperty
