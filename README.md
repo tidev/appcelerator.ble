@@ -1,7 +1,7 @@
 # Appcelerator Bluetooth Low Energy Module
 
-- This module brings Low Energy Bluetooth into the mobile apps for titanium app developers.
-- Using Low Energy Bluetooth module, developers can bring feature like:
+- This module brings Bluetooth Low Energy into the mobile apps for titanium app developers.
+- Using Bluetooth Low Energy module, developers can bring feature like:
 - Act as BLE Central :
   - Central can scan nearby peripheral, connect and exchange data with the peripherals
   - Central can subscribe with peripheral to get latest updates for peripheral
@@ -11,7 +11,7 @@
   - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
 peripheral at real time
 - Main use case addressed by this module is Exchange of Data and Communicating with Central and
-Peripherals that supports Low Energy Bluetooth.
+Peripherals that supports Bluetooth Low Energy.
 
 ## Getting Started
 
@@ -25,6 +25,22 @@ Peripherals that supports Low Energy Bluetooth.
 				  <string>usage description string</string>
 	        <key>NSBluetoothPeripheralUsageDescription</key>
 				  <string>usage description string</string>
+      </plist>
+    </ios>
+  </ti:app>
+  ```
+
+ - If your app needs to run in background to perform certain Bluetooth-related tasks, Edit the `plist` with following `uses-permission` element to the ios plist section of the
+  tiapp.xml file.
+  ```
+  <ti:app>
+    <ios>
+      <plist>
+            <key>UIBackgroundModes</key>
+            <array>
+            <string>bluetooth-central</string>
+            <string>bluetooth-peripheral</string>
+      </array>
       </plist>
     </ios>
   </ti:app>
@@ -44,7 +60,7 @@ var BLE = require("appcelerator.ble");
 ```
 The BLE variable is a reference to the Module object.
 
-# Act As Central
+# Act As Central Application
 
 ## Follow basic steps to create Central application:
 
@@ -235,7 +251,7 @@ The BLE variable is a reference to the Module object.
   channel.close();
   ```
 
-# Act As Peripheral
+# Act As Peripheral Application
 
 ## Follow basic steps to create Peripheral application:
 
@@ -374,10 +390,18 @@ The BLE variable is a reference to the Module object.
     ```
     peripheralManager.stopAdvertising();
     ```
+## Read Data from TiBuffer
+- you can access bytes from TiBuffer using:
 
+    ```
+    for (i = 0; i < buffer.length; i++) {
+        var byte = buffer[i];
+    }
+    ```
 ## Example
 
-Please see the `example/` folder.
+- Please see the `example/` folder.
+- See the `example/` folder in branch `[channel_image_transfer](https://github.com/appcelerator/appcelerator.ble/tree/channel_image_transfer/example)` for image transfer sample using channel
 
 
 ## Building
@@ -385,7 +409,6 @@ Please see the `example/` folder.
 Simply run `appc run -p ios --build-only` which will compile and package your module. 
 
 Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. /Library/Application Support/Titanium).
-
 
 ## Author
 
