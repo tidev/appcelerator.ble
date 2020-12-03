@@ -8,11 +8,11 @@ package appcelerator.ble;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import org.appcelerator.kroll.common.Log;
 
@@ -22,7 +22,9 @@ public class TiBLEManageCentralService extends Service
 	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
 	private final IBinder binder = new LocalBinder();
 
-	@Nullable
+	private TiBleCentralOperationManager centralOperationManager;
+	private TiBLEPeripheralProxy peripheralProxy;
+
 	@Override
 	public IBinder onBind(Intent intent)
 	{
@@ -33,6 +35,7 @@ public class TiBLEManageCentralService extends Service
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		Log.d(LCAT, "onStartCommand(): Service is Started");
+
 		return START_NOT_STICKY;
 	}
 
@@ -41,6 +44,9 @@ public class TiBLEManageCentralService extends Service
 	{
 		super.onDestroy();
 		Log.d(LCAT, "onDestroy(): Service is being destroyed");
+
+		peripheralProxy = null;
+		centralOperationManager = null;
 	}
 
 	@Override
@@ -63,6 +69,72 @@ public class TiBLEManageCentralService extends Service
 			NotificationManager manager = getSystemService(NotificationManager.class);
 			manager.createNotificationChannel(serviceChannel);
 		}
+	}
+
+	public void initiateConnectionWithPeripheral(TiBLECentralManagerProxy centralManagerProxy,
+												 TiBLEPeripheralProxy peripheralProxy, boolean autoConnect)
+	{
+		this.peripheralProxy = peripheralProxy;
+		centralOperationManager =
+			new TiBleCentralOperationManager(this, centralManagerProxy, this.peripheralProxy, autoConnect);
+		centralOperationManager.initiateConnectionWithPeripheral();
+	}
+
+	public void cancelPeripheralConnection(TiBLEPeripheralProxy peripheralProxy)
+	{
+		if (!peripheralProxy.address().equals(this.peripheralProxy.address())) {
+			Log.e(LCAT,
+				  "cancelPeripheralConnection(): unable to cancel the connection. Peripheral provided name/address- "
+					  + peripheralProxy.name() + " / " + peripheralProxy.address()
+					  + ", but existing peripheral connection name/address - " + this.peripheralProxy.name() + " / "
+					  + this.peripheralProxy.address());
+			return;
+		}
+
+		centralOperationManager.cancelPeripheralConnection();
+	}
+
+	public boolean isConnectedWithPeripheral(TiBLEPeripheralProxy peripheralProxy)
+	{
+		if (!peripheralProxy.address().equals(this.peripheralProxy.address())) {
+			return false;
+		}
+		return centralOperationManager.isConnected();
+	}
+
+	public void readRSSI()
+	{
+		centralOperationManager.readRSSI();
+	}
+
+	public void requestConnectionPriority(int priority)
+	{
+		centralOperationManager.requestConnectionPriority(priority);
+	}
+
+	public void discoverServices()
+	{
+		centralOperationManager.discoverServices();
+	}
+
+	public void discoverIncludedServices(TiBLEServiceProxy serviceProxy)
+	{
+		centralOperationManager.discoverIncludedServices(serviceProxy);
+	}
+
+	public void discoverCharacteristics(TiBLEServiceProxy serviceProxy)
+	{
+		centralOperationManager.discoverCharacteristics(serviceProxy);
+	}
+
+	public void discoverDescriptorsForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
+	{
+		centralOperationManager.discoverDescriptorsForCharacteristic(characteristicProxy);
+	}
+
+	public void handleBluetoothTurnedOff()
+	{
+		centralOperationManager.handleDisconnection(BluetoothGatt.GATT_FAILURE);
 	}
 
 	public class LocalBinder extends Binder

@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
 import appcelerator.ble.scan.ScanManager;
+import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -38,7 +39,8 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	private TiBLEPeripheralProvider peripheralProvider;
 	private TiBLEManageCentralService bleService;
 	private Intent serviceIntent = new Intent(TiApplication.getInstance(), TiBLEManageCentralService.class);
-	private boolean isServiceBound;
+	private TiBLEPeripheralProxy peripheralProxy;
+	private boolean autoConnect;
 
 	public TiBLECentralManagerProxy()
 	{
@@ -58,16 +60,17 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service)
 		{
-			bleService = ((TiBLEManageCentralService.LocalBinder) service).getService();
-			isServiceBound = true;
 			Log.d(LCAT, "onServiceConnected(): Service is Binded");
+			bleService = ((TiBLEManageCentralService.LocalBinder) service).getService();
+			bleService.initiateConnectionWithPeripheral(TiBLECentralManagerProxy.this, peripheralProxy, autoConnect);
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name)
 		{
-			isServiceBound = false;
 			bleService = null;
+			peripheralProxy = null;
+			autoConnect = false;
 			Log.d(LCAT, "onServiceDisconnected(): Service is unBinded");
 		}
 	};
@@ -135,7 +138,37 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	public TiBLEPeripheralProxy createPeripheral(String address)
 	{
 		BluetoothDevice bluetoothDevice = btAdapter.getRemoteDevice(address);
-		return peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice);
+		return peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice, null);
+	}
+
+	@Kroll.method
+	public void connectPeripheral(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("peripheral")) {
+			Log.e(LCAT, "connectPeripheral(): peripheral object not provided.");
+			return;
+		}
+
+		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get("peripheral");
+		boolean autoConnect = false;
+		if (dict.containsKey("autoConnect")) {
+			autoConnect = dict.getBoolean("autoConnect");
+		}
+		this.peripheralProxy = peripheralProxy;
+		this.autoConnect = autoConnect;
+		startAndBindService();
+	}
+
+	@Kroll.method
+	public void cancelPeripheralConnection(KrollDict dict)
+	{
+		if ((dict == null && !dict.containsKey("peripheral"))) {
+			Log.e(LCAT, "cancelPeripheralConnection(): peripheral object not provided.");
+			return;
+		}
+
+		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get("peripheral");
+		bleService.cancelPeripheralConnection(peripheralProxy);
 	}
 
 	public void cleanup()
@@ -156,24 +189,80 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		Log.d(LCAT, "startAndBindService(): binding the service ");
 	}
 
-	private void stopAndUnbindService()
+	public void stopAndUnbindService()
 	{
-		if (isServiceBound) {
-			TiApplication.getInstance().unbindService(bleServiceConnection);
-			isServiceBound = false;
-			Log.d(LCAT, "stopAndUnbindService(): service unbinding initiated");
-		}
 		if (bleService != null) {
+			TiApplication.getInstance().unbindService(bleServiceConnection);
+			Log.d(LCAT, "stopAndUnbindService(): service unbinding initiated");
 			TiApplication.getInstance().stopService(serviceIntent);
 			Log.d(LCAT, "stopAndUnbindService(): service stopping..");
 			bleService = null;
 		}
+		peripheralProxy = null;
+		autoConnect = false;
 	}
+
+	public void bluetoothStateChanged(int state)
+	{
+		HashMap<String, Integer> dict = new HashMap<>();
+		dict.put("state", state);
+		fireEvent("didUpdateState", dict);
+		if (state == BluetoothAdapter.STATE_OFF && bleService != null) {
+			// we have bluetooth turned off and an active connection exist.
+			bleService.handleBluetoothTurnedOff();
+		}
+	}
+
+	private TiBLEPeripheralProxy.IOperationHandler peripheralOperationListener =
+		new TiBLEPeripheralProxy.IOperationHandler() {
+			@Override
+			public boolean isConnected(TiBLEPeripheralProxy peripheralProxy)
+			{
+				return bleService != null && bleService.isConnectedWithPeripheral(peripheralProxy);
+			}
+
+			@Override
+			public void readRSSI()
+			{
+				bleService.readRSSI();
+			}
+
+			@Override
+			public void requestConnectionPriority(int priority)
+			{
+				bleService.requestConnectionPriority(priority);
+			}
+
+			@Override
+			public void discoverServices(String[] serviceUUIDs)
+			{
+				bleService.discoverServices();
+			}
+
+			@Override
+			public void discoverIncludedServices(TiBLEServiceProxy serviceProxy)
+			{
+				bleService.discoverIncludedServices(serviceProxy);
+			}
+
+			@Override
+			public void discoverCharacteristics(TiBLEServiceProxy serviceProxy)
+			{
+				bleService.discoverCharacteristics(serviceProxy);
+			}
+
+			@Override
+			public void discoverDescriptorsForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
+			{
+				bleService.discoverDescriptorsForCharacteristic(characteristicProxy);
+			}
+		};
 
 	private ScanManager.IScanDeviceFoundListener scanListener = (bluetoothDevice, i, bytes) ->
 	{
 
-		TiBLEPeripheralProxy peripheralProxy = peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice);
+		TiBLEPeripheralProxy peripheralProxy =
+			peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice, peripheralOperationListener);
 
 		KrollDict dict = new KrollDict();
 

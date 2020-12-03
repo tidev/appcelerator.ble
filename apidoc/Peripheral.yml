@@ -12,7 +12,7 @@ properties:
   - name: isConnected
     summary: Whether or not the peripheral is currently connected.
     type: Boolean
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: name
@@ -24,7 +24,7 @@ properties:
   - name: services
     summary: A list of a peripheral’s discovered services.
     type: Array<Modules.BLE.Service>
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
 
   - name: state
@@ -61,14 +61,27 @@ properties:
 methods:
   - name: readRSSI
     summary: Retrieves the current RSSI value for the peripheral while connected to the central manager.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     returns:
       type: void
 
+  - name: requestConnectionPriority
+    summary: Request the specific connection priority. This method will send connection parameter update request to the remote device.
+    platforms: [android]
+    since: "1.0.0"
+    parameters:
+      - name: connectionPriority
+        type: Number
+        summary: Connection priority to set. Must be one of CONNECTION_PRIORITY_HIGH, CONNECTION_PRIORITY_BALANCED and CONNECTION_PRIORITY_LOW_POWER.
+        optional: false
+    returns:
+      type: void
+
   - name: discoverCharacteristics
-    summary: Discovers the specified characteristic(s) of a service. The result of this operation is returned via the didDiscoverCharacteristics event.
-    platforms: [iphone, ipad]
+    summary: Discovers the specified characteristic(s) of a service. The result of this operation is returned via the didDiscoverCharacteristics event. In android, all the characteristics have already been discovered,
+        as part of the discoverServices operation. So, this method is kept in android to keep parity with the iOS platform.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: services
@@ -83,8 +96,9 @@ methods:
       type: void
 
   - name: discoverDescriptorsForCharacteristic
-    summary: Discovers the descriptor(s) of a characteristic.The result of this operation is returned via the didDiscoverDescriptorsForCharacteristics event.
-    platforms: [iphone, ipad]
+    summary: Discovers the descriptor(s) of a characteristic.The result of this operation is returned via the didDiscoverDescriptorsForCharacteristics event. In android, all the descriptors have already been discovered,
+        as part of the discoverServices operation. So, this method is kept in android to keep parity with the iOS platform.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: characteristic
@@ -95,8 +109,9 @@ methods:
       type: void
 
   - name: discoverIncludedServices
-    summary: Discovers the specified included service(s) of a service.The result of this operation is returned via the discoveredIncludedServices event.
-    platforms: [iphone, ipad]
+    summary: Discovers the specified included service(s) of a service.The result of this operation is returned via the didDiscoverIncludedServices event. In android, all the included services have already been discovered,
+        as part of the discoverServices operation. So, this method is kept in android to keep parity with the iOS platform.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: services
@@ -111,13 +126,13 @@ methods:
       type: void
 
   - name: discoverServices
-    summary: Discovers available service(s) on the peripheral. The result of this operation is returned via the discoveredServices event.
-    platforms: [iphone, ipad]
+    summary: Discovers available service(s) on the peripheral. The result of this operation is returned via the didDiscoverServices event.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: serviceUUIDs
         type: Array<String>
-        summary: An array of UUID objects that you are interested in. Each UUID identifies the services you want to discover.
+        summary: An array of UUID objects that you are interested in. Each UUID identifies the services you want to discover. In android, the behavior is discoverServices discovers all the available services irrespective of this parameter.
         optional: true
     returns:
       type: void
@@ -242,7 +257,7 @@ events:
     summary: This event returns the result of a call to the discoverCharacteristics method. If the characteristic(s) were read successfully, they can be retrieved via the service property's characteristics property.
     description: |
         Core Bluetooth invokes this method when your app calls the discoverCharacteristics method. If the peripheral successfully discovers the characteristics of the specified service, you can access them through the service’s characteristics property.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -265,7 +280,7 @@ events:
     summary: This event returns the result of a call to the discoverDescriptorsForCharacteristic method.
     description: |
         Core Bluetooth invokes this method when your app calls the discoverDescriptors method. If the peripheral successfully discovers the descriptors of the specified characteristic, you can access them through the characteristic’s descriptors property.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -288,7 +303,7 @@ events:
     summary: This event returns the result of a call to the discoverIncludedServices method.
     description: |
         Core Bluetooth invokes this method when your app calls the discoverIncludedServices method. If the peripheral successfully discovers services, you can access them through the service’s includedServices property.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -376,7 +391,7 @@ events:
     summary: This event returns the result of a call to the readRSSI method.
     description: |
         Core Bluetooth invokes this method when your app calls the readRSSI() method, while the peripheral is connected to the central manager. If successful, the error parameter is nil and the parameter RSSI reports the peripheral’s signal strength, in decibels. If unsuccessful, the error parameter returns the cause of the failure.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral

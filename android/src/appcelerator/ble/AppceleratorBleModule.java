@@ -10,6 +10,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.pm.PackageManager;
 import org.appcelerator.kroll.KrollDict;
@@ -78,6 +80,15 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.constant
 	public static final int CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED =
 		BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED;
+	@SuppressLint("InlinedApi")
+	@Kroll.constant
+	public static final int CONNECTION_PRIORITY_HIGH = BluetoothGatt.CONNECTION_PRIORITY_HIGH;
+	@SuppressLint("InlinedApi")
+	@Kroll.constant
+	public static final int CONNECTION_PRIORITY_BALANCED = BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
+	@SuppressLint("InlinedApi")
+	@Kroll.constant
+	public static final int CONNECTION_PRIORITY_LOW_POWER = BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER;
 
 	public AppceleratorBleModule()
 	{
@@ -171,6 +182,7 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
 	{
-		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy(null));
+		BluetoothDevice mockBluetoothDevice = btAdapter.getRemoteDevice("00:11:22:AA:BB:CC");
+		return TiBLEServiceProxy.mockServiceForUT(dict, new TiBLEPeripheralProxy(mockBluetoothDevice, null));
 	}
 }
