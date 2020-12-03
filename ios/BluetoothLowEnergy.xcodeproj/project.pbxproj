@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		000000000000000000000002 /* TitaniumKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 000000000000000000000001 /* TitaniumKit.xcframework */; };
 		3152E6BA252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3152E6B9252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift */; };
 		DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */; };
 		DB34CDE1207B998A005F8E8C /* AppceleratorBleModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,6 +21,9 @@
 		F7707A682546BE96004FEBD2 /* TiBLEPeerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */; };
 		F7707A6C2546C196004FEBD2 /* TiBLEIOStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */; };
 		F7807BBC2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7807BBB2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift */; };
+		F788320A257906AE003E0130 /* TiBLEBeaconsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */; };
+		F788320D2579071F003E0130 /* TiBLEBeaconRegionProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */; };
+		F788321025790786003E0130 /* TiBLERegionManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */; };
 		F78D846A24EAA70800189DD7 /* TiBLECentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78D846924EAA70800189DD7 /* TiBLECentralManager.swift */; };
 		F78D846F24F3EF1E00189DD7 /* TiBLEUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78D846E24F3EF1E00189DD7 /* TiBLEUtils.swift */; };
 		F7BEE01F24C95E80005DB480 /* TiBLERequestProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01924C95E80005DB480 /* TiBLERequestProxy.swift */; };
@@ -28,10 +32,10 @@
 		F7BEE02224C95E80005DB480 /* TiBLEServiceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */; };
 		F7BEE02324C95E80005DB480 /* TiBLECharacteristicProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */; };
 		F7BEE02424C95E80005DB480 /* TiBLEPeripheralProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */; };
-		000000000000000000000002 /* TitaniumKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 000000000000000000000001 /* TitaniumKit.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		000000000000000000000001 /* TitaniumKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TitaniumKit.xcframework; path = "$(TITANIUM_SDK)/iphone/Frameworks/TitaniumKit.xcframework"; sourceTree = "<absolute>"; };
 		3152E6B9252DEB5C00C7274F /* TiBLEPeripheralProviderProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralProviderProxy.swift; path = Classes/TiBLEPeripheralProviderProxy.swift; sourceTree = "<group>"; };
 		DB34CDDE207B998A005F8E8C /* AppceleratorBleModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppceleratorBleModuleAssets.m; path = Classes/AppceleratorBleModuleAssets.m; sourceTree = SOURCE_ROOT; };
 		DB34CDDF207B998A005F8E8C /* AppceleratorBleModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppceleratorBleModuleAssets.h; path = Classes/AppceleratorBleModuleAssets.h; sourceTree = SOURCE_ROOT; };
@@ -47,6 +51,9 @@
 		F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEPeerProxy.swift; path = Classes/TiBLEPeerProxy.swift; sourceTree = "<group>"; };
 		F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEIOStream.swift; path = Classes/TiBLEIOStream.swift; sourceTree = "<group>"; };
 		F7807BBB2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralManagerProxy.swift; path = Classes/TiBLEPeripheralManagerProxy.swift; sourceTree = "<group>"; };
+		F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEBeaconsProxy.swift; path = Classes/TiBLEBeaconsProxy.swift; sourceTree = "<group>"; };
+		F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEBeaconRegionProxy.swift; path = Classes/TiBLEBeaconRegionProxy.swift; sourceTree = "<group>"; };
+		F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLERegionManagerProxy.swift; path = Classes/TiBLERegionManagerProxy.swift; sourceTree = "<group>"; };
 		F78D846924EAA70800189DD7 /* TiBLECentralManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLECentralManager.swift; path = Classes/TiBLECentralManager.swift; sourceTree = "<group>"; };
 		F78D846E24F3EF1E00189DD7 /* TiBLEUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiBLEUtils.swift; sourceTree = "<group>"; };
 		F7BEE01924C95E80005DB480 /* TiBLERequestProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLERequestProxy.swift; path = Classes/TiBLERequestProxy.swift; sourceTree = "<group>"; };
@@ -55,7 +62,6 @@
 		F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEServiceProxy.swift; path = Classes/TiBLEServiceProxy.swift; sourceTree = "<group>"; };
 		F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLECharacteristicProxy.swift; path = Classes/TiBLECharacteristicProxy.swift; sourceTree = "<group>"; };
 		F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralProxy.swift; path = Classes/TiBLEPeripheralProxy.swift; sourceTree = "<group>"; };
-		000000000000000000000001 /* TitaniumKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "TitaniumKit.xcframework"; path = "$(TITANIUM_SDK)/iphone/Frameworks/TitaniumKit.xcframework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +109,9 @@
 				F78D846E24F3EF1E00189DD7 /* TiBLEUtils.swift */,
 				F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */,
 				F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */,
+				F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */,
+				F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */,
+				F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -254,7 +263,10 @@
 				E2D656E924DD493D00946B63 /* TiBLEMutableCharacteristicProxy.swift in Sources */,
 				F7BEE02024C95E80005DB480 /* TiBLEDescriptorProxy.swift in Sources */,
 				F7BEE02124C95E80005DB480 /* TiBLECentralProxy.swift in Sources */,
+				F788320A257906AE003E0130 /* TiBLEBeaconsProxy.swift in Sources */,
+				F788321025790786003E0130 /* TiBLERegionManagerProxy.swift in Sources */,
 				E2F46DA625148C5B0059EF83 /* TiBLEL2CAPchannelProxy.swift in Sources */,
+				F788320D2579071F003E0130 /* TiBLEBeaconRegionProxy.swift in Sources */,
 				F7807BBC2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift in Sources */,
 				F7BEE01F24C95E80005DB480 /* TiBLERequestProxy.swift in Sources */,
 				F78D846F24F3EF1E00189DD7 /* TiBLEUtils.swift in Sources */,
@@ -388,7 +400,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
@@ -420,7 +433,11 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = (
 					"-DDEBUG",
@@ -462,7 +479,11 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = (
