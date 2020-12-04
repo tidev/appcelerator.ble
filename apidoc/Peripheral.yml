@@ -210,9 +210,10 @@ methods:
     description: |
         Writes the value of a characteristic descriptor. 
         This method copies the data passed into the data parameter, and you can dispose of it after the method returns.
-        Note: You can’t use this method to write the value of a client configuration descriptor (represented by the BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING constant), 
+        Note (iOS): You can’t use this method to write the value of a client configuration descriptor (represented by the BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING constant), 
         which describes the configuration of notification or indications for a characteristic’s value. 
         If you want to manage notifications or indications for a characteristic’s value, you must use the subscribeToCharacteristic({characteristic:}) and unsubscribeFromCharacteristic({characteristic:}) method instead.
+        Another Note (iOS): Once published, you can’t update the value dynamically. Reference (https://developer.apple.com/documentation/corebluetooth/cbmutabledescriptor/1518999-init)
     platforms: [iphone, ipad]
     since: "1.0.0"
     parameters:
