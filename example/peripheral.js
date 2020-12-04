@@ -3,29 +3,34 @@
 function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicUUID) {
 	var logs = [];
 	// Central event for peripheral connection
-	centralManager.addEventListener('didConnectPeripheral', function (e) {
+	var peripheralConnectedListener = (e) => {
 		logs.push('Connected to Peripheral');
 		setData(logs);
 		registerEvents(e.peripheral);
 		peripheral.discoverServices();
-	});
+	};
+	var peripheralDisconnectedListener = (e) => {
+		Ti.API.info('Disconnected from Peripheral: ' + e.peripheral.name + ' with address: ' + e.peripheral.address);
+		unregisterEvents(e.peripheral);
 
-	centralManager.addEventListener('didDisconnectPeripheral', function (e) {
-		Ti.API.info('Disconnected from Peripheral: ' + e.peripheral.name + ' with UUID: ' + e.peripheral.uuid);
 		logs.push('Peripheral Disconnected');
 		setData(logs);
 		global.charactersticObject = null;
 		global.serviceObject = null;
-	});
-
-	centralManager.addEventListener('didFailToConnectPeripheral', function (e) {
+	};
+	var peripheralFailToConnectListener = (e) => {
 		Ti.API.info('didFailToConnectPeripheral');
 		Ti.API.info(e.peripheral);
-		Ti.API.info(e.error.localizedDescription);
+		if (global.IOS) {
+			Ti.API.info(e.error.localizedDescription);
+		}
 		Ti.API.info('Fail to connect with Peripheral - error code ' + e.errorCode + ' error domain: ' + e.errorDomain + ' error description ' + e.errorDescription);
 		logs.push('did Fail To Connect Peripheral');
 		setData(logs);
-	});
+	};
+	centralManager.addEventListener('didConnectPeripheral', peripheralConnectedListener);
+	centralManager.addEventListener('didDisconnectPeripheral', peripheralDisconnectedListener);
+	centralManager.addEventListener('didFailToConnectPeripheral', peripheralFailToConnectListener);
 
 	// Configure UI
 	var deviceWindow = Ti.UI.createWindow({
@@ -33,12 +38,12 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		title: 'Device information',
 		titleAttributes: { color: 'blue' }
 	});
-	var navDeviceWindow = Ti.UI.iOS.createNavigationWindow({
+	var navDeviceWindow = Ti.UI.createNavigationWindow({
 		window: deviceWindow
 	});
 
 	var backButton = Titanium.UI.createButton({
-		top: 100,
+		top: 40,
 		title: 'Go to device list'
 	});
 	backButton.addEventListener('click', function () {
@@ -47,38 +52,38 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 
 	var nameLabel = Ti.UI.createLabel({
 		color: 'black',
-		top: 140,
+		top: 95,
 		width: 250,
-		font: { fontSize: 14 },
+		font: { fontSize: 15 },
 		text: 'Name - ' + peripheral.name
 	});
 	var uuidLabel = Ti.UI.createLabel({
 		color: 'blue',
-		top: 170,
+		top: 120,
 		width: 250,
 		font: { fontSize: 11 },
-		text: 'UUID - ' + peripheral.UUID
+		text: ('ADDRESS - ' + peripheral.address)
 	});
 
 	var connectButton = Titanium.UI.createButton({
-		top: 200,
+		top: 150,
 		title: 'Connect'
 	});
 	var disConnectButton = Titanium.UI.createButton({
-		top: 250,
+		top: 190,
 		title: 'Disconnect'
 	});
 	var subscribeButton = Titanium.UI.createButton({
-		top: 300,
+		top: 230,
 		title: 'Subscribe to Heart Rate (2A37)'
 	});
 	var unsubscribeButton = Titanium.UI.createButton({
-		top: 350,
+		top: 270,
 		title: 'Unsubscribe'
 	});
 
 	var valueField = Ti.UI.createTextField({
-		top: 400,
+		top: 320,
 		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
 		hintText: 'Enter Value',
 		hintTextColor: '#000000',
@@ -89,12 +94,12 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	var writeValue = Titanium.UI.createButton({
-		top: 450,
+		top: 360,
 		title: 'Write Value'
 	});
 
 	var tableView = Titanium.UI.createTableView({
-		top: 500,
+		top: 410,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',
@@ -108,8 +113,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			for (var i = initalValue; i >= 0; i--) {
 				var btDevicesRow = Ti.UI.createTableViewRow({
 					height: 50,
-					row: i,
-					hasChild: true
+					row: i
 				});
 				var uuidLabel = Ti.UI.createLabel({
 					left: 5,
@@ -127,10 +131,23 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	}
 	setData(logs);
 
-	navDeviceWindow.add(connectButton, backButton, nameLabel, uuidLabel, disConnectButton, subscribeButton, unsubscribeButton, tableView, valueField, writeValue);
+	deviceWindow.add(connectButton);
+	deviceWindow.add(backButton);
+	deviceWindow.add(nameLabel);
+	deviceWindow.add(uuidLabel);
+	deviceWindow.add(disConnectButton);
+	deviceWindow.add(subscribeButton);
+	deviceWindow.add(unsubscribeButton);
+	deviceWindow.add(tableView);
+	deviceWindow.add(valueField);
+	deviceWindow.add(writeValue);
 
 	// Buttoon click events
 	writeValue.addEventListener('click', function () {
+		if (global.isAndroid) {
+			alert('Android work in progress.');
+			return;
+		}
 		if (global.charactersticObject) {
 			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
 			var buffer = Ti.createBuffer({ value: data });
@@ -165,13 +182,21 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 
 	disConnectButton.addEventListener('click', function () {
 		if (peripheral) {
-			centralManager.cancelPeripheralConnection({ peripheral: peripheral });
+			if (peripheral.isConnected) {
+				centralManager.cancelPeripheralConnection({ peripheral: peripheral });
+			} else {
+				alert('Peripheral not connected.');
+			}
 		} else {
 			alert('No peripheral available to disconnect');
 		}
 	});
 
 	subscribeButton.addEventListener('click', function () {
+		if (global.isAndroid) {
+			alert('Android work in progress.');
+			return;
+		}
 		if (peripheral) {
 			if (peripheral.isConnected) {
 				if (global.charactersticObject) {
@@ -190,6 +215,10 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	unsubscribeButton.addEventListener('click', function () {
+		if (global.isAndroid) {
+			alert('Android work in progress.');
+			return;
+		}
 		if (global.charactersticObject) {
 			peripheral.unsubscribeFromCharacteristic({
 				characteristic: global.charactersticObject
@@ -199,27 +228,54 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		}
 	});
 
-	function registerEvents(connectedPeripheral) {
-		connectedPeripheral.addEventListener('didDiscoverServices', function (e) {
-			Ti.API.info('didDiscoverServices ' + e);
-			if (e.errorCode !== null) {
-				alert('Error while discovering services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
-				return;
-			}
-			let discoverServicePeripheral = e.sourcePeripheral;
-			discoverHeartRateServices(discoverServicePeripheral);
-		});
+	var servicesDiscoveredListener = (e) => {
+		Ti.API.info('didDiscoverServices ' + e);
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			alert('Error while discovering services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			return;
+		}
+		let discoverServicePeripheral = e.sourcePeripheral;
+		discoverHeartRateServices(discoverServicePeripheral);
+	};
+	var characteristicDiscoveredListener = (e) =>  {
+		Ti.API.info('didDiscoverCharacteristics');
+		Ti.API.info(e);
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			alert('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			return;
+		}
+		let discoverCharacteristicPeripheral = e.sourcePeripheral;
+		discoverHeartRateCharacteristic(discoverCharacteristicPeripheral);// Subscribe To Characteristic
+	};
+	var descriptorDiscoveredListener = (e) => {
+		Ti.API.info('didDiscoverDescriptorsForCharacteristics');
+		Ti.API.info(e);
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			Ti.API.info('Error while discovering descriptors for characteristics' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			return;
+		}
+	};
+	var includedServicesDiscoveredListener = (e) => {
+		Ti.API.info('didDiscoverIncludedServices');
+		Ti.API.info(e);
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			alert('Error while discovering included services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			return;
+		}
+	};
+	var readRssiListener = (e) => {
+		Ti.API.info('didReadRSSI');
+		Ti.API.info(e);
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			alert('Error while reading RSSI' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
+			return;
+		}
+	};
 
-		connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {
-			Ti.API.info('didDiscoverCharacteristics');
-			Ti.API.info(e);
-			if (e.errorCode !== null) {
-				alert('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
-				return;
-			}
-			let discoverCharacteristicPeripheral = e.sourcePeripheral;
-			discoverHeartRateCharacteristic(discoverCharacteristicPeripheral);// Subscribe To Characteristic
-		});
+	function registerEvents(connectedPeripheral) {
+		connectedPeripheral.addEventListener('didDiscoverServices', servicesDiscoveredListener);
+
+		connectedPeripheral.addEventListener('didDiscoverCharacteristics', characteristicDiscoveredListener);
 
 		connectedPeripheral.addEventListener('didUpdateNotificationStateForCharacteristics', function (e) {
 			Ti.API.info('didUpdateNotificationStateForCharacteristics');
@@ -256,32 +312,11 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			}
 		});
 
-		connectedPeripheral.addEventListener('didDiscoverDescriptorsForCharacteristics', function (e) {
-			Ti.API.info('didDiscoverDescriptorsForCharacteristics');
-			Ti.API.info(e);
-			if (e.errorCode !== null) {
-				Ti.API.info('Error while discovering descriptors for characteristics' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
-				return;
-			}
-		});
+		connectedPeripheral.addEventListener('didDiscoverDescriptorsForCharacteristics', descriptorDiscoveredListener);
 
-		connectedPeripheral.addEventListener('didDiscoverIncludedServices', function (e) {
-			Ti.API.info('didDiscoverIncludedServices');
-			Ti.API.info(e);
-			if (e.errorCode !== null) {
-				alert('Error while discovering included services' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
-				return;
-			}
-		});
+		connectedPeripheral.addEventListener('didDiscoverIncludedServices', includedServicesDiscoveredListener);
 
-		connectedPeripheral.addEventListener('didReadRSSI', function (e) {
-			Ti.API.info('didReadRSSI');
-			Ti.API.info(e);
-			if (e.errorCode !== null) {
-				alert('Error while reading RSSI' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
-				return;
-			}
-		});
+		connectedPeripheral.addEventListener('didReadRSSI', readRssiListener);
 
 		connectedPeripheral.addEventListener('didUpdateValueForDescriptor', function (e) {
 			Ti.API.info('didUpdateValueForDescriptor');
@@ -335,6 +370,14 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		});
 	}
 
+	function unregisterEvents(peripheral) {
+		peripheral.removeEventListener('didDiscoverServices', servicesDiscoveredListener);
+		peripheral.removeEventListener('didDiscoverCharacteristics', characteristicDiscoveredListener);
+		peripheral.removeEventListener('didDiscoverDescriptorsForCharacteristics', descriptorDiscoveredListener);
+		peripheral.removeEventListener('didDiscoverIncludedServices', includedServicesDiscoveredListener);
+		peripheral.removeEventListener('didReadRSSI', readRssiListener);
+	}
+
 	function discoverHeartRateServices (sourcePeripheral) {
 		var services;
 
@@ -342,15 +385,17 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		services = sourcePeripheral.services;
 		Ti.API.info('services ' + services);
 		services.forEach(function (service) {
-			Ti.API.info('Discovered service ' + service.UUID);
-			if (service.uuid === serviceUUID) {
+			Ti.API.info('Discovered service ' + service.uuid);
+			if (service.uuid.toLowerCase() === serviceUUID.toLowerCase()) {
 				global.serviceObject = service;
 				Ti.API.info('Found heart rate service!');
 				logs.push('Found heart rate service!');
 				setData(logs);
-				sourcePeripheral.discoverCharacteristics({
-					service: service
-				});
+				if (sourcePeripheral.isConnected) {
+					sourcePeripheral.discoverCharacteristics({
+						service: service
+					});
+				}
 			}
 		});
 	}
@@ -360,8 +405,8 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		characteristics = global.serviceObject.characteristics;
 		Ti.API.info('characteristics ' + characteristics);
 		characteristics.forEach(function (characteristic) {
-			Ti.API.info('Discovered characteristic ' + characteristic.UUID);
-			if (characteristic.uuid === characteristicUUID) {
+			Ti.API.info('Discovered characteristic ' + characteristic.uuid);
+			if (characteristic.uuid.toLowerCase() === characteristicUUID.toLowerCase()) {
 				global.charactersticObject = characteristic;
 				Ti.API.info('Found heart rate characteristic, will subscribe...');
 				logs.push('Found heart rate characteristic!');
@@ -369,6 +414,17 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			}
 		});
 	}
+
+	deviceWindow.addEventListener('close', function () {
+		if (peripheral && peripheral.isConnected) {
+			unregisterEvents(peripheral);
+			centralManager.cancelPeripheralConnection({ peripheral: peripheral });
+		}
+		centralManager.removeEventListener('didConnectPeripheral', peripheralConnectedListener);
+		centralManager.removeEventListener('didDisconnectPeripheral', peripheralDisconnectedListener);
+		centralManager.removeEventListener('didFailToConnectPeripheral', peripheralFailToConnectListener);
+	});
+
 	return navDeviceWindow;
 }
 exports.deviceWin = deviceWin;
