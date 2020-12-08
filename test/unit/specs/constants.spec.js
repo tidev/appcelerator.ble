@@ -310,17 +310,17 @@ describe('appcelerator.ble', function () {
 			it('CHARACTERISTIC_PROPERTIES_SIGNED_WRITES', () => {
 				expect(BLE.CHARACTERISTIC_PROPERTIES_SIGNED_WRITES).toEqual(jasmine.any(Number));
 			});
-
-			describe('CHARACTERISTIC_TYPE_WRITE_*', () => {
-				it('CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE', () => {
-					expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE).toEqual(jasmine.any(Number));
-				});
-
-				it('CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE', () => {
-					expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE).toEqual(jasmine.any(Number));
-				});
-			});
 		}
+	});
+
+	describe('CHARACTERISTIC_TYPE_WRITE_*', () => {
+		it('CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE', () => {
+			expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE).toEqual(jasmine.any(Number));
+		});
+
+		it('CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE', () => {
+			expect(BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE).toEqual(jasmine.any(Number));
+		});
 	});
 
 	describe('MANAGER_STATE_* are constants', () => {
@@ -342,5 +342,21 @@ describe('appcelerator.ble', function () {
 			});
 		}
 	});
+
+	if (!IOS) {
+		describe('CONNECTION_PRIORITY_*', () => {
+			it('CONNECTION_PRIORITY_HIGH', () => {
+				expect(BLE.CONNECTION_PRIORITY_HIGH).toEqual(jasmine.any(Number));
+			});
+
+			it('CONNECTION_PRIORITY_BALANCED', () => {
+				expect(BLE.CONNECTION_PRIORITY_BALANCED).toEqual(jasmine.any(Number));
+			});
+
+			it('CONNECTION_PRIORITY_LOW_POWER', () => {
+				expect(BLE.CONNECTION_PRIORITY_LOW_POWER).toEqual(jasmine.any(Number));
+			});
+		});
+	}
 });
 
