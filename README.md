@@ -401,7 +401,7 @@ The BLE variable is a reference to the Module object.
 ## Example
 
 - Please see the `example/` folder.
-- See the `example/` folder in branch `[channel_image_transfer](https://github.com/appcelerator/appcelerator.ble/tree/channel_image_transfer/example)` for image transfer sample using channel
+- Please see the `example/ImageTransferUsingChannelStream` folder for how to use channel stream API's to transfer bigger data like images.
 
 
 ## Building
