@@ -6,6 +6,9 @@ description: |
     value in human-readable form and describe how to format the value for presentation purposes.
     Characteristic descriptors also indicate whether a characteristic’s value indicates or notifies
     a client (a central) when the value of the characteristic changes.
+    iOS Note: You must use only one of the two currently supported descriptor 
+    types: CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING or CBUUID_CHARACTERISTIC_FORMAT_STRING. 
+    Reference (https://developer.apple.com/documentation/corebluetooth/cbmutabledescriptor/1518999-init)
 since: "1.0.0"
 properties:
   - name: characteristic
@@ -20,6 +23,10 @@ properties:
         The return type of this property varies as per the platform. In iphone and ipad, it can have
         multiple return type as String, Number and Titanium.Buffer. In android, the return type is 
         Titanium.Buffer only.
+        iOS Note: The descriptor value to cache. You must provide a non-nil value.
+        Once published, you can’t update the value dynamically.
+        Reference (https://developer.apple.com/documentation/corebluetooth/cbmutabledescriptor/1518999-init)
+
     since: "1.0.0"
     type: [Titanium.Buffer, String, Number]
     platforms: [android, iphone, ipad]
