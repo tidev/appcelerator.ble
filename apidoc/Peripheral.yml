@@ -138,8 +138,8 @@ methods:
       type: void
 
   - name: readValueForCharacteristic
-    summary: Reads the value of a characteristic.The result of this operation is returned via the updatedValueForCharacteristic event.
-    platforms: [iphone, ipad]
+    summary: Reads the value of a characteristic.The result of this operation is returned via the didUpdateValueForCharacteristic event.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: characteristic
@@ -150,8 +150,8 @@ methods:
       type: void
 
   - name: readValueForDescriptor
-    summary: Reads the value of a descriptor. The result of this operation is returned via the updatedValueForDescriptor event.
-    platforms: [iphone, ipad]
+    summary: Reads the value of a descriptor. The result of this operation is returned via the didUpdateValueForDescriptor event.
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: descriptor
@@ -163,31 +163,47 @@ methods:
 
   - name: subscribeToCharacteristic
     summary: Enables notifications/indications for a characteristic. If the characteristic allows both, notifications will be used.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: characteristic
         type: Modules.BLE.Characteristic
         summary: The characteristic whose value you want to read.
         optional: false
+      - name: descriptorUUID="00002902-0000-1000-8000-00805f9b34fb"
+        type: String
+        summary: The UUID of the configuration descriptor of the characteristic. The module will attempt to write descriptorValue to this descriptor. If you do not want the module to do this, set this parameter to an empty string. This parameter is only for Android.
+        optional: true
+      - name: descriptorValue=ENABLE_NOTIFICATION_VALUE
+        type: Titanium.Buffer
+        summary: The value to be written to the configuration descriptor. This parameter is only for Android.
+        optional: true
     returns:
       type: void
 
   - name: unsubscribeFromCharacteristic
     summary: Disables notifications/indications for a characteristic.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: characteristic
         type: Modules.BLE.Characteristic
         summary: The characteristic whose value you want to read.
         optional: false
+      - name: descriptorUUID="00002902-0000-1000-8000-00805f9b34fb"
+        type: String
+        summary: The UUID of the configuration descriptor of the characteristic. The module will attempt to write descriptorValue to this descriptor. If you do not want the module to do this, set this parameter to an empty string. This parameter is only for Android.
+        optional: true
+      - name: descriptorValue=DISABLE_NOTIFICATION_VALUE
+        type: Titanium.Buffer
+        summary: The value to be written to the configuration descriptor. This parameter is only for Android.
+        optional: true
     returns:
       type: void
 
   - name: writeValueForCharacteristic
     summary: Writes a value to a characteristic.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: characteristic
@@ -210,11 +226,11 @@ methods:
     description: |
         Writes the value of a characteristic descriptor. 
         This method copies the data passed into the data parameter, and you can dispose of it after the method returns.
-        Note (iOS): You can’t use this method to write the value of a client configuration descriptor (represented by the BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING constant), 
+        Note (iOS): You can’t use this method to write the value of a client configuration descriptor (represented by the BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING constant),
         which describes the configuration of notification or indications for a characteristic’s value. 
         If you want to manage notifications or indications for a characteristic’s value, you must use the subscribeToCharacteristic({characteristic:}) and unsubscribeFromCharacteristic({characteristic:}) method instead.
         Another Note (iOS): Once published, you can’t update the value dynamically. Reference (https://developer.apple.com/documentation/corebluetooth/cbmutabledescriptor/1518999-init)
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
       - name: descriptor
@@ -369,7 +385,7 @@ events:
     summary: This event returns the result of a call to the subscribeToCharacteristic or unsubscribeFromCharacteristic method.
     description: |
         Core Bluetooth invokes this method when your app calls the subscribeToCharacteristic or unsubscribeFromCharacteristic method.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -378,6 +394,9 @@ events:
       - name: characteristic
         type: Modules.BLE.Characteristic
         summary: The characteristic to subscribe.
+      - name: isSubscribed
+        type: Boolean
+        summary: A Boolean value that specifies whether the didUpdateNotificationStateForCharacteristics event is for subscribe or unsubscribe operation. true, if subscribe and false otherwise.
       - name: errorCode
         type: String
         summary: The error code; only present if an error occurred.
@@ -415,7 +434,7 @@ events:
     summary: This event is fired after a call to the readValueForCharacteristic method, or upon receipt of a notification/indication.
     description: |
         Core Bluetooth invokes this method when your app calls the readValueForCharacteristic method. A peripheral also invokes this method to notify your app of a change to the value of the characteristic for which the app previously enabled notifications by calling subscribeToCharacteristic or unsubscribeFromCharacteristic method.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -438,7 +457,7 @@ events:
     summary: This event returns the result of a call to the readValueForDescriptor method.
     description: |
         Core Bluetooth invokes this method when your app calls the readValueForDescriptor method.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -461,7 +480,7 @@ events:
     summary: This event returns the result of a call to the writeValueForCharacteristic method.
     description: |
         Core Bluetooth invokes this method only when your app calls the writeValueForCharacteristic method with the BLE.CHARACTERISTIC_WRYTE_TYPE_WITH_RESPOSNE constant specified as the write type.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral
@@ -484,7 +503,7 @@ events:
     summary: This event returns the result of a call to the writeValueForDescriptor method.
     description: |
         Core Bluetooth invokes this method when your app calls the writeValueForDescriptor method.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: sourcePeripheral

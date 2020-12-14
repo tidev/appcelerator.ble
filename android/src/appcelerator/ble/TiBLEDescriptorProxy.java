@@ -16,26 +16,28 @@ import ti.modules.titanium.BufferProxy;
 public class TiBLEDescriptorProxy extends KrollProxy
 {
 	private BluetoothGattDescriptor descriptor;
-	private TiBLECharacteristicProxy characteristicProxy;
 
-	public TiBLEDescriptorProxy(BluetoothGattDescriptor descriptor, TiBLECharacteristicProxy characteristicProxy)
+	public TiBLEDescriptorProxy(BluetoothGattDescriptor descriptor)
 	{
 		this.descriptor = descriptor;
-		this.characteristicProxy = characteristicProxy;
 	}
 
 	//temporary method for descriptor UT.
 	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict, TiBLECharacteristicProxy characteristicProxy)
+	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
 		if (dict.containsKey("permission") && dict.containsKey("uuid")) {
 			int permission = (int) dict.get("permission");
 			String uuid = (String) dict.get("uuid");
 
-			return new TiBLEDescriptorProxy(new BluetoothGattDescriptor(UUID.fromString(uuid), permission),
-											characteristicProxy);
+			return new TiBLEDescriptorProxy(new BluetoothGattDescriptor(UUID.fromString(uuid), permission));
 		}
 		return null;
+	}
+
+	public BluetoothGattDescriptor getDescriptor()
+	{
+		return descriptor;
 	}
 
 	@Kroll.getProperty
@@ -53,6 +55,6 @@ public class TiBLEDescriptorProxy extends KrollProxy
 	@Kroll.getProperty
 	public TiBLECharacteristicProxy characteristic()
 	{
-		return characteristicProxy;
+		return new TiBLECharacteristicProxy(descriptor.getCharacteristic());
 	}
 }

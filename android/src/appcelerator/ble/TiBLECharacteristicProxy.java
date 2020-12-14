@@ -17,22 +17,16 @@ import ti.modules.titanium.BufferProxy;
 @Kroll.proxy
 public class TiBLECharacteristicProxy extends KrollProxy
 {
-	private TiBLEServiceProxy serviceProxy;
 	private BluetoothGattCharacteristic characteristic;
 
-	private TiBLEDescriptorProxy[] descriptorProxies;
-
-	public TiBLECharacteristicProxy(BluetoothGattCharacteristic characteristic, TiBLEServiceProxy serviceProxy)
+	public TiBLECharacteristicProxy(BluetoothGattCharacteristic characteristic)
 	{
-		this.serviceProxy = serviceProxy;
 		this.characteristic = characteristic;
-
-		initDescriptorsProxies();
 	}
 
 	//temporary method for Characteristic UT.
 	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict, TiBLEServiceProxy serviceProxy)
+	public static TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
 	{
 		if (dict.containsKey("properties") && dict.containsKey("uuid") && dict.containsKey("permissions")) {
 			int properties = (int) dict.get("properties");
@@ -41,15 +35,20 @@ public class TiBLECharacteristicProxy extends KrollProxy
 
 			BluetoothGattCharacteristic characteristic =
 				new BluetoothGattCharacteristic(UUID.fromString(uuid), properties, permissions);
-			return new TiBLECharacteristicProxy(characteristic, serviceProxy);
+			return new TiBLECharacteristicProxy(characteristic);
 		}
 		return null;
+	}
+
+	public BluetoothGattCharacteristic getCharacteristic()
+	{
+		return characteristic;
 	}
 
 	@Kroll.getProperty
 	public TiBLEServiceProxy service()
 	{
-		return serviceProxy;
+		return new TiBLEServiceProxy(characteristic.getService());
 	}
 
 	@Kroll.getProperty
@@ -76,20 +75,14 @@ public class TiBLECharacteristicProxy extends KrollProxy
 		return characteristic.getProperties();
 	}
 
-	private void initDescriptorsProxies()
-	{
-		List<BluetoothGattDescriptor> bluetoothGattDescriptors = characteristic.getDescriptors();
-		this.descriptorProxies = new TiBLEDescriptorProxy[bluetoothGattDescriptors.size()];
-		int i = 0;
-		for (BluetoothGattDescriptor gattDescriptor : bluetoothGattDescriptors) {
-			descriptorProxies[i] = new TiBLEDescriptorProxy(gattDescriptor, this);
-			i++;
-		}
-	}
-
 	@Kroll.getProperty
 	public TiBLEDescriptorProxy[] descriptors()
 	{
+		List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
+		TiBLEDescriptorProxy[] descriptorProxies = new TiBLEDescriptorProxy[descriptors.size()];
+		for (int i = 0; i < descriptors.size(); i++) {
+			descriptorProxies[i] = new TiBLEDescriptorProxy(descriptors.get(i));
+		}
 		return descriptorProxies;
 	}
 
