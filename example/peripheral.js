@@ -144,21 +144,21 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 
 	// Buttoon click events
 	writeValue.addEventListener('click', function () {
-		if (global.isAndroid) {
-			alert('Android work in progress.');
-			return;
-		}
-		if (global.charactersticObject) {
-			var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
-			var buffer = Ti.createBuffer({ value: data });
-			// Characteristic needs to have write permission & property
-			peripheral.writeValueForCharacteristic({
-				data: buffer,
-				characteristic: global.charactersticObject,
-				type: BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
-			});
+		if (peripheral.isConnected) {
+			if (global.charactersticObject) {
+				var data = valueField.value === '' || valueField.value === null ? 'temp data' : valueField.value;
+				var buffer = Ti.createBuffer({ value: data });
+				// Characteristic needs to have write permission & property
+				peripheral.writeValueForCharacteristic({
+					data: buffer,
+					characteristic: global.charactersticObject,
+					type: BLE.CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE
+				});
+			} else {
+				alert('No heart rate characteristic (2A37) available to write value');
+			}
 		} else {
-			alert('No heart rate characteristic (2A37) available to write value');
+			alert('Peripheral is not connected.');
 		}
 	});
 
@@ -193,10 +193,6 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	subscribeButton.addEventListener('click', function () {
-		if (global.isAndroid) {
-			alert('Android work in progress.');
-			return;
-		}
 		if (peripheral) {
 			if (peripheral.isConnected) {
 				if (global.charactersticObject) {
@@ -215,16 +211,16 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 	});
 
 	unsubscribeButton.addEventListener('click', function () {
-		if (global.isAndroid) {
-			alert('Android work in progress.');
-			return;
-		}
-		if (global.charactersticObject) {
-			peripheral.unsubscribeFromCharacteristic({
-				characteristic: global.charactersticObject
-			});
+		if (peripheral.isConnected) {
+			if (global.charactersticObject) {
+				peripheral.unsubscribeFromCharacteristic({
+					characteristic: global.charactersticObject
+				});
+			} else {
+				alert('No registered characteristic available to unsubscribe');
+			}
 		} else {
-			alert('No registered characteristic available to unsubscribe');
+			alert('Peripheral is not connected.');
 		}
 	});
 
@@ -279,12 +275,13 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 
 		connectedPeripheral.addEventListener('didUpdateNotificationStateForCharacteristics', function (e) {
 			Ti.API.info('didUpdateNotificationStateForCharacteristics');
-			if (e.errorCode !== null) {
+			if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
 				alert('Error while subscribing characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
 			let characteristic = e.characteristic;
-			if (characteristic.isNotifying === true) {
+			var subscribe = global.IOS ? characteristic.isNotifying === true : e.isSubscribed === true;
+			if (subscribe) {
 				logs.push('subscribed for Heart Rate (2A37)');
 			} else {
 				logs.push('unsubscribed for Heart Rate (2A37)');
@@ -293,7 +290,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		});
 
 		connectedPeripheral.addEventListener('didUpdateValueForCharacteristic', function (e) {
-			if (e.errorCode !== null) {
+			if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
 				alert('Error while didUpdateValueForCharacteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
@@ -321,7 +318,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		connectedPeripheral.addEventListener('didUpdateValueForDescriptor', function (e) {
 			Ti.API.info('didUpdateValueForDescriptor');
 			Ti.API.info(e);
-			if (e.errorCode !== null) {
+			if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
 				alert('Error while updating value for descriptor' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
@@ -330,7 +327,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		connectedPeripheral.addEventListener('didWriteValueForCharacteristic', function (e) {
 			Ti.API.info('didWriteValueForCharacteristic');
 			Ti.API.info(e);
-			if (e.errorCode !== null) {
+			if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
 				alert('Error while write value for characteristic ' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
@@ -339,7 +336,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		connectedPeripheral.addEventListener('didWriteValueForDescriptor', function (e) {
 			Ti.API.info('didWriteValueForDescriptor');
 			Ti.API.info(e);
-			if (e.errorCode !== null) {
+			if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
 				alert('Error while write value dor descriptor' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 				return;
 			}
