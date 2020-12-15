@@ -8,15 +8,54 @@ import UIKit
 import TitaniumKit
 import CoreLocation
 
+@objc
 class TiBLEBeaconRegionProxy: TiProxy {
     private var _beaconRegion: CLBeaconRegion!
 
     private override init() {
         super.init()
     }
+
     convenience init(pageContext: TiEvaluator, beaconRegion: CLBeaconRegion) {
         self.init()
         _init(withPageContext: pageContext)
-        _beaconRegion = _beaconRegion
+        _beaconRegion = beaconRegion
+    }
+
+    @objc
+    func identifier() -> String {
+        return _beaconRegion.identifier
+    }
+
+    @objc
+    func major() -> NSNumber? {
+        return _beaconRegion.major
+    }
+
+    @objc
+    func minor() -> NSNumber? {
+        return _beaconRegion.minor
+    }
+
+    @objc
+    var notifyEntryStateOnDisplay: NSNumber {
+        get {
+            return NSNumber(value: _beaconRegion.notifyEntryStateOnDisplay)
+        }
+        set {
+            _beaconRegion.notifyEntryStateOnDisplay = newValue.boolValue
+        }
+    }
+
+    @objc
+    func uuid() -> String? {
+        if #available(iOS 13.0, *) {
+            return _beaconRegion.uuid.uuidString
+        }
+        return nil
+    }
+
+    func beaconRegion() -> CLBeaconRegion {
+        return _beaconRegion
     }
 }
