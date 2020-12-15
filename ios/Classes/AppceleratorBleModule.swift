@@ -7,7 +7,7 @@
 import UIKit
 import TitaniumKit
 import CoreBluetooth
-
+import CoreLocation
 /**
 
  Titanium Swift Module Requirements
@@ -210,4 +210,43 @@ class AppceleratorBleModule: TiModule {
         }
         return nil
     }
+
+    @objc(createBeaconRegion:)
+    func createBeaconRegion(arg: Any?) -> TiBLEBeaconRegionProxy? {
+        let values = arg as? [Any]
+        let options = values?.first as? [String: Any]
+        let major = (options?["major"] as? NSNumber)?.uint16Value
+        let minor = (options?["minor"] as? NSNumber)?.uint16Value
+        guard let uuidString = options?["uuid"] as? String,
+              let uuid = UUID(uuidString: uuidString),
+              let identifier = options?["identifier"] as? String else {
+            return nil
+        }
+        var beaconRegion: CLBeaconRegion?
+        if let major = major,
+           let  minor = minor {
+            if #available(iOS 13.0, *) {
+                beaconRegion =  CLBeaconRegion(uuid: uuid, major: major, minor: minor, identifier: identifier)
+            } else {
+                beaconRegion = CLBeaconRegion(proximityUUID: uuid, major: major, minor: minor, identifier: identifier)
+            }
+        } else if let major = major {
+            if #available(iOS 13.0, *) {
+                beaconRegion =  CLBeaconRegion(uuid: uuid, major: major, identifier: identifier)
+            } else {
+                beaconRegion = CLBeaconRegion(proximityUUID: uuid, major: major, identifier: identifier)
+            }
+        } else {
+            if #available(iOS 13.0, *) {
+                beaconRegion =  CLBeaconRegion(uuid: uuid, identifier: identifier)
+            } else {
+                beaconRegion = CLBeaconRegion(proximityUUID: uuid, identifier: identifier)
+            }
+        }
+        if let beaconRegion = beaconRegion {
+            return TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: beaconRegion)
+        }
+        return nil
+    }
+
 }

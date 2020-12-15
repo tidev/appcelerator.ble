@@ -118,6 +118,24 @@ methods:
    returns:
       type: void  
 
+ - name: startAdvertisingBeaconRegion
+   summary: Instructs the module's internal peripheral manager to start advertising for beacon region.
+   description: |
+    Important: You must call the initPeripheralManager function first!
+   platforms: [iphone, ipad]
+   since: "1.1.0"
+   parameters:
+      - name: measurePower
+        type: Number
+        summary:  This is the RSSI of the device observed from one meter in its intended environment.This value is optional, but should be specified to achieve the best ranging performance.
+         If not specified, it will default to a pre-determined value for the device.
+        optional: true
+      - name: beaconRegion
+        type:  Modules.BLE.BeaconRegion
+        summary: Object of Beacon Region.  
+   returns:
+      type: void  
+
  - name: stopAdvertising
    summary: Instructs the module's internal peripheral manager to stop advertising.
    platforms: [iphone, ipad]

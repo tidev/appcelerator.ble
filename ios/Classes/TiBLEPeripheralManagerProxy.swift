@@ -108,6 +108,17 @@ class TiBLEPeripheralManagerProxy: TiProxy {
         _peripheralManager.startAdvertising(data.isEmpty ? nil : data)
     }
 
+    @objc(startAdvertisingBeaconRegion:)
+    func startAdvertisingBeaconRegion(arg: Any?) {
+        let options = (arg as? [[String: Any]])?.first
+        let measurePower = options?["measurePower"] as? NSNumber
+        let beaconRegion = options?["beaconRegion"] as? TiBLEBeaconRegionProxy
+        let data = beaconRegion?.beaconRegion().peripheralData(withMeasuredPower: measurePower)
+        if let data = data as? [String: Any] {
+            _peripheralManager.startAdvertising(data)
+        }
+    }
+
     @objc(stopAdvertising:)
     func stopAdvertising(arg: Any?) {
         _peripheralManager.stopAdvertising()
