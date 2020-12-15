@@ -692,6 +692,26 @@ methods:
     returns:
       type: Modules.BLE.PeripheralManager
 
+  - name: createBeaconRegion
+    summary: create Beacon Region.
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    parameters:
+      - name: uuid
+        type: String
+        summary: The value of uuid.
+      - name: identifier
+        type: String
+        summary: The value of beacon identifier.
+      - name: major
+        type: Number
+        summary: The value of major.
+      - name: minor
+        type: Number
+        summary: The value of minor.
+    returns:
+      type: Modules.BLE.BeaconRegion
+
   - name: createDescriptor
     summary: create descriptor.
     platforms: [iphone, ipad]
