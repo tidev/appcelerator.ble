@@ -6,6 +6,10 @@
 package appcelerator.ble;
 
 import android.bluetooth.BluetoothGattDescriptor;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -26,11 +30,20 @@ public class TiBLEDescriptorProxy extends KrollProxy
 	//TODO Address or remove this temp method in MOD-2689.
 	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
-		if (dict.containsKey("permission") && dict.containsKey("uuid")) {
+		if (dict.containsKey("permission") && dict.containsKey("uuid") && dict.containsKey("value")) {
 			int permission = (int) dict.get("permission");
 			String uuid = (String) dict.get("uuid");
-
-			return new TiBLEDescriptorProxy(new BluetoothGattDescriptor(UUID.fromString(uuid), permission));
+			Object value = dict.get("value");
+			BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
+			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				 ObjectOutput out = new ObjectOutputStream(bos)) {
+				out.writeObject(value);
+				byte[] bytes = bos.toByteArray();
+				descriptor.setValue(bytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return new TiBLEDescriptorProxy(descriptor);
 		}
 		return null;
 	}
@@ -49,6 +62,9 @@ public class TiBLEDescriptorProxy extends KrollProxy
 	@Kroll.getProperty
 	public BufferProxy value()
 	{
+		if (descriptor.getValue() == null) {
+			return null;
+		}
 		return new BufferProxy(descriptor.getValue());
 	}
 
