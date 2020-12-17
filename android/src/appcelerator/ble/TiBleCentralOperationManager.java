@@ -136,7 +136,7 @@ public class TiBleCentralOperationManager
 						+ "status = " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "fail"));
 		KrollDict dict = new KrollDict();
 		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
-		dict.put("RSSI", rssi);
+		dict.put("rssi", rssi);
 		if (status != BluetoothGatt.GATT_SUCCESS) {
 			String errorMessage = "failed to read remote rssi";
 			dict.put(ERROR_CODE_KEY, status);
