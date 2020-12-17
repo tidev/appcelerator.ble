@@ -52,7 +52,7 @@ properties:
     platforms: [android, iphone, ipad] 
   
   - name: value
-    summary: The value of the descriptor.
+    summary: The value of the characteristic.
     since: "1.0.0"
     type: Titanium.Buffer
     platforms: [android, iphone, ipad]
