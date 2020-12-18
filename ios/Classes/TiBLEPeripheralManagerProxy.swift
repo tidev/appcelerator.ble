@@ -51,10 +51,10 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(addService:)
     func addService(arg: Any?) -> TiBLEServiceProxy? {
         guard let values = arg as? [Any],
-              let options = values.first as? [String: Any],
-              let primary = options["primary"] as? Bool,
-              let uuid = options["uuid"] as? String else {
-            return nil
+            let options = values.first as? [String: Any],
+            let primary = options["primary"] as? Bool,
+            let uuid = options["uuid"] as? String else {
+                return nil
         }
         let cbUUID = CBUUID(string: uuid)
         let service = CBMutableService(type: cbUUID, primary: primary)
@@ -77,8 +77,8 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(removeService:)
     func removeService(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let service = options["service"] as? TiBLEServiceProxy else {
-            return
+            let service = options["service"] as? TiBLEServiceProxy else {
+                return
         }
         _peripheralManager?.remove(service.mutableService())
     }
@@ -86,10 +86,10 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(respondToRequest:)
     func respondToRequest(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let request = options["request"] as? TiBLERequestProxy,
-              let code = options["result"] as? NSNumber,
-              let result = CBATTError.Code(rawValue: code.intValue) else {
-            return
+            let request = options["request"] as? TiBLERequestProxy,
+            let code = options["result"] as? NSNumber,
+            let result = CBATTError.Code(rawValue: code.intValue) else {
+                return
         }
         _peripheralManager.respond(to: request.request(), withResult: result)
     }
@@ -127,8 +127,8 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(publishL2CAPChannel:)
     func publishL2CAPChannel(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let encryption = options["encryptionRequired"] as? Bool else {
-            return
+            let encryption = options["encryptionRequired"] as? Bool else {
+                return
         }
         if #available(iOS 11.0, *) {
             _peripheralManager.publishL2CAPChannel(withEncryption: encryption)
@@ -138,8 +138,8 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(unpublishL2CAPChannel:)
     func unpublishL2CAPChannel(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let psm = options["PSM"] as? NSNumber else {
-            return
+            let psm = options["PSM"] as? NSNumber else {
+                return
         }
         if #available(iOS 11.0, *) {
             _peripheralManager.unpublishL2CAPChannel(psm.uint16Value)
@@ -149,9 +149,9 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(updateValue:)
     func updateValue(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let data = options["data"] as? TiBuffer,
-              let characteristic = (options["characteristic"] as? TiBLEMutableCharacteristicProxy)?.mutableCharacteristic() else {
-            return
+            let data = options["data"] as? TiBuffer,
+            let characteristic = (options["characteristic"] as? TiBLEMutableCharacteristicProxy)?.mutableCharacteristic() else {
+                return
         }
         var cbCentrals = [CBCentral]()
         if let centrals = options["centrals"] as? [TiBLECentralProxy] {
@@ -165,10 +165,10 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     @objc(setDesiredConnectionLatency:)
     func setDesiredConnectionLatency(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-              let latencyValue = (options["latency"] as? NSNumber)?.intValue,
-              let latency = CBPeripheralManagerConnectionLatency(rawValue: latencyValue),
-              let central = options["central"] as? TiBLECentralProxy else {
-            return
+            let latencyValue = (options["latency"] as? NSNumber)?.intValue,
+            let latency = CBPeripheralManagerConnectionLatency(rawValue: latencyValue),
+            let central = options["central"] as? TiBLECentralProxy else {
+                return
         }
         _peripheralManager.setDesiredConnectionLatency(latency, for: central.central())
     }
@@ -223,7 +223,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "errorCode": (error as NSError?)?.code as Any,
                         "errorDomain": (error as NSError?)?.domain as Any,
                         "errorDescription": error?.localizedDescription as Any
-                       ])
+        ])
     }
 
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
@@ -234,7 +234,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                        with: [
                         "central": TiBLECentralProxy(pageContext: pageContext, central: central),
                         "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
-                       ])
+        ])
     }
 
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
@@ -245,7 +245,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                        with: [
                         "central": TiBLECentralProxy(pageContext: pageContext, central: central),
                         "characteristic": TiBLECharacteristicProxy(pageContext: pageContext, characteristic: characteristic)
-                       ])
+        ])
     }
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
         if !self._hasListeners("didReceiveReadRequest") {
@@ -254,7 +254,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
         self.fireEvent("didReceiveReadRequest",
                        with: [
                         "request": TiBLERequestProxy(pageContext: pageContext, request: request)
-                       ])
+        ])
     }
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         if !self._hasListeners("didReceiveWriteRequests") {
@@ -267,7 +267,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
         self.fireEvent("didReceiveWriteRequests",
                        with: [
                         "requests": proxyRequests
-                       ])
+        ])
     }
 
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
@@ -287,7 +287,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "errorDomain": (error as NSError?)?.domain as Any,
                         "errorDescription": error?.localizedDescription as Any,
                         "psm": NSNumber(value: PSM)
-                       ])
+        ])
     }
 
     func peripheralManager(_ peripheral: CBPeripheralManager, didUnpublishL2CAPChannel PSM: CBL2CAPPSM, error: Error?) {
@@ -300,7 +300,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "errorDomain": (error as NSError?)?.domain as Any,
                         "errorDescription": error?.localizedDescription as Any,
                         "psm": NSNumber(value: PSM)
-                       ])
+        ])
     }
 
     @available(iOS 11.0, *)
@@ -314,7 +314,7 @@ extension TiBLEPeripheralManagerProxy: CBPeripheralManagerDelegate {
                         "errorDomain": (error as NSError?)?.domain as Any,
                         "errorDescription": error?.localizedDescription as Any,
                         "channel": (channel == nil ? nil:TiBLEL2CAPchannelProxy(pageContext: pageContext, L2CapChannel: channel!)) as Any
-                       ])
+        ])
     }
 
 }

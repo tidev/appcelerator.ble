@@ -16,6 +16,10 @@ describe('appcelerator.ble', function () {
 			it('should have createMutableCharacteristic function', () => {
 				expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
 			});
+
+			it('should have createBeaconRegion function', () => {
+				expect(BLE.createBeaconRegion).toEqual(jasmine.any(Function));
+			});
 		});
 
 		describe('property', () => {
