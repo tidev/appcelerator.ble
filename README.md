@@ -6,14 +6,47 @@
   - Central can scan nearby peripheral, connect and exchange data with the peripherals
   - Central can subscribe with peripheral to get latest updates for peripheral
 - Act as BLE Peripheral:
-  - Peripheral can advertise services, connect and exchange data with multiple central
+  - Peripheral can advertise services, connect and exchange data with multiple central. This feature
+is currently available on iOS platform only.
 - Use L2CAP Channel:
   - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
-peripheral at real time
+peripheral at real time. This feature is currently available on iOS platform only.
 - Main use case addressed by this module is Exchange of Data and Communicating with Central and
 Peripherals that supports Bluetooth Low Energy.
 
 ## Getting Started
+
+### Android
+
+- Edit the manifest with following uses-permission element to the Android manifest section of the tiapp.xml file.
+```
+<ti:app>
+<android xmlns:android="http://schemas.android.com/apk/res/android">
+  <manifest>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  </manifest>
+</android>
+</ti:app>
+```
+
+- Set the ``` <module> ``` element in tiapp.xml, such as this:
+```
+<modules>
+	<module platform="android">appcelerator.ble</module>
+</modules>
+```
+
+- To access this module from JavaScript, you would do the following:
+
+```
+var BLE = require("appcelerator.ble");
+```
+The BLE variable is a reference to the Module object.
+
+### iOS
 
  - Edit the `plist` with following `uses-permission` element to the ios plist section of the
   tiapp.xml file.
@@ -69,7 +102,7 @@ The BLE variable is a reference to the Module object.
     var centralManager = BLE.initCentralManager();
     ```
 - Check for `didUpdateState` event for `centralManager` status
-- Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for perpherals using `startScan`
+- Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for peripherals using `startScan`
     ```
     centralManager.startScan();
     ```
@@ -129,7 +162,10 @@ The BLE variable is a reference to the Module object.
     centralManager.cancelPeripheralConnection({ peripheral: peripheral });
     ```
 
-## Follow basic steps to create Central application and use Channal for communication:
+- As the module currently provides support to act only as central for the Android, hence to test the example application, user can use any heart-rate peripheral
+or the peripheral simulator in order to do the connection and data-exchange with the central.
+
+## Follow basic steps to create Central application and use Channel for communication: (iOS Only)
 
 - Use `initCentralManager` to create Central Manager
     ```
@@ -251,7 +287,7 @@ The BLE variable is a reference to the Module object.
   channel.close();
   ```
 
-# Act As Peripheral Application
+# Act As Peripheral Application (iOS Only)
 
 ## Follow basic steps to create Peripheral application:
 
@@ -403,10 +439,15 @@ The BLE variable is a reference to the Module object.
 - Please see the `example/` folder.
 - Please see the `example/ImageTransferUsingChannelStream` folder for how to use channel stream API's to transfer bigger data like images.
 
+## Observations
+
+### Android
+
+- This behaviour is observed on certain android devices. While starting the ble scan, make sure the location service is turned-on in order to receive the scan results.
 
 ## Building
 
-Simply run `appc run -p ios --build-only` which will compile and package your module. 
+Simply run `appc run -p ios --build-only` and `appc run -p android --build-only` which will compile and package your module.
 
 Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. /Library/Application Support/Titanium).
 
