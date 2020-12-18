@@ -4,7 +4,7 @@ var BLE = require('appcelerator.ble');
 let beaconUUID = '135C8F13-6A2D-46ED-AA71-FB956FC23742';
 let major = 100;
 let minor = 0;
-let beaconId = 'com.sample.ble.beacon';
+let beaconId = 'com.appcelerator.BluetoothLowEnergy.beacon';
 
 var isAndroid = Ti.Platform.osname === 'android';
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
