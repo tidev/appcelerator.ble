@@ -43,6 +43,30 @@ if (android) {
 			it('should have discoverDescriptorsForCharacteristic function', () => {
 				expect(peripheral.discoverDescriptorsForCharacteristic).toEqual(jasmine.any(Function));
 			});
+
+			it('should have readValueForCharacteristic function', () => {
+				expect(peripheral.readValueForCharacteristic).toEqual(jasmine.any(Function));
+			});
+
+			it('should have writeValueForCharacteristic function', () => {
+				expect(peripheral.writeValueForCharacteristic).toEqual(jasmine.any(Function));
+			});
+
+			it('should have readValueForDescriptor function', () => {
+				expect(peripheral.readValueForDescriptor).toEqual(jasmine.any(Function));
+			});
+
+			it('should have writeValueForDescriptor function', () => {
+				expect(peripheral.writeValueForDescriptor).toEqual(jasmine.any(Function));
+			});
+
+			it('should have subscribeToCharacteristic function', () => {
+				expect(peripheral.subscribeToCharacteristic).toEqual(jasmine.any(Function));
+			});
+
+			it('should have unsubscribeFromCharacteristic function', () => {
+				expect(peripheral.unsubscribeFromCharacteristic).toEqual(jasmine.any(Function));
+			});
 		});
 	});
 }
