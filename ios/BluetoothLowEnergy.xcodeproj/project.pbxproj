@@ -21,7 +21,7 @@
 		F7707A682546BE96004FEBD2 /* TiBLEPeerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */; };
 		F7707A6C2546C196004FEBD2 /* TiBLEIOStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */; };
 		F7807BBC2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7807BBB2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift */; };
-		F788320A257906AE003E0130 /* TiBLEBeaconsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */; };
+		F788320A257906AE003E0130 /* TiBLEBeaconProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7883209257906AE003E0130 /* TiBLEBeaconProxy.swift */; };
 		F788320D2579071F003E0130 /* TiBLEBeaconRegionProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */; };
 		F788321025790786003E0130 /* TiBLERegionManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */; };
 		F78D846A24EAA70800189DD7 /* TiBLECentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78D846924EAA70800189DD7 /* TiBLECentralManager.swift */; };
@@ -51,7 +51,7 @@
 		F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEPeerProxy.swift; path = Classes/TiBLEPeerProxy.swift; sourceTree = "<group>"; };
 		F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEIOStream.swift; path = Classes/TiBLEIOStream.swift; sourceTree = "<group>"; };
 		F7807BBB2522094700C5AABE /* TiBLEPeripheralManagerProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralManagerProxy.swift; path = Classes/TiBLEPeripheralManagerProxy.swift; sourceTree = "<group>"; };
-		F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEBeaconsProxy.swift; path = Classes/TiBLEBeaconsProxy.swift; sourceTree = "<group>"; };
+		F7883209257906AE003E0130 /* TiBLEBeaconProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEBeaconProxy.swift; path = Classes/TiBLEBeaconProxy.swift; sourceTree = "<group>"; };
 		F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLEBeaconRegionProxy.swift; path = Classes/TiBLEBeaconRegionProxy.swift; sourceTree = "<group>"; };
 		F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBLERegionManagerProxy.swift; path = Classes/TiBLERegionManagerProxy.swift; sourceTree = "<group>"; };
 		F78D846924EAA70800189DD7 /* TiBLECentralManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLECentralManager.swift; path = Classes/TiBLECentralManager.swift; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 				F78D846E24F3EF1E00189DD7 /* TiBLEUtils.swift */,
 				F7707A672546BE96004FEBD2 /* TiBLEPeerProxy.swift */,
 				F7707A6B2546C196004FEBD2 /* TiBLEIOStream.swift */,
-				F7883209257906AE003E0130 /* TiBLEBeaconsProxy.swift */,
+				F7883209257906AE003E0130 /* TiBLEBeaconProxy.swift */,
 				F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */,
 				F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */,
 			);
@@ -263,7 +263,7 @@
 				E2D656E924DD493D00946B63 /* TiBLEMutableCharacteristicProxy.swift in Sources */,
 				F7BEE02024C95E80005DB480 /* TiBLEDescriptorProxy.swift in Sources */,
 				F7BEE02124C95E80005DB480 /* TiBLECentralProxy.swift in Sources */,
-				F788320A257906AE003E0130 /* TiBLEBeaconsProxy.swift in Sources */,
+				F788320A257906AE003E0130 /* TiBLEBeaconProxy.swift in Sources */,
 				F788321025790786003E0130 /* TiBLERegionManagerProxy.swift in Sources */,
 				E2F46DA625148C5B0059EF83 /* TiBLEL2CAPchannelProxy.swift in Sources */,
 				F788320D2579071F003E0130 /* TiBLEBeaconRegionProxy.swift in Sources */,
