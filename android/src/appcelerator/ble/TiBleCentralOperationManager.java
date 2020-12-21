@@ -27,7 +27,11 @@ public class TiBleCentralOperationManager
 
 	private static final String LCAT = "TiBleCentralOperationManager";
 	private static final String UUID_CLIENT_CHARACTERISTIC_CONFIGURATION = "00002902-0000-1000-8000-00805f9b34fb";
-
+	private static final String ERROR_CODE_KEY = "errorCode";
+	private static final String ERROR_DESCRIPTION_KEY = "errorDescription";
+	private static final String SOURCE_PERIPHERAL_KEY = "sourcePeripheral";
+	private static final String CHARACTERISTIC_KEY = "characteristic";
+	private static final String DESCRIPTOR_KEY = "descriptor";
 	private final Context context;
 	private final TiBLECentralManagerProxy centralManagerProxy;
 	private TiBLEPeripheralProxy peripheralProxy;
@@ -131,11 +135,12 @@ public class TiBleCentralOperationManager
 		Log.d(LCAT, "handleOnReadRemoteRssi(): rssi =  " + rssi
 						+ "status = " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "fail"));
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
 		dict.put("RSSI", rssi);
 		if (status != BluetoothGatt.GATT_SUCCESS) {
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to read remote rssi");
+			String errorMessage = "failed to read remote rssi";
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		}
 		peripheralProxy.fireEvent("didReadRSSI", dict);
 	}
@@ -146,14 +151,15 @@ public class TiBleCentralOperationManager
 						+ (status == BluetoothGatt.GATT_SUCCESS ? "success" : "fail"));
 
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
 
 		if (status == BluetoothGatt.GATT_SUCCESS) {
 			peripheralProxy.addServices(gatt.getServices());
 		} else {
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to discover services for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to discover services for peripheral name/address- " + peripheralProxy.name()
+								  + " / " + peripheralProxy.address();
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		}
 
 		peripheralProxy.fireEvent("didDiscoverServices", dict);
@@ -162,8 +168,8 @@ public class TiBleCentralOperationManager
 	private void handleOnCharacteristicRead(BluetoothGattCharacteristic characteristic, int status)
 	{
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", new TiBLECharacteristicProxy(characteristic));
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, new TiBLECharacteristicProxy(characteristic));
 		if (status == BluetoothGatt.GATT_SUCCESS) {
 			Log.d(LCAT, "handleOnCharacteristicRead(): characteristic- " + characteristic.getUuid().toString()
 							+ " read successful.");
@@ -171,9 +177,10 @@ public class TiBleCentralOperationManager
 		} else {
 			Log.d(LCAT, "handleOnCharacteristicRead(): characteristic- " + characteristic.getUuid().toString()
 							+ " read failed.");
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to read the characteristic for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to read the characteristic for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		}
 
 		peripheralProxy.fireEvent("didUpdateValueForCharacteristic", dict);
@@ -182,14 +189,15 @@ public class TiBleCentralOperationManager
 	private void handleOnCharacteristicWrite(BluetoothGattCharacteristic characteristic, int status)
 	{
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", new TiBLECharacteristicProxy(characteristic));
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, new TiBLECharacteristicProxy(characteristic));
 		if (status != BluetoothGatt.GATT_SUCCESS) {
 			Log.d(LCAT, "handleOnCharacteristicWrite(): characteristic- " + characteristic.getUuid().toString()
 							+ " write failed.");
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to write value on characteristic for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to write value on characteristic for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		} else {
 			Log.d(LCAT, "handleOnCharacteristicWrite(): characteristic- " + characteristic.getUuid().toString()
 							+ " write successful.");
@@ -201,13 +209,14 @@ public class TiBleCentralOperationManager
 	private void handleOnDescriptorRead(BluetoothGattDescriptor descriptor, int status)
 	{
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("descriptor", new TiBLEDescriptorProxy(descriptor));
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(DESCRIPTOR_KEY, new TiBLEDescriptorProxy(descriptor));
 		if (status != BluetoothGatt.GATT_SUCCESS) {
 			Log.d(LCAT, "handleOnDescriptorRead(): descriptor- " + descriptor.getUuid().toString() + " read failed.");
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to read the descriptor for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to read the descriptor for peripheral name/address- " + peripheralProxy.name()
+								  + " / " + peripheralProxy.address();
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		} else {
 			Log.d(LCAT,
 				  "handleOnDescriptorRead(): descriptor- " + descriptor.getUuid().toString() + " read successful.");
@@ -219,13 +228,14 @@ public class TiBleCentralOperationManager
 	private void handleOnDescriptorWrite(BluetoothGattDescriptor descriptor, int status)
 	{
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("descriptor", new TiBLEDescriptorProxy(descriptor));
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(DESCRIPTOR_KEY, new TiBLEDescriptorProxy(descriptor));
 		if (status != BluetoothGatt.GATT_SUCCESS) {
 			Log.d(LCAT, "handleOnDescriptorWrite(): descriptor- " + descriptor.getUuid().toString() + " write failed.");
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to write value on descriptor for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to write value on descriptor for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 		} else {
 			Log.d(LCAT,
 				  "handleOnDescriptorWrite(): descriptor- " + descriptor.getUuid().toString() + " write successful.");
@@ -271,7 +281,7 @@ public class TiBleCentralOperationManager
 		// In Android, the all included services have already been discovered as part of the discoverServices operation.
 		// so directly fire corresponding result event for it.
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
 		dict.put("service", serviceProxy);
 		peripheralProxy.fireEvent("didDiscoverIncludedServices", dict);
 	}
@@ -281,7 +291,7 @@ public class TiBleCentralOperationManager
 		// In Android, all characteristics have already been discovered as part of the discoverServices operation.
 		// so directly fire corresponding result event for it.
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
 		dict.put("service", serviceProxy);
 		peripheralProxy.fireEvent("didDiscoverCharacteristics", dict);
 	}
@@ -291,8 +301,8 @@ public class TiBleCentralOperationManager
 		// In Android, all descriptors have already been discovered as part of the discoverServices operation.
 		// so directly fire corresponding result event for it.
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", characteristicProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, characteristicProxy);
 		peripheralProxy.fireEvent("didDiscoverDescriptorsForCharacteristics", dict);
 	}
 
@@ -307,15 +317,17 @@ public class TiBleCentralOperationManager
 			Log.d(LCAT, "handleDisconnection(): disconnected to peripheral: name- " + peripheralProxy.name()
 							+ ", address- " + peripheralProxy.address());
 			if (status != BluetoothGatt.GATT_SUCCESS) {
-				dict.put("errorCode", status);
-				dict.put("errorDescription", "connection disconnected with the peripheral.");
+				String errorMessage = "connection disconnected with the peripheral.";
+				dict.put(ERROR_CODE_KEY, status);
+				dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 			}
 			centralManagerProxy.fireEvent("didDisconnectPeripheral", dict);
 		} else {
 			Log.d(LCAT, "handleDisconnection(): failed to connect with peripheral: name- " + peripheralProxy.name()
 							+ ", address- " + peripheralProxy.address());
-			dict.put("errorCode", status);
-			dict.put("errorDescription", "failed to connect with peripheral.");
+			String errorMessage = "failed to connect with peripheral.";
+			dict.put(ERROR_CODE_KEY, status);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(status, errorMessage));
 			centralManagerProxy.fireEvent("didFailToConnectPeripheral", dict);
 		}
 
@@ -330,11 +342,12 @@ public class TiBleCentralOperationManager
 						+ " read initiation status- ." + isReadInitiated);
 		if (!isReadInitiated) {
 			KrollDict dict = new KrollDict();
-			dict.put("sourcePeripheral", peripheralProxy);
-			dict.put("characteristic", characteristicProxy);
-			dict.put("errorCode", BluetoothGatt.GATT_FAILURE);
-			dict.put("errorDescription", "failed to initiate reading characteristic for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to initiate reading characteristic for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+			dict.put(CHARACTERISTIC_KEY, characteristicProxy);
+			dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(BluetoothGatt.GATT_FAILURE, errorMessage));
 			peripheralProxy.fireEvent("didUpdateValueForCharacteristic", dict);
 		}
 	}
@@ -348,12 +361,12 @@ public class TiBleCentralOperationManager
 						+ isWritingInitiated);
 		if (!isWritingInitiated) {
 			KrollDict dict = new KrollDict();
-			dict.put("sourcePeripheral", peripheralProxy);
-			dict.put("characteristic", charProxy);
-			dict.put("errorCode", BluetoothGatt.GATT_FAILURE);
-			dict.put("errorDescription",
-					 "failed to initiate writing value on characteristic for peripheral name/address- "
-						 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to initiate writing value on characteristic for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+			dict.put(CHARACTERISTIC_KEY, charProxy);
+			dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(BluetoothGatt.GATT_FAILURE, errorMessage));
 			peripheralProxy.fireEvent("didWriteValueForCharacteristic", dict);
 		}
 	}
@@ -365,11 +378,12 @@ public class TiBleCentralOperationManager
 						+ isReadInitiated);
 		if (!isReadInitiated) {
 			KrollDict dict = new KrollDict();
-			dict.put("sourcePeripheral", peripheralProxy);
-			dict.put("descriptor", descriptorProxy);
-			dict.put("errorCode", BluetoothGatt.GATT_FAILURE);
-			dict.put("errorDescription", "failed to initiate reading value for descriptor for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to initiate reading value on descriptor for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+			dict.put(DESCRIPTOR_KEY, descriptorProxy);
+			dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(BluetoothGatt.GATT_FAILURE, errorMessage));
 			peripheralProxy.fireEvent("didUpdateValueForDescriptor", dict);
 		}
 	}
@@ -383,11 +397,12 @@ public class TiBleCentralOperationManager
 						+ isWritingInitiated);
 		if (!isWritingInitiated) {
 			KrollDict dict = new KrollDict();
-			dict.put("sourcePeripheral", peripheralProxy);
-			dict.put("descriptor", descriptorProxy);
-			dict.put("errorCode", BluetoothGatt.GATT_FAILURE);
-			dict.put("errorDescription", "failed to initiate writing value on descriptor for peripheral name/address- "
-											 + peripheralProxy.name() + " / " + peripheralProxy.address());
+			String errorMessage = "failed to initiate writing value on descriptor for peripheral name/address- "
+								  + peripheralProxy.name() + " / " + peripheralProxy.address();
+			dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+			dict.put(DESCRIPTOR_KEY, descriptorProxy);
+			dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
+			dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(BluetoothGatt.GATT_FAILURE, errorMessage));
 			peripheralProxy.fireEvent("didWriteValueForDescriptor", dict);
 		}
 	}
@@ -440,8 +455,8 @@ public class TiBleCentralOperationManager
 		Log.d(LCAT, "subscribeToCharacteristic(): subscribe successful");
 
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", charProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, charProxy);
 		dict.put("isSubscribed", true);
 		peripheralProxy.fireEvent("didUpdateNotificationStateForCharacteristics", dict);
 	}
@@ -494,8 +509,8 @@ public class TiBleCentralOperationManager
 		Log.d(LCAT, "unsubscribeToCharacteristic(): unsubscribe successful");
 
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", charProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, charProxy);
 		dict.put("isSubscribed", false);
 		peripheralProxy.fireEvent("didUpdateNotificationStateForCharacteristics", dict);
 	}
@@ -504,12 +519,49 @@ public class TiBleCentralOperationManager
 														boolean isSubscribed)
 	{
 		KrollDict dict = new KrollDict();
-		dict.put("sourcePeripheral", peripheralProxy);
-		dict.put("characteristic", charProxy);
+		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
+		dict.put(CHARACTERISTIC_KEY, charProxy);
 		dict.put("isSubscribed", isSubscribed);
-		dict.put("errorCode", BluetoothGatt.GATT_FAILURE);
-		dict.put("errorDescription", errorDescription);
+		dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
+		dict.put(ERROR_DESCRIPTION_KEY, getErrorDescriptionMessage(BluetoothGatt.GATT_FAILURE, errorDescription));
 		peripheralProxy.fireEvent("didUpdateNotificationStateForCharacteristics", dict);
+	}
+
+	private String getErrorDescriptionMessage(int status, String message)
+	{
+		String errorMessage;
+		switch (status) {
+			case BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION:
+				errorMessage = "Insufficient authentication for a given operation.";
+				break;
+			case BluetoothGatt.GATT_INVALID_ATTRIBUTE_LENGTH:
+				errorMessage = "The write operation exceeds the maximum length of the attribute.";
+				break;
+			case BluetoothGatt.GATT_INVALID_OFFSET:
+				errorMessage = "The read or write operation was requested with an invalid offset.";
+				break;
+			case BluetoothGatt.GATT_READ_NOT_PERMITTED:
+				errorMessage = "The read operation is not permitted.";
+				break;
+			case BluetoothGatt.GATT_REQUEST_NOT_SUPPORTED:
+				errorMessage = "The given request is not supported.";
+				break;
+			case BluetoothGatt.GATT_WRITE_NOT_PERMITTED:
+				errorMessage = "The write operation is not permitted.";
+				break;
+			case BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION:
+				errorMessage = "Insufficient encryption for a given operation.";
+				break;
+			case BluetoothGatt.GATT_FAILURE:
+			default:
+				if (message == null) {
+					errorMessage = "Failed to perform this operation.";
+				} else {
+					errorMessage = message;
+				}
+				break;
+		}
+		return errorMessage;
 	}
 
 	public enum ConnectionState { New, Connecting, Connected, Disconnecting, Disconnected }
