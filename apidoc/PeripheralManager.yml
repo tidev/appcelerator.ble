@@ -119,7 +119,7 @@ methods:
       type: void  
 
  - name: stopAdvertising
-   summary: Instructs the module's internal peripheral manager to start advertising.
+   summary: Instructs the module's internal peripheral manager to stop advertising.
    platforms: [iphone, ipad]
    since: "1.0.0"
    returns:
