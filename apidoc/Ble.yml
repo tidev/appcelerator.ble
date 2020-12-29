@@ -724,8 +724,8 @@ methods:
 
   - name: initPeripheralManager
     summary: Initializes the module's peripheral manager object. This function must be called in an app that acts as a peripheral before any other function can be used.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: showPowerAlert
         type: Boolean
@@ -821,4 +821,11 @@ methods:
     returns:
       type: "Boolean"
       summary: "Returns true if BLE is supported on the device, false otherwise."
-      
+
+  - name: isAdvertisingSupported
+    summary: Determines whether Bluetooth Low Energy Advertising feature is supported on the local Bluetooth device.
+    since: "1.1.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if BLE Advertising is supported on the device, false on bluetooth off or if BLE Advertising is not supported."

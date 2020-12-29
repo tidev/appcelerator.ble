@@ -14,6 +14,8 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import appcelerator.ble.peripheral.TiBLEPeripheralManagerProxy;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -27,6 +29,7 @@ public class AppceleratorBleModule extends KrollModule
 
 	private final BluetoothAdapter btAdapter;
 	private TiBLECentralManagerProxy centralManagerProxy;
+	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 
 	//Temp constant for descriptor UUID
 	//TODO Address or remove this temp constant in MOD-2689.
@@ -146,9 +149,24 @@ public class AppceleratorBleModule extends KrollModule
 	}
 
 	@Kroll.method
+	public boolean isAdvertisingSupported()
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			return btAdapter.getBluetoothLeAdvertiser() != null;
+		}
+		return false;
+	}
+
+	@Kroll.method
 	public TiBLECentralManagerProxy initCentralManager(@Kroll.argument(optional = true) KrollDict dict)
 	{
 		return centralManagerProxy = new TiBLECentralManagerProxy();
+	}
+
+	@Kroll.method
+	public TiBLEPeripheralManagerProxy initPeripheralManager(@Kroll.argument(optional = true) KrollDict dict)
+	{
+		return peripheralManagerProxy = new TiBLEPeripheralManagerProxy();
 	}
 
 	@Override
@@ -157,6 +175,9 @@ public class AppceleratorBleModule extends KrollModule
 		super.onDestroy(activity);
 		if (centralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
 			centralManagerProxy.cleanup();
+		}
+		if (peripheralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
+			peripheralManagerProxy.cleanup();
 		}
 	}
 
