@@ -15,6 +15,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import appcelerator.ble.peripheral.TiBLEMutableCharacteristicProxy;
 import appcelerator.ble.peripheral.TiBLEPeripheralManagerProxy;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
@@ -32,12 +33,12 @@ public class AppceleratorBleModule extends KrollModule
 	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 
 	//Temp constant for descriptor UUID
-	//TODO Address or remove this temp constant in MOD-2689.
+	//TODO Address or remove this temp constant in MOD-2849.
 	@Kroll.constant
 	public static final String MOCK_UUID_FOR_DESCRIPTOR_UT = "4f448481-bf5b-49fb-bb84-794303e3dc33";
 
 	//Temp constant for Characteristic UUID
-	//TODO Address or remove this temp constant in MOD-2689.
+	//TODO Address or remove this temp constant in MOD-2849.
 	@Kroll.constant
 	public static final String MOCK_UUID_FOR_CHARACTERISTIC_UT = "3b07719f-d2fc-4d09-82f4-806e07702397";
 
@@ -100,6 +101,14 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.constant
 	public static final BufferProxy DISABLE_NOTIFICATION_VALUE =
 		new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
+	@Kroll.constant
+	public static final int DESCRIPTOR_PERMISSION_READ = BluetoothGattDescriptor.PERMISSION_READ;
+	@Kroll.constant
+	public static final int DESCRIPTOR_PERMISSION_READ_ENCRYPTED = BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED;
+	@Kroll.constant
+	public static final int DESCRIPTOR_PERMISSION_WRITE = BluetoothGattDescriptor.PERMISSION_WRITE;
+	@Kroll.constant
+	public static final int DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED = BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED;
 
 	public AppceleratorBleModule()
 	{
@@ -182,7 +191,7 @@ public class AppceleratorBleModule extends KrollModule
 	}
 
 	//temporary method for descriptor UT.
-	//TODO Address or remove this temp method in MOD-2689.
+	//TODO Address or remove this temp method in MOD-2849.
 	@Kroll.method
 	public TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
@@ -190,7 +199,7 @@ public class AppceleratorBleModule extends KrollModule
 	}
 
 	//temporary method for Characteristic UT.
-	//TODO Address or remove this temp method in MOD-2689.
+	//TODO Address or remove this temp method in MOD-2849.
 	@Kroll.method
 	public TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
 	{
@@ -202,10 +211,22 @@ public class AppceleratorBleModule extends KrollModule
 	}
 
 	//temporary method for Service UT.
-	//TODO: Address or remove this temp method in MOD-2689.
+	//TODO: Address or remove this temp method in MOD-2849.
 	@Kroll.method
 	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
 	{
 		return TiBLEServiceProxy.mockServiceForUT(dict);
+	}
+
+	@Kroll.method
+	public TiBLEMutableCharacteristicProxy createMutableCharacteristic(KrollDict dict)
+	{
+		return TiBLEMutableCharacteristicProxy.createMutableCharacteristicProxy(dict);
+	}
+
+	@Kroll.method
+	public TiBLEDescriptorProxy createDescriptor(KrollDict dict)
+	{
+		return TiBLEDescriptorProxy.createDescriptorProxy(dict);
 	}
 }
