@@ -8,6 +8,7 @@ package appcelerator.ble.peripheral;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
@@ -19,6 +20,8 @@ public class TiBLEManagePeripheralService extends Service
 {
 	private static final String LCAT = TiBLEManagePeripheralService.class.getSimpleName();
 	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
+	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
+	private TiBLEPeripheralOperationManager peripheralOperationManager;
 	private final IBinder binder = new LocalBinder();
 
 	@Override
@@ -62,6 +65,28 @@ public class TiBLEManagePeripheralService extends Service
 			NotificationManager manager = getSystemService(NotificationManager.class);
 			manager.createNotificationChannel(serviceChannel);
 		}
+	}
+
+	public void initialisePeripheralAndOpenGattServer(TiBLEPeripheralManagerProxy peripheralManagerProxy)
+	{
+		this.peripheralManagerProxy = peripheralManagerProxy;
+		peripheralOperationManager = new TiBLEPeripheralOperationManager(this, peripheralManagerProxy);
+		peripheralOperationManager.openGattServer();
+	}
+
+	public void addService(BluetoothGattService service)
+	{
+		peripheralOperationManager.addService(service);
+	}
+
+	public void removeServiceFromServer(BluetoothGattService service)
+	{
+		peripheralOperationManager.removeService(service);
+	}
+
+	public void removeAllServicesFromServer()
+	{
+		peripheralOperationManager.clearServices();
 	}
 
 	public class LocalBinder extends Binder
