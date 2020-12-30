@@ -14,12 +14,14 @@ import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
 public class TiBLEDescriptorProxy extends KrollProxy
 {
 	private BluetoothGattDescriptor descriptor;
+	private static final String LCAT = "TiBLEDescriptorProxy";
 
 	public TiBLEDescriptorProxy(BluetoothGattDescriptor descriptor)
 	{
@@ -27,7 +29,7 @@ public class TiBLEDescriptorProxy extends KrollProxy
 	}
 
 	//temporary method for descriptor UT.
-	//TODO Address or remove this temp method in MOD-2689.
+	//TODO Address or remove this temp method in MOD-2849.
 	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
 	{
 		if (dict.containsKey("permission") && dict.containsKey("uuid") && dict.containsKey("value")) {
@@ -46,6 +48,30 @@ public class TiBLEDescriptorProxy extends KrollProxy
 			return new TiBLEDescriptorProxy(descriptor);
 		}
 		return null;
+	}
+
+	public static TiBLEDescriptorProxy createDescriptorProxy(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("permission") || !dict.containsKey("uuid")) {
+			Log.e(LCAT, "createDescriptorProxy(): Unable to create Descriptor, required parameters not provided");
+			return null;
+		}
+		String uuid = (String) dict.get("uuid");
+		int permission = (int) dict.get("permission");
+		BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
+		if (dict.containsKey("value")) {
+			Object value = dict.get("value");
+			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				 ObjectOutput out = new ObjectOutputStream(bos)) {
+				out.writeObject(value);
+				byte[] bytes = bos.toByteArray();
+				descriptor.setValue(bytes);
+			} catch (IOException e) {
+				Log.e(LCAT,
+					  "createDescriptorProxy(): Error while converting Object into byte Array: " + e.getMessage());
+			}
+		}
+		return new TiBLEDescriptorProxy(descriptor);
 	}
 
 	public BluetoothGattDescriptor getDescriptor()
