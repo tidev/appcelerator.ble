@@ -118,8 +118,8 @@ class TiBLECentralManagerProxy: TiProxy {
     @objc(retrievePeripheralsWithIdentifiers:)
     func retrievePeripheralsWithIdentifiers(arg: Any?) -> [TiBLEPeripheralProxy] {
         guard let args = (arg as? [[String: Any]])?.first,
-              let uuids = args["UUIDs"] as? [String] else {
-            return []
+            let uuids = args["UUIDs"] as? [String] else {
+                return []
         }
         let ids = TiBLEUtils.toUUIDs(from: uuids)
         let cbPeripherals = _centralManager.retrievePeripherals(withIdentifiers: ids)
@@ -135,8 +135,8 @@ class TiBLECentralManagerProxy: TiProxy {
     @objc(retrieveConnectedPeripheralsWithServices:)
     func retrieveConnectedPeripheralsWithServices(arg: Any?) -> [TiBLEPeripheralProxy] {
         guard let args = (arg as? [[String: Any]])?.first,
-              let uuids = args["UUIDs"] as? [String] else {
-            return []
+            let uuids = args["UUIDs"] as? [String] else {
+                return []
         }
         let ids = TiBLEUtils.toCBUUIDs(from: uuids)
         let cbPeripherals = _centralManager.retrieveConnectedPeripherals(withServices: ids)
@@ -152,8 +152,8 @@ class TiBLECentralManagerProxy: TiProxy {
     @objc(cancelPeripheralConnection:)
     func cancelPeripheralConnection(arg: Any?) {
         guard let args = (arg as? [[String: Any]])?.first,
-              let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
-            return
+            let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
+                return
         }
         _centralManager.cancelPeripheralConnection(peripheral.peripheral())
     }
@@ -161,8 +161,8 @@ class TiBLECentralManagerProxy: TiProxy {
     @objc(connectPeripheral:)
     func connectPeripheral(arg: Any?) {
         guard let args = (arg as? [[String: Any]])?.first,
-              let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
-            return
+            let peripheral = args["peripheral"] as? TiBLEPeripheralProxy else {
+                return
         }
         var options = [String: Any]()
         if let values = args["options"] as? [String: Any] {
