@@ -707,6 +707,34 @@ properties:
     platforms: [android]
     since: "1.0.0"
 
+  - name: DESCRIPTOR_PERMISSION_READ
+    type: Number
+    summary: A read permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_READ_ENCRYPTED
+    type: Number
+    summary: An encrypted read permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_WRITE
+    type: Number
+    summary: A write permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED
+    type: Number
+    summary: An encrypted write permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
@@ -738,8 +766,8 @@ methods:
 
   - name: createDescriptor
     summary: create descriptor.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: value
         type: Object
@@ -747,20 +775,27 @@ methods:
       - name: uuid
         type: String
         summary: The Bluetooth-specific UUID of the descriptor.
+      - name: permission
+        type: Number
+        summary: The permission for descriptor. This parameter is only for android. In android, the
+            permissions can be different for characteristic and descriptor. If Characteristic have the
+            read permission then it is only readable and if descriptor have the write permission, then
+            it is only writable. 
+        optional: false
     returns:
       type: Modules.BLE.Descriptor
 
   - name: createMutableCharacteristic
     summary: create mutable characteristic.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: properties
-        type: Array<Number>
-        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.
+        type: [Array<Number>, Number]
+        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.This parameter is of type Number in android.
       - name: permissions
-        type: Array<Number>
-        summary: The permissions of the characteristic value.
+        type: [Array<Number>, Number]
+        summary: The permissions of the characteristic value. This parameter is of type Number in android.
       - name: uuid
         type: String
         summary: The Bluetooth-specific UUID of the characteristic.

@@ -34,8 +34,8 @@ properties:
 methods:
  - name: addService
    summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
+   platforms: [android, iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
    parameters:
       - name: characteristics
         type: Array<Modules.BLE.Characteristic>
@@ -44,7 +44,7 @@ methods:
         type: String
         summary: The Bluetooth-specific UUID of the attribute.
       - name: primary
-        type: Number
+        type: Boolean
         summary: The type of the service (primary or secondary). 
    returns:
       type: Modules.BLE.Service
@@ -52,8 +52,8 @@ methods:
 
  - name: removeService
    summary: Removes a specified published service from the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
+   platforms: [android, iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
    parameters:
       - name: service
         type: Modules.BLE.Service
@@ -63,8 +63,8 @@ methods:
 
  - name: removeAllServices
    summary: Removes all published services from the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
+   platforms: [android,iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
    returns:
       type: void
 
@@ -257,9 +257,9 @@ events:
         summary: The error description; only peresent if an 
 
   - name: didAddService
-    summary: This event returns the result of a addService call. If advertisement could not be started, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    summary: This event returns the result of a addService call. If service could not be added, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: service
         type: Modules.BLE.Service
