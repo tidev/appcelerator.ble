@@ -821,15 +821,4 @@ methods:
     returns:
       type: "Boolean"
       summary: "Returns true if BLE is supported on the device, false otherwise."
-
-events:
-  - name: didUpdateState
-    summary: Fired when the state of the local Bluetooth adapter changes.
-    description: |
-        Most possible reason for this event to occur is either bluetooth is turning on or off.
-    since: "1.0.0"
-    platforms: [android]
-    properties:
-      - name: state
-        summary: An integer describing the state of the Bluetooth adapter.
-        type: Number
+      

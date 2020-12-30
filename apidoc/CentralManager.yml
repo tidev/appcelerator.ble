@@ -156,11 +156,11 @@ events:
     summary: A event called when centrel manager state updated
     description: |
          Invoked whenever the central manager's state has been updated. Commands should only be issued when the state is
-         Modules.BLE.CENTREL_MANAGER_STATE_POWERED_ON. A state below Modules.BLE.CENTREL_MANAGER_STATE_POWERED_ON
+         Modules.BLE.MANAGER_STATE_POWERED_ON. A state below Modules.BLE.MANAGER_STATE_POWERED_ON
          implies that scanning has stopped and any connected peripherals have been disconnected. If the state moves below
-         Modules.BLE.CENTREL_MANAGER_STATE_POWERED_OFF, all Peripheral objects obtained from this central
+         Modules.BLE.MANAGER_STATE_POWERED_OFF, all Peripheral objects obtained from this central
          manager become invalid and must be retrieved or discovered again.
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
     since: "1.0.0"
     properties:
       - name: state
