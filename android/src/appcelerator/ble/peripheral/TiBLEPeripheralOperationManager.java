@@ -101,4 +101,9 @@ public class TiBLEPeripheralOperationManager
 	{
 		bluetoothGattServer.clearServices();
 	}
+
+	public void closeGATTServer()
+	{
+		bluetoothGattServer.close();
+	}
 }
