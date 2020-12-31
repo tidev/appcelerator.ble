@@ -14,7 +14,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
+import androidx.annotation.RequiresApi;
 import appcelerator.ble.TiBLEServiceProxy;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
 import java.util.HashMap;
@@ -126,6 +128,51 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 		bleService.removeAllServicesFromServer();
 	}
 
+	@Kroll.method
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public void startAdvertising(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("serviceUUIDs") || !dict.containsKey("localName")) {
+			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, required parameters not provided");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, GATT server not opened");
+			return;
+		}
+		Object[] serviceUUIDObjects = (Object[]) dict.get("serviceUUIDs");
+		boolean name = (boolean) dict.get("localName");
+		if (serviceUUIDObjects != null) {
+			String[] uuids = new String[serviceUUIDObjects.length];
+			for (int i = 0; i < serviceUUIDObjects.length; i++) {
+				uuids[i] = (String) serviceUUIDObjects[i];
+			}
+			bleService.startAdvertising(uuids, name);
+		}
+	}
+
+	@Kroll.method
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public void stopAdvertising()
+	{
+		if (bleService == null) {
+			Log.e(LCAT, "stopAdvertising(): Cannot stop Advertising, GATT server not opened");
+			return;
+		}
+		bleService.stopAdvertising();
+	}
+
+	@Kroll.getProperty(name = "isAdvertising")
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public boolean isAdvertising()
+	{
+		if (bleService == null) {
+			Log.e(LCAT, "isAdvertising(): Advertising is not going on, GATT server not opened");
+			return false;
+		}
+		return bleService.isLEAdvertising();
+	}
+
 	public void cleanup()
 	{
 		try {
@@ -133,6 +180,24 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 		} catch (IllegalArgumentException e) {
 			Log.e(LCAT, "cleanup(): Error during unregistering the receiver," + e.getMessage());
 		}
+		if (bleService != null) {
+			closePeripheral();
+		}
+	}
+
+	@Kroll.method
+	public void closePeripheral()
+	{
+		if (bleService == null) {
+			Log.e(LCAT, "closePeripheral(): Cannot close peripheral as GATT server already not opened.");
+			return;
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			if (isAdvertising()) {
+				bleService.stopAdvertising();
+			}
+		}
+		bleService.closeGattServer();
 		stopAndUnbindService();
 	}
 
@@ -141,5 +206,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 		HashMap<String, Integer> dict = new HashMap<>();
 		dict.put("state", state);
 		fireEvent("didUpdateState", dict);
+		if (state == BluetoothAdapter.STATE_OFF && bleService != null) {
+			closePeripheral();
+		}
 	}
 }
