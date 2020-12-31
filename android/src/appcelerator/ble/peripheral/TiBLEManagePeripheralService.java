@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import org.appcelerator.kroll.common.Log;
 
@@ -22,6 +23,7 @@ public class TiBLEManagePeripheralService extends Service
 	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
 	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 	private TiBLEPeripheralOperationManager peripheralOperationManager;
+	private TiBLEPeripheralAdvertiseManager advertiseManager;
 	private final IBinder binder = new LocalBinder();
 
 	@Override
@@ -87,6 +89,36 @@ public class TiBLEManagePeripheralService extends Service
 	public void removeAllServicesFromServer()
 	{
 		peripheralOperationManager.clearServices();
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public void startAdvertising(String[] serviceUUIDs, boolean localName)
+	{
+		if (advertiseManager == null) {
+			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxy);
+		}
+		advertiseManager.startAdvertising(serviceUUIDs, localName);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public void stopAdvertising()
+	{
+		advertiseManager.stopAdvertising();
+	}
+
+	public void closeGattServer()
+	{
+		peripheralOperationManager.closeGATTServer();
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public boolean isLEAdvertising()
+	{
+		if (advertiseManager == null) {
+			Log.e(LCAT, "isLEAdvertising(): Advertise process is not initialized");
+			return false;
+		}
+		return advertiseManager.isAdvertising();
 	}
 
 	public class LocalBinder extends Binder
