@@ -10,15 +10,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import appcelerator.ble.TiBLECentralManagerProxy;
+import appcelerator.ble.peripheral.TiBLEPeripheralManagerProxy;
 
 public class StateBroadcastReceiver extends BroadcastReceiver
 {
 
-	private TiBLECentralManagerProxy proxy;
+	private TiBLECentralManagerProxy centralManagerProxy;
+	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 
-	public StateBroadcastReceiver(TiBLECentralManagerProxy proxy)
+	public StateBroadcastReceiver(TiBLECentralManagerProxy centralManagerProxy)
 	{
-		this.proxy = proxy;
+		this.centralManagerProxy = centralManagerProxy;
+	}
+
+	public StateBroadcastReceiver(TiBLEPeripheralManagerProxy peripheralManagerProxy)
+	{
+		this.peripheralManagerProxy = peripheralManagerProxy;
 	}
 
 	@Override
@@ -27,7 +34,12 @@ public class StateBroadcastReceiver extends BroadcastReceiver
 		String action = intent.getAction();
 		if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
 			final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-			proxy.bluetoothStateChanged(state);
+			if (centralManagerProxy != null) {
+				centralManagerProxy.bluetoothStateChanged(state);
+			}
+			if (peripheralManagerProxy != null) {
+				peripheralManagerProxy.bluetoothStateChanged(state);
+			}
 		}
 	}
 }
