@@ -28,7 +28,7 @@ describe('appcelerator.service', function () {
 		});
 
 		it('should have valid primary value', () => {
-			expect(service.primary).toEqual(true);
+			expect(service.isPrimary).toEqual(true);
 		});
 
 		it('should have valid includedServices value', () => {

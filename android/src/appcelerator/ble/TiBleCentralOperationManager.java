@@ -136,7 +136,7 @@ public class TiBleCentralOperationManager
 						+ "status = " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "fail"));
 		KrollDict dict = new KrollDict();
 		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
-		dict.put("RSSI", rssi);
+		dict.put("rssi", rssi);
 		if (status != BluetoothGatt.GATT_SUCCESS) {
 			String errorMessage = "failed to read remote rssi";
 			dict.put(ERROR_CODE_KEY, status);
@@ -167,13 +167,14 @@ public class TiBleCentralOperationManager
 
 	private void handleOnCharacteristicRead(BluetoothGattCharacteristic characteristic, int status)
 	{
+		TiBLECharacteristicProxy characteristicProxy = new TiBLECharacteristicProxy(characteristic);
 		KrollDict dict = new KrollDict();
 		dict.put(SOURCE_PERIPHERAL_KEY, peripheralProxy);
-		dict.put(CHARACTERISTIC_KEY, new TiBLECharacteristicProxy(characteristic));
+		dict.put(CHARACTERISTIC_KEY, characteristicProxy);
 		if (status == BluetoothGatt.GATT_SUCCESS) {
 			Log.d(LCAT, "handleOnCharacteristicRead(): characteristic- " + characteristic.getUuid().toString()
 							+ " read successful.");
-			dict.put("value", new BufferProxy(characteristic.getValue()));
+			dict.put("value", characteristicProxy.value());
 		} else {
 			Log.d(LCAT, "handleOnCharacteristicRead(): characteristic- " + characteristic.getUuid().toString()
 							+ " read failed.");

@@ -60,6 +60,9 @@ public class TiBLECharacteristicProxy extends KrollProxy
 	@Kroll.getProperty
 	public BufferProxy value()
 	{
+		if (characteristic.getValue() == null) {
+			return null;
+		}
 		return new BufferProxy(characteristic.getValue());
 	}
 

@@ -63,7 +63,7 @@ public class TiBLEServiceProxy extends KrollProxy
 		return includedServiceProxyArr;
 	}
 
-	@Kroll.getProperty
+	@Kroll.getProperty(name = "isPrimary")
 	public boolean isPrimary()
 	{
 		return service.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY;
