@@ -1,0 +1,306 @@
+name: Modules.BLE.RegionManager
+summary: An object that manages and scan beacons.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+since: "1.1.0"
+properties:
+  - name: locationManagerAuthorizationStatus
+    type: Number
+    summary: Returns the current authorization status of the calling application.
+    permission: read-only
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "14.0"}}     
+
+  - name: maximumRegionMonitoringDistance
+    type: Number
+    summary: The maximum region size, in terms of a distance from a central point, that the framework can support.
+    description: |
+            Attempts to register a region larger than this will generate a kCLErrorRegionMonitoringFailure.
+            This value may vary based on the hardware features of the device, as well as on dynamically changing resource constraints.
+    permission: read-only
+    platforms: [iphone, ipad]
+
+  - name: monitoredRegions
+    type: Array<Modules.BLE.BeaconRegion>
+    summary: Retrieve a set of objects for the regions that are currently being monitored.
+    description: |
+            If manager has been instructed to monitor a region, during this or previous launches of your application, it will
+            be present in this set.
+    permission: read-only
+    platforms: [iphone, ipad]
+ 
+  - name: rangedRegions
+    type: Array<Modules.BLE.BeaconRegion>
+    summary: Retrieve a set of objects representing the regions for which this location manager is actively providing ranging.
+    permission: read-only
+    platforms: [iphone, ipad]  
+
+  - name: rangedBeaconConstraints
+    type: Array<Modules.BLE.BeaconIdentityConstraint>
+    summary: Retrieve a set of beacon constraints for which this location manager is actively providing ranging.
+    permission: read-only
+    platforms: [iphone, ipad] 
+    osver: {ios: {min: "13.0"}}     
+ 
+
+  - name: locationServicesEnabled
+    type: Boolean
+    summary: Determines whether the user has location services enabled.
+    description: |
+         If false, and you proceed to call other CoreLocation API, user will be prompted with the warning
+         dialog. You may want to check this property and use location services only when explicitly requested by the user.
+    permission: read-only
+    platforms: [iphone, ipad]  
+
+  - name: isRangingAvailable
+    type: Boolean
+    summary: Determines whether the device supports ranging.
+    description: |
+         If false, all attempts to range beacons will fail.
+    permission: read-only
+    platforms: [iphone, ipad]    
+
+  - name: isMonitoringAvailable
+    type: Boolean
+    summary: Determines whether the device supports monitoring for the specified type of region.
+    description: |
+         If false, all attempts to monitor the specified type of region will fail.
+    permission: read-only
+    platforms: [iphone, ipad]     
+
+   
+methods:
+  - name: requestAlwaysAuthorization
+    summary: When locationManagerAuthorizationStatus == LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED, calling this method will start the process of requesting "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization from the user.
+    description: |
+       An application which currently has "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE" authorization and has never before requested "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization may use this method to request "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization one time only
+    platforms: [iphone, ipad]
+    returns:
+      type: void
+ 
+  - name: requestWhenInUseAuthorization
+    summary: When locationManagerAuthorizationStatus == LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED, calling this method will trigger a prompt to request "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE" authorization from the user. 
+    platforms: [iphone, ipad]
+    returns:
+      type: void
+
+  - name: requestRegionState
+    summary: Asynchronously retrieve the cached state of the specified region. The state is returned to the "didDetermineState" event
+    platforms: [iphone, ipad]
+    parameters:
+      - name: beaconRegion
+        type: Modules.BLE.BeaconRegion
+        summary: Beacon region which state is requested
+    returns:
+      type: void      
+
+  - name: startRangingBeaconsInRegion
+    summary: Start calculating ranges for beacons in the specified region.
+    platforms: [iphone, ipad]
+    parameters:
+      - name: beaconRegion
+        type: Modules.BLE.BeaconRegion
+        summary: Beacon region object
+    returns:
+      type: void   
+
+  - name: stopRangingBeaconsInRegion
+    summary:  Stop calculating ranges for the specified region.
+    platforms: [iphone, ipad]
+    parameters:
+      - name: beaconRegion
+        type: Modules.BLE.BeaconRegion
+        summary: Beacon region object
+    returns:
+      type: void
+
+  - name: startRangingBeaconsSatisfyingIdentityConstraint
+    summary: Start calculating ranges for beacons in the specified region.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}     
+    parameters:
+      - name: identityConstraint
+        type: Modules.BLE.BeaconIdentityConstraint
+        summary: Beacon identity constraint object
+    returns:
+      type: void
+              
+
+  - name: stopRangingBeaconsSatisfyingIdentityConstraint
+    summary: Stop an earlier beacon ranging request.  See startRangingBeaconsSatisfyingIdentityConstraint:.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}
+    parameters:
+      - name: identityConstraint
+        type: Modules.BLE.BeaconIdentityConstraint
+        summary: Beacon identity constraint object
+    returns:
+      type: void
+
+  - name: startRegionMonitoring
+    summary:  Start monitoring the specified region.
+    description: |
+        If a region of the same type with the same identifier is already being monitored for this application, it will be removed from monitoring.
+        For circular regions, the region monitoring service will prioritize regions by their size, favoring smaller regions over larger regions.
+        Note: This is done asynchronously and may not be immediately reflected in monitoredRegions.
+    platforms: [iphone, ipad]
+    parameters:
+      - name: beaconRegion
+        type: Modules.BLE.BeaconRegion
+        summary: Beacon region object
+    returns:
+      type: void  
+
+  - name: stopRegionMonitoring
+    summary:  Stop monitoring the specified region.
+    description: |
+        It is valid to call stopMonitoring for a region that was registered for monitoring with a different region manager object, during this or previous launches of your application.
+        Note: This is done asynchronously and may not be immediately reflected in monitoredRegions.
+    platforms: [iphone, ipad]
+    parameters:
+      - name: beaconRegion
+        type: Modules.BLE.BeaconRegion
+        summary: Beacon region object
+    returns:
+      type: void
+
+events:
+  - name: didEnterRegion
+    summary: Invoked when the user enters a monitored region.
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object
+
+  - name: didExitRegion
+    summary: Invoked when the user exits a monitored region
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object
+
+  - name: didRangeBeacons
+    summary: Invoked when a new set of beacons are available in the specified region
+    description: |
+        If beacons is empty, it may be assumed no beacons that match the specified region are nearby.
+        Similarly if a specific beacon no longer appears in beacons, it may be assumed the beacon is no longer received
+        by the device.
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object   
+      - name: beacons
+        type: Array<Modules.BLE.Beacon>
+        summary:  Beacon objects
+
+  - name: didRange
+    summary: Invoked when a new set of beacons are available in the specified Beacon Identity Constraint
+    description: |
+        If beacons is empty, it may be assumed no beacons that match the specified Beacon Identity Constraint are nearby.
+        Similarly if a specific beacon no longer appears in beacons, it may be assumed the beacon is no longer received
+        by the device.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}
+    properties:
+      - name: beaconConstraint
+        type: Modules.BLE.BeaconIdentityConstraint
+        summary:  Beacon Identity Constraint object   
+      - name: beacons
+        type: Array<Modules.BLE.Beacon>
+        summary:  Beacon objects      
+
+  - name: didFailRanging
+    summary: Invoked when an error has occurred ranging beacons in a region.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}
+    properties:
+      - name: beaconConstraint
+        type: Modules.BLE.BeaconIdentityConstraint
+        summary:  Beacon Identity Constraint object   
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if any  
+
+  - name: didFail
+    summary: Invoked when an any error has occurred.
+    platforms: [iphone, ipad]
+    properties:
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if any             
+
+  - name: rangingBeaconsDidFail
+    summary: Invoked when an error has occurred ranging beacons in a region.
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object   
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if any  
+
+  - name: didDetermineState
+    summary:  Invoked when there's a state transition for a monitored region or in response to a request for state via a call to "requestRegionState"
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object   
+      - name: state
+        type: Number
+        summary: current state value. see REGION_STATE_* for possible values     
+
+  - name: didStartMonitoring
+    summary: Invoked when a monitoring for a region started successfully.
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object   
+
+  - name: rangingBeaconsDidFail
+    summary: Invoked when an error has occurred ranging beacons in a region.
+    platforms: [iphone, ipad]
+    properties:
+      - name: region
+        type: Modules.BLE.BeaconRegion
+        summary:  Beacon region object   
+      - name: errorCode
+        type: String
+        summary: The error code; only present if an error occurred.
+      - name: errorDomain
+        type: String
+        summary: The error domain; only present if an error occurred..
+      - name: errorDescription
+        type: String
+        summary: The error description; only peresent if any
+
+  - name: didChangeAuthorization
+    summary: Invoked when the authorization status changes for this application.
+    platforms: [iphone, ipad]
+    properties:
+      - name: state
+        type: Number
+        summary: current authorization value. see LOCATION_MANAGER_AUTHORIZATION_STATUS_* for possible values

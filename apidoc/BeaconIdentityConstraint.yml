@@ -1,0 +1,24 @@
+name: Modules.BLE.BeaconIdentityConstraint
+summary: Represents a beacon that was encountered during region monitoring. You do not create instances of this class directly. They will be delivered via the rangedBeacons event.
+description: |
+    The Beacon class represents a beacon that was observed during beacon ranging. You do not create instances of this class directly. The region manager (RegionManager) object reports observed beacons to its associated delegate object.
+    The identity of a beacon is defined by its uuid, major, and minor properties. These values are coded into the beacon itself. For a more thorough description of the meaning of those values, see BeaconRegion.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+osver: {ios: {min: "13.0"}}
+since: "1.1.0"
+properties:
+      - name: major
+        summary: The value identifying a group of beacons.
+        type: Number
+        platforms: [iphone, ipad]
+
+      - name: minor
+        summary: The value identifying a specific beacon within a group.
+        type: Number
+        platforms: [iphone, ipad]
+
+      - name: uuid
+        summary: The unique ID of the beacons being targeted.
+        type: String
+        platforms: [iphone, ipad]
