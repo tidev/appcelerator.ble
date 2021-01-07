@@ -24,8 +24,8 @@ class TiBLEMutableCharacteristicProxy: TiBLECharacteristicProxy {
     @objc
     func subscribedCentrals() -> [TiBLECentralProxy] {
         guard let _mutableCharacteristic = characteristic() as? CBMutableCharacteristic,
-            let centrals = _mutableCharacteristic.subscribedCentrals else {
-                return []
+              let centrals = _mutableCharacteristic.subscribedCentrals else {
+            return []
         }
         var objects = [TiBLECentralProxy]()
         for central in centrals {
