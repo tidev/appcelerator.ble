@@ -162,7 +162,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
             self.fireEvent("didEnterRegion",
                            with: [
                             "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region)
-            ])
+                           ])
         }
     }
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
@@ -173,7 +173,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
             self.fireEvent("didExitRegion",
                            with: [
                             "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region)
-            ])
+                           ])
         }
     }
 
@@ -188,7 +188,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                        with: [
                         "beacons": beaconProxies,
                         "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region)
-        ])
+                       ])
     }
 
     @available(iOS 13.0, *)
@@ -203,7 +203,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                        with: [
                         "beacons": beaconProxies,
                         "beaconConstraint": TiBeaconIdentityConstraintProxy(pageContext: self.pageContext, beaconIdentityConstraint: beaconConstraint)
-        ])
+                       ])
     }
 
     @available(iOS 13.0, *)
@@ -217,7 +217,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                         "errorCode": (error as NSError).code ,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
-        ])
+                       ])
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -229,7 +229,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                         "errorCode": (error as NSError).code ,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
-        ])
+                       ])
     }
 
     func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
@@ -242,7 +242,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                         "errorCode": (error as NSError).code ,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
-        ])
+                       ])
     }
 
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
@@ -254,7 +254,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                            with: [
                             "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region),
                             "state": NSNumber(value: state.rawValue)
-            ])
+                           ])
         }
     }
 
@@ -266,7 +266,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
             self.fireEvent("didStartMonitoring",
                            with: [
                             "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region)
-            ])
+                           ])
         }
     }
 
@@ -281,7 +281,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
                             "errorCode": (error as NSError).code ,
                             "errorDomain": (error as NSError).domain,
                             "errorDescription": error.localizedDescription
-            ])
+                           ])
         }
     }
 
@@ -292,7 +292,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
         self.fireEvent("didChangeAuthorization",
                        with: [
                         "state": NSNumber(value: status.rawValue)
-        ])
+                       ])
     }
 
     @available(iOS 14.0, *)
@@ -303,6 +303,6 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
         self.fireEvent("didChangeAuthorization",
                        with: [
                         "state": self.locationManagerAuthorizationStatus()
-        ])
+                       ])
     }
 }
