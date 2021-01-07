@@ -47,8 +47,8 @@ class TiBLERequestProxy: TiProxy {
     @objc(updateValue:)
     func updateValue(arg: Any?) {
         guard let options = (arg as? [[String: Any]])?.first,
-            let value = options["value"] as? TiBuffer else {
-                return
+              let value = options["value"] as? TiBuffer else {
+            return
         }
         _request.value = value.data as Data?
     }
