@@ -164,10 +164,10 @@ class AppceleratorBleModule: TiModule {
     @objc(createDescriptor:)
     func createDescriptor(arg: Any?) -> TiBLEDescriptorProxy? {
         guard let values = arg as? [Any],
-            let options = values.first as? [String: Any],
-            let value = options["value"],
-            let uuid = options["uuid"] as? String else {
-                return nil
+              let options = values.first as? [String: Any],
+              let value = options["value"],
+              let uuid = options["uuid"] as? String else {
+            return nil
         }
         var descriptorValue: Any?
         if value is TiBuffer, let data = (value as? TiBuffer)?.data {
@@ -183,9 +183,9 @@ class AppceleratorBleModule: TiModule {
     @objc(createMutableCharacteristic:)
     func createMutableCharacteristic(arg: Any?) -> TiBLEMutableCharacteristicProxy? {
         if let options = (arg as? [[String: Any]])?.first,
-            let properties = options["properties"] as? [NSNumber],
-            let permission = options["permissions"] as? [NSNumber],
-            let uuid = options["uuid"] as? String {
+           let properties = options["properties"] as? [NSNumber],
+           let permission = options["permissions"] as? [NSNumber],
+           let uuid = options["uuid"] as? String {
             let cbUUID = CBUUID(string: uuid)
             var characteristicPermission: CBAttributePermissions?
             for value in permission {
@@ -206,7 +206,7 @@ class AppceleratorBleModule: TiModule {
             let data = options["data"] as? TiBuffer
             let characteristicData = data?.data as Data?
             if let characteristicProperties = characteristicProperties,
-                let characteristicPermission = characteristicPermission {
+               let characteristicPermission = characteristicPermission {
                 let characteristic = CBMutableCharacteristic(type: cbUUID, properties: characteristicProperties, value: characteristicData, permissions: characteristicPermission)
                 var descriptorArray = [CBDescriptor]()
                 if let descriptors = options["descriptors"] as? [TiBLEDescriptorProxy] {
@@ -228,13 +228,13 @@ class AppceleratorBleModule: TiModule {
         let major = (options?["major"] as? NSNumber)?.uint16Value
         let minor = (options?["minor"] as? NSNumber)?.uint16Value
         guard let uuidString = options?["uuid"] as? String,
-            let uuid = UUID(uuidString: uuidString),
-            let identifier = options?["identifier"] as? String else {
-                return nil
+              let uuid = UUID(uuidString: uuidString),
+              let identifier = options?["identifier"] as? String else {
+            return nil
         }
         var beaconRegion: CLBeaconRegion?
         if let major = major,
-            let  minor = minor {
+           let  minor = minor {
             if #available(iOS 13.0, *) {
                 beaconRegion =  CLBeaconRegion(uuid: uuid, major: major, minor: minor, identifier: identifier)
             } else {
@@ -267,11 +267,11 @@ class AppceleratorBleModule: TiModule {
         let major = (options?["major"] as? NSNumber)?.uint16Value
         let minor = (options?["minor"] as? NSNumber)?.uint16Value
         guard let uuidString = options?["uuid"] as? String,
-            let uuid = UUID(uuidString: uuidString) else {
-                return nil
+              let uuid = UUID(uuidString: uuidString) else {
+            return nil
         }
         if let major = major,
-            let  minor = minor {
+           let  minor = minor {
             return TiBeaconIdentityConstraintProxy(pageContext: self.pageContext, beaconIdentityConstraint: CLBeaconIdentityConstraint(uuid: uuid, major: major, minor: minor))
         } else if let major = major {
             return TiBeaconIdentityConstraintProxy(pageContext: self.pageContext, beaconIdentityConstraint: CLBeaconIdentityConstraint(uuid: uuid, major: major))
