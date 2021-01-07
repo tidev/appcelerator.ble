@@ -42,7 +42,6 @@ properties:
     platforms: [iphone, ipad] 
     osver: {ios: {min: "13.0"}}     
  
-
   - name: locationServicesEnabled
     type: Boolean
     summary: Determines whether the user has location services enabled.
@@ -280,8 +279,8 @@ events:
         type: Modules.BLE.BeaconRegion
         summary:  Beacon region object   
 
-  - name: rangingBeaconsDidFail
-    summary: Invoked when an error has occurred ranging beacons in a region.
+  - name: monitoringDidFail
+    summary: Invoked when an error has occurred monitoring beacons in a region.
     platforms: [iphone, ipad]
     properties:
       - name: region
