@@ -4,21 +4,26 @@
 function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	var central = null;
 	var logs = [];
+	var charProperties, charPermissions;
+	if (IOS) {
+		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
+	} else {
+		charProperties = BLE.CHARACTERISTIC_PROPERTIES_READ;
+		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
+	}
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
-		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
-		permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ]
+		properties: charProperties,
+		permissions: charPermissions
 	});
 	var heartRateService = null;
 
 	var manager = null;
-	var deviceWindow = Ti.UI.createWindow({
+	var win = Ti.UI.createWindow({
 		backgroundColor: 'white',
 		title: 'Peripheral Manager',
 		titleAttributes: { color: 'blue' }
-	});
-	var win = Ti.UI.iOS.createNavigationWindow({
-		window: deviceWindow
 	});
 	var closeButton = Titanium.UI.createButton({
 		top: 100,
@@ -36,75 +41,28 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	InitializePeripheralManager.addEventListener('click', function () {
 		if (manager === null) {
 			manager = BLE.initPeripheralManager();
-			manager.addEventListener('didUpdateState', function (e) {
-				Ti.API.info('didUpdateState');
-				switch (e.state) {
-					case BLE.MANAGER_STATE_RESETTING:
-						logs.push('Manager state updated to Resetting');
-						alert('Resetting');
-						break;
+			manager.addEventListener('didUpdateState', didUpdateStateListener);
+			manager.addEventListener('didStartAdvertising', didStartAdvertisingListener);
+			manager.addEventListener('didAddService', didAddServiceListener);
 
-					case BLE.MANAGER_STATE_UNSUPPORTED:
-						logs.push('Manager state updated to Unsupported');
-						alert('Unsupported');
-						break;
+			if (IOS) {
+				manager.addEventListener('willRestoreState', function (e) {
+					Ti.API.info('Peripheral Manager will restore state');
+					logs.push('Peripheral Manager will restore state');
+					setData(logs);
+				});
+			}
 
-					case BLE.MANAGER_STATE_UNAUTHORIZED:
-						logs.push('Manager state updated to Unauthorized');
-						alert('Unauthorized');
-						break;
-
-					case BLE.MANAGER_STATE_POWERED_OFF:
-						logs.push('Manager state updated to powered Off');
-						alert('Peripheral Manager is powered Off');
-						break;
-
-					case BLE.MANAGER_STATE_POWERED_ON:
-						logs.push('Manager state updated to powered On');
-						alert('Peripheral Manager is powered On');
-						break;
-
-					case BLE.MANAGER_STATE_UNKNOWN:
-					default:
-						logs.push('Manager state updated to Unknown');
-						alert('Unknown');
-						break;
-				}
-				if (e.state === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
-					heartRateService = manager.addService({
-						uuid: serviceUUID,
-						primary: true,
-						characteristics: [ heartRateCharacteristic ]
-					});
-					logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
-				}
+			if (manager.peripheralManagerState === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
+				heartRateService = manager.addService({
+					uuid: serviceUUID,
+					primary: true,
+					characteristics: [ heartRateCharacteristic ]
+				});
+				logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
 				setData(logs);
-			});
-			manager.addEventListener('didStartAdvertising', function (e) {
-				Ti.API.info('Peripheral Manager started advertising');
-				logs.push('Peripheral Manager started advertising');
-				setData(logs);
-			});
-			manager.addEventListener('willRestoreState', function (e) {
-				Ti.API.info('Peripheral Manager will restore state');
-				logs.push('Peripheral Manager will restore state');
-				setData(logs);
-			});
-			manager.addEventListener('didAddService', function (e) {
-				if (e.errorCode !== null || e.errorDomain !== null) {
-					Ti.API.info('Error while adding service');
-					if (e.errorDescription !== null) {
-						alert('Error while adding service (error: ' + e.errorDescription + ')');
-						return;
-					}
-					alert('Error while adding service');
-					return;
-				}
-				heartRateService = e.service;
-				Ti.API.info('Peripheral Manager added service');
-				logs.push('Did Added Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
-				setData(logs);
-			});
+			}
+
 			manager.addEventListener('didSubscribeToCharacteristic', function (e) {
 				Ti.API.info('Peripheral Manager subscribed to characteristic');
 				central = e.central;
@@ -166,6 +124,84 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 
 	win.add(InitializePeripheralManager);
 
+	var didAddServiceListener = (e) => {
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			Ti.API.info('Error while adding service');
+			if (e.errorDescription !== null) {
+				alert('Error while adding service (error: ' + e.errorDescription + ')');
+				return;
+			}
+			alert('Error while adding service');
+			return;
+		}
+		heartRateService = e.service;
+		Ti.API.info('Peripheral Manager added service');
+		logs.push('Did Added Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+		setData(logs);
+	};
+
+	var didStartAdvertisingListener = (e) => {
+		if (typeof e.errorCode !== 'undefined' && e.errorCode !== null) {
+			Ti.API.info('Error while starting advertising');
+			if (e.errorDescription !== null) {
+				alert('Error while starting advertising (error: ' + e.errorDescription + ')');
+				return;
+			}
+			alert('Error while starting advertising');
+			return;
+		}
+		Ti.API.info('Peripheral Manager started advertising');
+		logs.push('Peripheral Manager started advertising');
+		setData(logs);
+	};
+
+	var didUpdateStateListener = (e) => {
+		Ti.API.info('didUpdateState');
+		switch (e.state) {
+			case BLE.MANAGER_STATE_RESETTING:
+				logs.push('Manager state updated to Resetting');
+				alert('Resetting');
+				break;
+
+			case BLE.MANAGER_STATE_UNSUPPORTED:
+				logs.push('Manager state updated to Unsupported');
+				alert('Unsupported');
+				break;
+
+			case BLE.MANAGER_STATE_UNAUTHORIZED:
+				logs.push('Manager state updated to Unauthorized');
+				alert('Unauthorized');
+				break;
+
+			case BLE.MANAGER_STATE_POWERED_OFF:
+				logs.push('Manager state updated to powered Off');
+				alert('Peripheral Manager is powered Off');
+				break;
+
+			case BLE.MANAGER_STATE_POWERED_ON:
+				logs.push('Manager state updated to powered On');
+				alert('Peripheral Manager is powered On');
+				break;
+
+			case BLE.MANAGER_STATE_TURNING_ON:
+				logs.push('Manager state updated to powered Turning On');
+				alert('Peripheral Manager is Turning On');
+				break;
+
+			case BLE.MANAGER_STATE_TURNING_OFF:
+				logs.push('Manager state updated to powered Turning Off');
+				alert('Peripheral Manager is Turning Off');
+				break;
+
+			case BLE.MANAGER_STATE_UNKNOWN:
+			default:
+				logs.push('Manager state updated to Unknown');
+				alert('Unknown');
+				break;
+		}
+		setData(logs);
+	};
+
 	var startAdvertisingButton = Titanium.UI.createButton({
 		top: 180,
 		title: 'Start Advertising'
@@ -180,10 +216,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				alert('Peripheral Manager is already advertising');
 				return;
 			}
-			var name = 'BLE-Sample';
+			var name = IOS ? 'BLE-Sample' : true;
 			var servicesUUIDs = [];
 			if (heartRateService !== null) {
-				servicesUUIDs.push(heartRateService);
+				servicesUUIDs.push(heartRateService.uuid);
 			}
 			manager.startAdvertising({
 				localName: name,
@@ -207,9 +243,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				alert('Peripheral Manager is not advertising');
 				return;
 			}
-			Ti.API.info('Peripheral Manager has stopped advertising');
-			alert('Peripheral Manager has stopped advertising');
 			manager.stopAdvertising();
+			Ti.API.info('Peripheral Manager has stopped advertising');
+			logs.push('Peripheral Manager has stopped advertising');
+			setData(logs);
 		}
 	});
 	win.add(stopAdvertisingButton);
@@ -235,6 +272,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 		} else {
+			if (isAndroid) {
+				alert('Android Work is in progress');
+				return;
+			}
 			var data = valueField.value === '' || valueField.value === null ? '60' : valueField.value;
 			if (isNaN(data)) {
 				alert('Value should be number only');
@@ -277,8 +318,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			for (var i = initalValue; i >= 0; i--) {
 				var btDevicesRow = Ti.UI.createTableViewRow({
 					height: 50,
-					row: i,
-					hasChild: true
+					row: i
 				});
 				var uuidLabel = Ti.UI.createLabel({
 					left: 5,
@@ -296,6 +336,18 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	}
 	setData(logs);
 	win.add(tableView);
+
+	win.addEventListener('close', function () {
+		if (manager === null) {
+			return;
+		}
+		if (isAndroid) {
+			manager.closePeripheral();
+		}
+		manager.removeEventListener('didAddService', didAddServiceListener);
+		manager.removeEventListener('didStartAdvertising', didStartAdvertisingListener);
+		manager.removeEventListener('didUpdateState', didUpdateStateListener);
+	});
 
 	return win;
 }
