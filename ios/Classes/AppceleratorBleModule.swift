@@ -3,7 +3,7 @@
  * Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
  * Proprietary and Confidential - This source code is not for redistribution
  */
-
+// swiftlint:disable type_body_length
 import UIKit
 import TitaniumKit
 import CoreBluetooth
@@ -286,3 +286,5 @@ class AppceleratorBleModule: TiModule {
     }
 
 }
+
+// swiftlint:enable type_body_length
