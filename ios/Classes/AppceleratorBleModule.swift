@@ -121,6 +121,11 @@ class AppceleratorBleModule: TiModule {
     @objc public let REGION_STATE_INSIDE = CLRegionState.inside.rawValue
     @objc public let REGION_STATE_OUTSIDE = CLRegionState.outside.rawValue
 
+    @objc public let BEACON_PROXIMITY_UNKNOWN = CLProximity.unknown.rawValue
+    @objc public let BEACON_PROXIMITY_IMMEDIATE = CLProximity.immediate.rawValue
+    @objc public let BEACON_PROXIMITY_NEAR = CLProximity.near.rawValue
+    @objc public let BEACON_PROXIMITY_FAR = CLProximity.far.rawValue
+
     func moduleGUID() -> String {
         return "8d0b486f-27ff-4029-a989-56e4a6755e6f"
     }
