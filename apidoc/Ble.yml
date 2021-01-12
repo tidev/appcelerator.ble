@@ -763,7 +763,35 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
     since: "1.1.0"
-    
+
+  - name: BEACON_PROXIMITY_UNKNOWN
+    type: Number
+    summary: current state of the device with reference to a region is unknown
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_IMMEDIATE
+    type: Number
+    summary: current state of the device with reference to a region is immediate
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_NEAR
+    type: Number
+    summary: current state of the device with reference to a region is near
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_FAR
+    type: Number
+    summary: current state of the device with reference to a region is far
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
