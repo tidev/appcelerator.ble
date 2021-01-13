@@ -36,7 +36,9 @@ var buttonScanner = Ti.UI.createButton({
 	visible: IOS
 });
 buttonScanner.addEventListener('click', function () {
-	alert('Beacon Scanner is not implemented yet');
+	var devices = require('beaconScanner.js');
+	var devicePage = new devices.deviceWin(BLE, beaconUUID, major, minor, beaconId);
+	navCentralWindow.openWindow(devicePage, { animated: true });
 });
 mainWindow.add(buttonScanner);
 
