@@ -35,6 +35,4 @@ properties:
         summary: The unique ID of the beacons being targeted.
         type: String
         platforms: [iphone, ipad]
-        since: "1.1.0" 
-        osver: {ios: {min: "13.0"}}      
-         
+        since: "1.1.0"          

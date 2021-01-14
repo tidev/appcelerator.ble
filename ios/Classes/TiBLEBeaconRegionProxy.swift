@@ -52,7 +52,7 @@ class TiBLEBeaconRegionProxy: TiProxy {
         if #available(iOS 13.0, *) {
             return _beaconRegion.uuid.uuidString
         }
-        return nil
+        return _beaconRegion.proximityUUID.uuidString
     }
 
     func beaconRegion() -> CLBeaconRegion {
