@@ -73,7 +73,7 @@ methods:
     summary: When locationManagerAuthorizationStatus == LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED, calling this method will start the process of requesting "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization from the user.
     description: |
        An application which currently has "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE" authorization and has never before requested "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization may use this method to request "LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS" authorization one time only.
-       Note: To call this method, you must have both NSLocationAlwaysUsageDescription and NSLocationWhenInUseUsageDescription keys in your app’s tiapp.xml file. You may call requestAlwaysAuthorization() when the current authorization state is either:
+       Note: To call this method, you must have both NSLocationAlwaysUsageDescription and NSLocationWhenInUseUsageDescription keys in your app’s tiapp.xml file.
         ``` xml
        <key>NSLocationWhenInUseUsageDescription</key>
        <string>Allow Location permission</string>
