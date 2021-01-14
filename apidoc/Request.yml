@@ -1,0 +1,52 @@
+---
+name: Modules.BLE.Request
+summary: A request that uses the Attribute Protocol (ATT).
+description: |
+    The class represents Attribute Protocol (ATT) read and write requests from remote central devices
+    (represented by Central objects). Remote centrals use these ATT requests to read and write characteristic
+    values on local peripherals (represented by PeripheralManager objects). Local peripherals, on the other
+    hand, use the properties of Request objects to respond to the read and write requests appropriately,
+    using the respondToRequest() method of the PeripheralManager class.
+extends: Titanium.Proxy
+platforms: [android, iphone, ipad]
+since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+properties:
+  - name: central
+    summary: The central that originated the request.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    type: Modules.BLE.Central
+    permission: read-only
+
+  - name: characteristic
+    summary: The characteristic whose value will be read or written.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    type: Modules.BLE.Characteristic
+    permission: read-only
+
+  - name: offset
+    summary: The zero-based index of the first byte for the read or write.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    type: Number
+    permission: read-only
+
+  - name: value
+    summary: The data being read or written.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    type: Titanium.Buffer
+    permission: read-only
+
+methods:
+ - name: updateValue
+   summary: update the data of value field
+   platforms: [android, iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+   parameters:
+      - name: value
+        type: Titanium.Buffer
+        summary: Titanium.Buffer object to update data on value
+   returns:
+      type: void
