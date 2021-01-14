@@ -13,30 +13,30 @@ extends: Titanium.Proxy
 platforms: [android, iphone, ipad]
 since: "1.0.0"
 properties:
-      - name: isAdvertising
-        summary: Whether or not the the module's internal peripheral manager is currently advertising data.
-        type: Boolean
-        platforms: [iphone, ipad]
-        since: "1.0.0"
+  - name: isAdvertising
+    summary: Whether or not the the module's internal peripheral manager is currently advertising data.
+    type: Boolean
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
-      - name: peripheralManagerState
-        summary: State of the module's internal peripheral manager. Its value is one of the MANAGER_STATE_* constants.
-        type: Number
-        platforms: [android, iphone, ipad]
-        since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+  - name: peripheralManagerState
+    summary: State of the module's internal peripheral manager. Its value is one of the MANAGER_STATE_* constants.
+    type: Number
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
-      - name: restoredPeripheralManagerIdentifier
-        summary: string the restoration identifier for a peripheral manager object. this is the same string you assigned to the restoreIdentifier parameter of the initPeripheralManager function.
-        type: String
-        platforms: [iphone, ipad]
-        since: "1.0.0"
+  - name: restoredPeripheralManagerIdentifier
+    summary: string the restoration identifier for a peripheral manager object. this is the same string you assigned to the restoreIdentifier parameter of the initPeripheralManager function.
+    type: String
+    platforms: [iphone, ipad]
+    since: "1.0.0"
 
 methods:
- - name: addService
-   summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+  - name: addService
+    summary: Publishes a service and any of its associated characteristics and characteristic descriptors to the local GATT database.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    parameters:
       - name: characteristics
         type: Array<Modules.BLE.Characteristic>
         summary: A list of characteristics of a service.
@@ -44,98 +44,106 @@ methods:
         type: String
         summary: The Bluetooth-specific UUID of the attribute.
       - name: primary
-        type: Number
+        type: Boolean
         summary: The type of the service (primary or secondary). 
-   returns:
+    returns:
       type: Modules.BLE.Service
       summary: Object of service which is added.
 
- - name: removeService
-   summary: Removes a specified published service from the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+  - name: removeService
+    summary: Removes a specified published service from the local GATT database.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    parameters:
       - name: service
         type: Modules.BLE.Service
         summary: Object of service you want to remove.
-   returns:
+    returns:
       type: void
 
- - name: removeAllServices
-   summary: Removes all published services from the local GATT database.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   returns:
+  - name: removeAllServices
+    summary: Removes all published services from the local GATT database.
+    platforms: [android,iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    returns:
       type: void
 
- - name: respondToRequest
-   summary: Used to respond to request(s) received via the didReceiveReadRequest or didReceiveWriteRequests event.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+  - name: respondToRequest
+    summary: Used to respond to request(s) received via the didReceiveReadRequest or didReceiveWriteRequests event.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
       - name: request
         type: Modules.BLE.Request
         summary: The request to which the peripheral is responding.
       - name: result
         type: Number
         summary: The result code; see the ATT_ERROR* constants.      
-   returns:
+    returns:
       type: void  
 
- - name: publishL2CAPChannel
-   summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   osver: {ios: {min: "11.0"}}
-   parameters:
+  - name: publishL2CAPChannel
+    summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    osver: {ios: {min: "11.0"}}
+    parameters:
       - name: encryptionRequired
         type: Boolean
         summary: The bool can be true if the service requires the link to be encrypted before a stream can be established. false if the service can be used over an unsecured link.    
-   returns:
+    returns:
       type: void  
 
- - name: unpublishL2CAPChannel
-   summary: The service PSM to be removed from the system.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   osver: {ios: {min: "11.0"}}
-   parameters:
+  - name: unpublishL2CAPChannel
+    summary: The service PSM to be removed from the system.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    osver: {ios: {min: "11.0"}}
+    parameters:
       - name: PSM
         type: Number
         summary: The PSM of the channel along with we can close the particular channel.   
-   returns:
+    returns:
       type: void  
 
- - name: startAdvertising
-   summary: Instructs the module's internal peripheral manager to start advertising.
-   description: |
-    Important: You must call the initPeripheralManager function first!
-    Supported advertising data types are localName and serviceUUIDs. When in the foreground, an application can utilize up to 28 bytes of space in the initial advertisement data for any combination of the supported advertising data types. If this space is used up, there are an additional 10 bytes of space in the scan response that can be used only for the local name.
-    Note that these sizes do not include the 2 bytes of header information that are required for each new data type. Any service UUIDs that do not fit in the allotted space will be added to a special "overflow" area, and can only be discovered by an iOS device that is explicitly scanning for them. While an application is in the background, the local name will not be used and all service UUIDs will be placed in the "overflow" area.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+  - name: startAdvertising
+    summary: Instructs the module's internal peripheral manager to start advertising.
+    description: |
+      Important: You must call the initPeripheralManager function first!
+      Supported advertising data types are localName and serviceUUIDs. When in the foreground, an
+      application can utilize up to 28 bytes of space in the initial advertisement data for any combination
+      of the supported advertising data types. If this space is used up, there are an additional 10 bytes
+      of space in the scan response that can be used only for the local name.
+      Note that these sizes do not include the 2 bytes of header information that are required for each
+      new data type. Any service UUIDs that do not fit in the allotted space will be added to a special
+      " overflow" area, and can only be discovered by an iOS device that is explicitly scanning for them.
+      While an application is in the background, the local name will not be used and all service UUIDs
+      will be placed in the "overflow" area. In Android, Before starting the advertisement, user must 
+      add the service first. If this is not the case, then this method will not work as expected.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    parameters:
       - name: localName
-        type: String
-        summary: The local name of a peripheral.
+        type: [String, Boolean]
+        summary: The local name of a peripheral. This parameter is of type boolean in android
       - name: serviceUUIDs
         type: Array<String>
         summary: An array of service UUIDs.  
-   returns:
+    returns:
       type: void  
 
- - name: stopAdvertising
-   summary: Instructs the module's internal peripheral manager to stop advertising.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   returns:
+  - name: stopAdvertising
+    summary: Instructs the module's internal peripheral manager to stop advertising.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    returns:
       type: void  
 
- - name: updateValue
-   summary: Instructs the module's internal peripheral manager to send an updated characteristic value to one or more centrals, via a notification or indication.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+  - name: updateValue
+    summary: Instructs the module's internal peripheral manager to send an updated characteristic value to one or more centrals, via a notification or indication.
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
       - name: characteristic
         type: Modules.BLE.MutableCharacteristic
         summary: The value of the characteristic.
@@ -145,25 +153,36 @@ methods:
       - name: centrals
         type: Array<Modules.BLE.Central>
         summary: The list of centrals that need to be updated. If not specified, all subscribed centrals will be updated.
-   returns:
+    returns:
       type: Boolean
       summary: True if the update could be sent, or false if the underlying transmit queue is full. If false was returned, the readyToUpdateSubscribers event will be fired once space has become available, and the update should be re-sent if so desired.  
 
- - name: setDesiredConnectionLatency
-   summary: Sets the desired connection latency for an existing connection on the module's internal peripheral manager.
-   description: |
+  - name: setDesiredConnectionLatency
+    summary: Sets the desired connection latency for an existing connection on the module's internal peripheral manager.
+    description: |
        Connection latency changes are not guaranteed, so the resultant latency may vary. If a desired latency is not set, the latency chosen by the central at the time of connection establishment will be used. Typically, it is not necessary to change the latency.
-   platforms: [iphone, ipad]
-   since: "1.0.0"
-   parameters:
+    platforms: [iphone, ipad]
+    since: "1.0.0"
+    parameters:
       - name: latency
         type: Number
         summary: The desired connection latency. see BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_*
       - name: central
         type: Modules.BLE.Central
         summary: A connected central
-   returns:
-      type: void  
+    returns:
+      type: void
+
+  - name: closePeripheral
+    summary: This method closes the peripheral.
+    description: |
+        This method, when called terminate the ongoing advertisement process if any and closes the 
+        peripheral. Application should call this method, soon after it is done with the peripheral
+        operations.
+    platforms: [android]
+    since: "1.1.0"
+    returns:
+      type: void 
 
 events:
   - name: didUpdateState
@@ -243,8 +262,8 @@ events:
 
   - name: didStartAdvertising
     summary: This event returns the result of a startAdvertising call. If advertisement could not be started, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: errorCode
         type: String
@@ -257,9 +276,9 @@ events:
         summary: The error description; only peresent if an 
 
   - name: didAddService
-    summary: This event returns the result of a addService call. If advertisement could not be started, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    summary: This event returns the result of a addService call. If service could not be added, the cause will be detailed in the errorCode, errorDomain, and errorDescription properties.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: service
         type: Modules.BLE.Service
