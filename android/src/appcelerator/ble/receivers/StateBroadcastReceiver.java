@@ -11,12 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import appcelerator.ble.TiBLECentralManagerProxy;
 import appcelerator.ble.peripheral.TiBLEPeripheralManagerProxy;
+import java.lang.ref.WeakReference;
 
 public class StateBroadcastReceiver extends BroadcastReceiver
 {
 
 	private TiBLECentralManagerProxy centralManagerProxy;
-	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
+	private WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
 
 	public StateBroadcastReceiver(TiBLECentralManagerProxy centralManagerProxy)
 	{
@@ -25,7 +26,7 @@ public class StateBroadcastReceiver extends BroadcastReceiver
 
 	public StateBroadcastReceiver(TiBLEPeripheralManagerProxy peripheralManagerProxy)
 	{
-		this.peripheralManagerProxy = peripheralManagerProxy;
+		this.peripheralManagerProxyRef = new WeakReference<>(peripheralManagerProxy);
 	}
 
 	@Override
@@ -37,8 +38,8 @@ public class StateBroadcastReceiver extends BroadcastReceiver
 			if (centralManagerProxy != null) {
 				centralManagerProxy.bluetoothStateChanged(state);
 			}
-			if (peripheralManagerProxy != null) {
-				peripheralManagerProxy.bluetoothStateChanged(state);
+			if (peripheralManagerProxyRef != null) {
+				peripheralManagerProxyRef.get().bluetoothStateChanged(state);
 			}
 		}
 	}

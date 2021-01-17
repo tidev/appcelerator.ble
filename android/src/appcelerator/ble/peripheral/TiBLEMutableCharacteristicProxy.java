@@ -17,10 +17,12 @@ import org.appcelerator.kroll.common.Log;
 public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 {
 	private static final String LCAT = "TiBLEMutableCharacteristicProxy";
+	private BluetoothGattCharacteristic characteristic;
 
 	public TiBLEMutableCharacteristicProxy(BluetoothGattCharacteristic characteristic)
 	{
 		super(characteristic);
+		this.characteristic = characteristic;
 	}
 
 	public static TiBLEMutableCharacteristicProxy createMutableCharacteristicProxy(KrollDict dict)
@@ -50,5 +52,11 @@ public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 			}
 		}
 		return new TiBLEMutableCharacteristicProxy(characteristic);
+	}
+
+	@Kroll.getProperty
+	public TiBLECentralProxy[] subscribedCentrals()
+	{
+		return TiBLESubscribedCentrals.getInstance().getSubscribedCentrals(characteristic.getUuid().toString());
 	}
 }

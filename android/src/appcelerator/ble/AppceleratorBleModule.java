@@ -42,6 +42,12 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.constant
 	public static final String MOCK_UUID_FOR_CHARACTERISTIC_UT = "3b07719f-d2fc-4d09-82f4-806e07702397";
 
+	//Constant for characteristic uuid to enable notifications
+	@Kroll.constant
+	public static final String CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING =
+		"00002902-0000-1000-8000-00805f9b34fb";
+
+	// Constants for local bluetooth states
 	@Kroll.constant
 	public static final int MANAGER_STATE_POWERED_OFF = BluetoothAdapter.STATE_OFF;
 	@Kroll.constant
@@ -50,6 +56,8 @@ public class AppceleratorBleModule extends KrollModule
 	public static final int MANAGER_STATE_TURNING_OFF = BluetoothAdapter.STATE_TURNING_OFF;
 	@Kroll.constant
 	public static final int MANAGER_STATE_TURNING_ON = BluetoothAdapter.STATE_TURNING_ON;
+
+	//Constants for BLE Characteristics properties
 	@Kroll.constant
 	public static final int CHARACTERISTIC_PROPERTIES_BROADCAST = BluetoothGattCharacteristic.PROPERTY_BROADCAST;
 	@Kroll.constant
@@ -73,6 +81,8 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.constant
 	public static final int CHARACTERISTIC_TYPE_WRITE_WITHOUT_RESPONSE =
 		BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
+
+	//Constants for BLE Characteristics permissions.
 	@Kroll.constant
 	public static final int CHARACTERISTIC_PERMISSION_READABLE = BluetoothGattCharacteristic.PERMISSION_READ;
 	@Kroll.constant
@@ -83,6 +93,8 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.constant
 	public static final int CHARACTERISTIC_PERMISSION_WRITE_ENCRYPTED =
 		BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED;
+
+	//Constants for the BLE connection parameter
 	@SuppressLint("InlinedApi")
 	@Kroll.constant
 	public static final int CONNECTION_PRIORITY_HIGH = BluetoothGatt.CONNECTION_PRIORITY_HIGH;
@@ -92,6 +104,8 @@ public class AppceleratorBleModule extends KrollModule
 	@SuppressLint("InlinedApi")
 	@Kroll.constant
 	public static final int CONNECTION_PRIORITY_LOW_POWER = BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER;
+
+	//Constants for BLE Descriptors permissions
 	@Kroll.constant
 	public static final int DESCRIPTOR_PERMISSION_READ = BluetoothGattDescriptor.PERMISSION_READ;
 	@Kroll.constant
@@ -100,6 +114,26 @@ public class AppceleratorBleModule extends KrollModule
 	public static final int DESCRIPTOR_PERMISSION_WRITE = BluetoothGattDescriptor.PERMISSION_WRITE;
 	@Kroll.constant
 	public static final int DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED = BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED;
+
+	//Constants for the BLE operations status.
+	@Kroll.constant
+	public static final int ATT_SUCCESS = BluetoothGatt.GATT_SUCCESS;
+	@Kroll.constant
+	public static final int ATT_FAILURE = BluetoothGatt.GATT_FAILURE;
+	@Kroll.constant
+	public static final int ATT_READ_NOT_PERMITTED_ERROR = BluetoothGatt.GATT_READ_NOT_PERMITTED;
+	@Kroll.constant
+	public static final int ATT_WRITE_NOT_PERMITTED_ERROR = BluetoothGatt.GATT_WRITE_NOT_PERMITTED;
+	@Kroll.constant
+	public static final int ATT_INSUFFICIENT_AUTHENTICATION_ERROR = BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION;
+	@Kroll.constant
+	public static final int ATT_INVALID_OFFSET_ERROR = BluetoothGatt.GATT_INVALID_OFFSET;
+	@Kroll.constant
+	public static final int ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR = BluetoothGatt.GATT_INVALID_ATTRIBUTE_LENGTH;
+	@Kroll.constant
+	public static final int ATT_REQUEST_NOT_SUPPORTED_ERROR = BluetoothGatt.GATT_REQUEST_NOT_SUPPORTED;
+	@Kroll.constant
+	public static final int ATT_INSUFFICIENT_ENCRYPTION_ERROR = BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION;
 
 	public AppceleratorBleModule()
 	{
