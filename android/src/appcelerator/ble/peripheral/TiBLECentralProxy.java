@@ -23,4 +23,9 @@ public class TiBLECentralProxy extends KrollProxy
 	{
 		return bluetoothDevice.getAddress();
 	}
+
+	public BluetoothDevice getBluetoothDevice()
+	{
+		return bluetoothDevice;
+	}
 }

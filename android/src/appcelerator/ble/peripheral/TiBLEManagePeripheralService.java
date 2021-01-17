@@ -8,6 +8,7 @@ package appcelerator.ble.peripheral;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Binder;
@@ -15,13 +16,15 @@ import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import java.lang.ref.WeakReference;
 import org.appcelerator.kroll.common.Log;
+import ti.modules.titanium.BufferProxy;
 
 public class TiBLEManagePeripheralService extends Service
 {
 	private static final String LCAT = TiBLEManagePeripheralService.class.getSimpleName();
 	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
-	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
+	private WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
 	private TiBLEPeripheralOperationManager peripheralOperationManager;
 	private TiBLEPeripheralAdvertiseManager advertiseManager;
 	private final IBinder binder = new LocalBinder();
@@ -71,7 +74,7 @@ public class TiBLEManagePeripheralService extends Service
 
 	public void initialisePeripheralAndOpenGattServer(TiBLEPeripheralManagerProxy peripheralManagerProxy)
 	{
-		this.peripheralManagerProxy = peripheralManagerProxy;
+		this.peripheralManagerProxyRef = new WeakReference<>(peripheralManagerProxy);
 		peripheralOperationManager = new TiBLEPeripheralOperationManager(this, peripheralManagerProxy);
 		peripheralOperationManager.openGattServer();
 	}
@@ -95,7 +98,7 @@ public class TiBLEManagePeripheralService extends Service
 	public void startAdvertising(String[] serviceUUIDs, boolean localName)
 	{
 		if (advertiseManager == null) {
-			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxy);
+			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxyRef.get());
 		}
 		advertiseManager.startAdvertising(serviceUUIDs, localName);
 	}
@@ -119,6 +122,23 @@ public class TiBLEManagePeripheralService extends Service
 			return false;
 		}
 		return advertiseManager.isAdvertising();
+	}
+
+	public boolean updateCharacteristicAndNotifySubscribers(BluetoothGattCharacteristic characteristic,
+															BufferProxy value, TiBLECentralProxy[] centralProxies)
+	{
+		return peripheralOperationManager.updateCharacteristicAndNotifySubscribers(characteristic, value,
+																				   centralProxies);
+	}
+
+	public void sendResponseToCharacteristic(TiBLECharacteristicRequestProxy requestProxy, int result)
+	{
+		peripheralOperationManager.sendResponseToCharacteristic(requestProxy, result);
+	}
+
+	public void sendResponseToDescriptor(TiBLEDescriptorRequestProxy descriptorRequestProxy, int result)
+	{
+		peripheralOperationManager.sendResponseToDescriptor(descriptorRequestProxy, result);
 	}
 
 	public class LocalBinder extends Binder
