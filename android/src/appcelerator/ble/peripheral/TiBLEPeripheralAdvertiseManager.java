@@ -1,3 +1,8 @@
+/*
+ * Appcelerator Titanium Mobile - Bluetooth Low Energy (BLE) Module
+ * Copyright (c) 2020 by Axway, Inc. All Rights Reserved.
+ * Proprietary and Confidential - This source code is not for redistribution
+ */
 package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothAdapter;
@@ -8,6 +13,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.os.Build;
 import android.os.ParcelUuid;
 import androidx.annotation.RequiresApi;
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
@@ -16,7 +22,7 @@ import org.appcelerator.kroll.common.Log;
 public class TiBLEPeripheralAdvertiseManager
 {
 
-	private final TiBLEPeripheralManagerProxy managerProxy;
+	private final WeakReference<TiBLEPeripheralManagerProxy> managerProxyRef;
 	private BluetoothLeAdvertiser bluetoothLeAdvertiser;
 	private static final String DID_START_ADVERTISING_KEY = "didStartAdvertising";
 	private static final String LCAT = "TiBLEPeripheralAdvertiseManager";
@@ -24,7 +30,7 @@ public class TiBLEPeripheralAdvertiseManager
 
 	public TiBLEPeripheralAdvertiseManager(TiBLEPeripheralManagerProxy managerProxy)
 	{
-		this.managerProxy = managerProxy;
+		this.managerProxyRef = new WeakReference<>(managerProxy);
 	}
 
 	private AdvertiseCallback advertiseCallback = new AdvertiseCallback() {
@@ -34,7 +40,7 @@ public class TiBLEPeripheralAdvertiseManager
 			super.onStartSuccess(settingsInEffect);
 			Log.d(LCAT, "onStartSuccess(): Advertising is started successfully");
 			advertisingState = AdvertisingState.Started;
-			managerProxy.fireEvent(DID_START_ADVERTISING_KEY, "advertising is started");
+			managerProxyRef.get().fireEvent(DID_START_ADVERTISING_KEY, "advertising is started");
 		}
 
 		@Override
@@ -70,7 +76,7 @@ public class TiBLEPeripheralAdvertiseManager
 					break;
 			}
 			dict.put("errorDescription", errorDescription);
-			managerProxy.fireEvent(DID_START_ADVERTISING_KEY, dict);
+			managerProxyRef.get().fireEvent(DID_START_ADVERTISING_KEY, dict);
 			Log.e(LCAT, "onStartFailure: Cannot start advertising, errorDescription: " + errorDescription
 							+ "errorCode: " + errorCode);
 		}

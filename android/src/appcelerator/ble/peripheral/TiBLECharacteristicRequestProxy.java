@@ -14,19 +14,28 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import ti.modules.titanium.BufferProxy;
 
-@Kroll.proxy
-public class TiBLERequestProxy extends KrollProxy
+@Kroll.proxy(name = "TiBLERequestProxy")
+public class TiBLECharacteristicRequestProxy extends KrollProxy
 {
-	private static final String LCAT = "TiBLERequestProxy";
+	private static final String LCAT = "TiBLECharacteristicRequestProxy";
 	private BluetoothGattCharacteristic characteristic;
 	private BluetoothDevice bluetoothDevice;
 	private int offset;
+	private int requestId;
 	private BufferProxy value;
+	private boolean isResponseNeeded;
 
-	public TiBLERequestProxy(BluetoothGattCharacteristic characteristic, BluetoothDevice bluetoothDevice)
+	public TiBLECharacteristicRequestProxy(BluetoothGattCharacteristic characteristic, BluetoothDevice bluetoothDevice,
+										   int requestId, boolean responseNeeded, int offset, byte[] value)
 	{
 		this.characteristic = characteristic;
 		this.bluetoothDevice = bluetoothDevice;
+		this.requestId = requestId;
+		this.offset = offset;
+		this.isResponseNeeded = responseNeeded;
+		if (value != null) {
+			this.value = new BufferProxy(value);
+		}
 	}
 
 	@Kroll.getProperty
@@ -61,18 +70,24 @@ public class TiBLERequestProxy extends KrollProxy
 			return;
 		}
 		value = (BufferProxy) dict.get("value");
-	}
-
-	public void setOffset(int offset)
-	{
-		this.offset = offset;
-	}
-
-	public void setValue(byte[] value)
-	{
-		if (value == null) {
-			this.value = null;
+		if (value != null) {
+			characteristic.setValue(value.getBuffer());
 		}
-		this.value = new BufferProxy(value);
+	}
+
+	@Kroll.getProperty
+	public boolean responseNeeded()
+	{
+		return isResponseNeeded;
+	}
+
+	public int getRequestId()
+	{
+		return requestId;
+	}
+
+	public BluetoothDevice getBluetoothDevice()
+	{
+		return bluetoothDevice;
 	}
 }

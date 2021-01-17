@@ -9,6 +9,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.RequiresApi;
+import appcelerator.ble.TiBLECharacteristicProxy;
 import appcelerator.ble.TiBLEServiceProxy;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
 public class TiBLEPeripheralManagerProxy extends KrollProxy
@@ -171,6 +174,75 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			return false;
 		}
 		return bleService.isLEAdvertising();
+	}
+
+	@Kroll.method(name = "updateValue")
+	public boolean updateCharacteristicAndNotifySubscribers(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("characteristic") || !dict.containsKey("data")) {
+			Log.e(LCAT,
+				  "updateCharacteristicAndNotifySubscribers(): Cannot update value, required parameters not provided");
+			return false;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "updateCharacteristicAndNotifySubscribers(): Cannot update value, GATT server not opened");
+			return false;
+		}
+		TiBLECharacteristicProxy characteristicProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+		BluetoothGattCharacteristic characteristic = characteristicProxy.getCharacteristic();
+		BufferProxy value = (BufferProxy) dict.get("data");
+		if (dict.containsKey("centrals")) {
+			Object[] centralsObjects = (Object[]) dict.get("centrals");
+			if (centralsObjects != null) {
+				TiBLECentralProxy[] centralProxies = new TiBLECentralProxy[centralsObjects.length];
+				for (int i = 0; i < centralsObjects.length; i++) {
+					centralProxies[i] = (TiBLECentralProxy) centralsObjects[i];
+				}
+				return bleService.updateCharacteristicAndNotifySubscribers(characteristic, value, centralProxies);
+			}
+
+		} else {
+			return bleService.updateCharacteristicAndNotifySubscribers(characteristic, value, null);
+		}
+		return false;
+	}
+
+	@Kroll.method(name = "respondToRequest")
+	public void respondToCharacteristicRequest(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("request") || !dict.containsKey("result")) {
+			Log.e(
+				LCAT,
+				"respondToCharacteristicRequest(): Cannot respond to characteristic request, required parameters not provided");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT,
+				  "respondToCharacteristicRequest(): Cannot respond to characteristic request, GATT server not opened");
+			return;
+		}
+		TiBLECharacteristicRequestProxy requestProxy = (TiBLECharacteristicRequestProxy) dict.get("request");
+		int result = (int) dict.get("result");
+		bleService.sendResponseToCharacteristic(requestProxy, result);
+	}
+
+	@Kroll.method
+	public void respondToDescriptorRequest(KrollDict dict)
+	{
+		if (dict == null || !dict.containsKey("descriptorRequest") || !dict.containsKey("result")) {
+			Log.e(
+				LCAT,
+				"respondToDescriptorRequest(): Cannot respond to descriptor request, required parameters not provided");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "respondToDescriptorRequest(): Cannot respond to descriptor request, GATT server not opened");
+			return;
+		}
+		TiBLEDescriptorRequestProxy descriptorRequestProxy =
+			(TiBLEDescriptorRequestProxy) dict.get("descriptorRequest");
+		int result = (int) dict.get("result");
+		bleService.sendResponseToDescriptor(descriptorRequestProxy, result);
 	}
 
 	public void cleanup()
