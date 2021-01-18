@@ -12,63 +12,23 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 40,
 		title: 'Initialize Peripheral Manager'
 	});
-	InitializePeripheralManager.addEventListener('click', function () {
+	var InitializePeripheralManagerClick = (e) => {
 		if (manager === null) {
 			manager = BLE.initPeripheralManager();
-			manager.addEventListener('didUpdateState', function (e) {
-				Ti.API.info('didUpdateState');
-				switch (e.state) {
-					case BLE.MANAGER_STATE_RESETTING:
-						logs.push('Manager state updated to Resetting');
-						alert('Resetting');
-						break;
-
-					case BLE.MANAGER_STATE_UNSUPPORTED:
-						logs.push('Manager state updated to Unsupported');
-						alert('Unsupported');
-						break;
-
-					case BLE.MANAGER_STATE_UNAUTHORIZED:
-						logs.push('Manager state updated to Unauthorized');
-						alert('Unauthorized');
-						break;
-
-					case BLE.MANAGER_STATE_POWERED_OFF:
-						logs.push('Manager state updated to powered Off');
-						alert('Peripheral Manager is powered Off');
-						break;
-
-					case BLE.MANAGER_STATE_POWERED_ON:
-						logs.push('Manager state updated to powered On');
-						alert('Peripheral Manager is powered On');
-						break;
-
-					case BLE.MANAGER_STATE_UNKNOWN:
-					default:
-						logs.push('Manager state updated to Unknown');
-						alert('Unknown');
-						break;
-				}
-				setData(logs);
-			});
-			manager.addEventListener('didStartAdvertising', function (e) {
-				Ti.API.info('Peripheral Manager started advertising');
-				logs.push('Peripheral Manager started advertising');
-				setData(logs);
-			});
+			setPeripheralManagerEventListeners(manager);
 		} else {
 			Ti.API.info('Peripheral Manager already Initialized');
 			alert('Peripheral Manager already Initialized');
 		}
-	});
-
+	};
+	InitializePeripheralManager.addEventListener('click', InitializePeripheralManagerClick);
 	win.add(InitializePeripheralManager);
 
 	var startAdvertisingButton = Titanium.UI.createButton({
 		top: 90,
 		title: 'Start Advertising'
 	});
-	startAdvertisingButton.addEventListener('click', function () {
+	var startAdvertisingButtonClick = (e) => {
 		if (manager === null) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
@@ -87,17 +47,18 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 			manager.startAdvertisingBeaconRegion({
 				beaconRegion: beaconRegion
 			});
-			logs.push('added beacon uuid: ' + beaconUUID);
+			logs.push('Beacon uuid: ' + beaconUUID + ' Major: ' + major + ' Minor: ' + minor);
 			setData(logs);
 		}
-	});
+	};
+	startAdvertisingButton.addEventListener('click', startAdvertisingButtonClick);
 	win.add(startAdvertisingButton);
 
 	var stopAdvertisingButton = Titanium.UI.createButton({
 		top: 140,
 		title: 'Stop Advertising'
 	});
-	stopAdvertisingButton.addEventListener('click', function () {
+	var stopAdvertisingButtonClick = (e) => {
 		if (manager === null) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
@@ -111,7 +72,8 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 			alert('Peripheral Manager has stopped advertising');
 			manager.stopAdvertising();
 		}
-	});
+	};
+	stopAdvertisingButton.addEventListener('click', stopAdvertisingButtonClick);
 	win.add(stopAdvertisingButton);
 
 	var tableView = Titanium.UI.createTableView({
@@ -148,6 +110,63 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 	}
 	setData(logs);
 	win.add(tableView);
+
+	var didUpdateState = (e) => {
+		Ti.API.info('didUpdateState');
+		switch (e.state) {
+			case BLE.MANAGER_STATE_RESETTING:
+				logs.push('Manager state updated to Resetting');
+				alert('Resetting');
+				break;
+
+			case BLE.MANAGER_STATE_UNSUPPORTED:
+				logs.push('Manager state updated to Unsupported');
+				alert('Unsupported');
+				break;
+
+			case BLE.MANAGER_STATE_UNAUTHORIZED:
+				logs.push('Manager state updated to Unauthorized');
+				alert('Unauthorized');
+				break;
+
+			case BLE.MANAGER_STATE_POWERED_OFF:
+				logs.push('Manager state updated to powered Off');
+				alert('Peripheral Manager is powered Off');
+				break;
+
+			case BLE.MANAGER_STATE_POWERED_ON:
+				logs.push('Manager state updated to powered On');
+				alert('Peripheral Manager is powered On');
+				break;
+
+			case BLE.MANAGER_STATE_UNKNOWN:
+			default:
+				logs.push('Manager state updated to Unknown');
+				alert('Unknown');
+				break;
+		}
+		setData(logs);
+	};
+	var didStartAdvertising = (e) => {
+		Ti.API.info('Peripheral Manager started advertising');
+		logs.push('Peripheral Manager started advertising');
+		setData(logs);
+	};
+	function setPeripheralManagerEventListeners(manager) {
+		manager.addEventListener('didUpdateState', didUpdateState);
+		manager.addEventListener('didStartAdvertising', didStartAdvertising);
+	}
+	win.addEventListener('close', function () {
+		if (manager === null) {
+			return;
+		}
+		manager.removeEventListener('didUpdateState', didUpdateState);
+		manager.removeEventListener('didStartAdvertising', didStartAdvertising);
+
+		InitializePeripheralManager.removeEventListener('click', InitializePeripheralManagerClick);
+		startAdvertisingButton.removeEventListener('click', startAdvertisingButtonClick);
+		stopAdvertisingButton.removeEventListener('click', stopAdvertisingButtonClick);
+	});
 	return win;
 }
 exports.deviceWin = deviceWin;
