@@ -257,6 +257,60 @@ describe('appcelerator.ble', function () {
 				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH).toEqual(jasmine.any(Number));
 			});
 		});
+
+		describe('LOCATION_MANAGER_AUTHORIZATION_STATUS_*', () => {
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED).toEqual(jasmine.any(Number));
+			});
+		});
+
+		describe('REGION_STATE_*', () => {
+			it('REGION_STATE_UNKNOWN', () => {
+				expect(BLE.REGION_STATE_UNKNOWN).toEqual(jasmine.any(Number));
+			});
+
+			it('REGION_STATE_INSIDE', () => {
+				expect(BLE.REGION_STATE_INSIDE).toEqual(jasmine.any(Number));
+			});
+
+			it('REGION_STATE_OUTSIDE', () => {
+				expect(BLE.REGION_STATE_OUTSIDE).toEqual(jasmine.any(Number));
+			});
+		});
+
+		describe('BEACON_PROXIMITY_*', () => {
+			it('BEACON_PROXIMITY_UNKNOWN', () => {
+				expect(BLE.BEACON_PROXIMITY_UNKNOWN).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_IMMEDIATE', () => {
+				expect(BLE.BEACON_PROXIMITY_IMMEDIATE).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_NEAR', () => {
+				expect(BLE.BEACON_PROXIMITY_NEAR).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_FAR', () => {
+				expect(BLE.BEACON_PROXIMITY_FAR).toEqual(jasmine.any(Number));
+			});
+		});
 	}
 
 	describe('CHARACTERISTIC_PERMISSION_*', function () {
