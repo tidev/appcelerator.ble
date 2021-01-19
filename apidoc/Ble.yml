@@ -44,6 +44,7 @@ description: |
             </android>
         </ti:app>
       ```
+      Note: A detailed information about how to use module in your application, can be found with artifacts at path modules/iphone (platform)/appcelerator.ble/1.X.X (version of module)/documentation/index.html
 platforms: [android, iphone, ipad] 
 
 properties:
