@@ -26,7 +26,7 @@ class TiBLECentralProxy: TiProxy {
         return NSNumber(value: _central.maximumUpdateValueLength)
     }
     @objc
-    func UUID() -> String {
+    func address() -> String {
         return _central.identifier.uuidString
     }
     func central() -> CBCentral {

@@ -12,8 +12,8 @@ properties:
         platforms: [iphone, ipad]
         since: "1.0.0"
 
-      - name: UUID
-        summary: The UUID of the central.
+      - name: address
+        summary: The address (UUID) of the central.
         type: String
         platforms: [iphone, ipad]
         since: "1.0.0"
