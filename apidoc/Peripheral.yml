@@ -34,15 +34,9 @@ properties:
     since: "1.0.0"
   
   - name: address
-    summary: Once a peripheral has been connected at least once by the system, it is assigned a UUID. This address can be stored and later provided to the retrievePeripherals method.
+    summary: Once a peripheral has been connected at least once by the system, it is assigned a address (UUID). This address can be stored and later provided to the retrievePeripherals method.
     type: String
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-
-  - name: address
-    summary: Returns the hardware address of the peripheral device.
-    type: String
-    platforms: [android]
+    platforms: [iphone, ipad, android]
     since: "1.0.0"
 
   - name: canSendWriteWithoutResponse
