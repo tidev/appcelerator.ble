@@ -3,6 +3,7 @@ summary: L2Cap allow us to open a side channel, with it we can directly read and
 description: L2Cap Channel on the lowest level is the stream of data between two devices. It’s actually the protocol that has been used underneath for all types of communication between two devices. So L2Cap has been used from the first day of Bluetooth communications. but now with the L2CAP class, we use is directly talk over these channels.
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
+createable: false
 since: "1.0.0"
 osver: {ios: {min: "11.0"}}
 properties:
