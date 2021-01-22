@@ -1,0 +1,45 @@
+name: Modules.BLE.Request
+summary: A request that uses the Attribute Protocol (ATT).
+createable: false
+description: |
+    The class represents Attribute Protocol (ATT) read and write requests from remote central devices (represented by Central objects). Remote centrals use these ATT requests to read and write characteristic values on local peripherals (represented by PeripheralManager objects). Local peripherals, on the other hand, use the properties of Request objects to respond to the read and write requests appropriately, using the respondToRequest() method of the PeripheralManager class.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+since: "1.0.0"
+properties:
+
+      - name: offset
+        summary: The zero-based index of the first byte for the read or write.
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+        type: Number
+
+      - name: central
+        summary: The central that originated the request.
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+        type: Modules.BLE.Central
+
+      - name: value
+        summary: The data being read or written. Its a type of TiBuffer.
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+        type: Titanium.Buffer
+
+      - name: characteristics
+        summary: A list of characteristics discovered in this service.
+        platforms: [iphone, ipad]
+        since: "1.0.0"
+        type: Modules.BLE.Characteristic
+
+methods:
+ - name: updateValue
+   summary: update the data of value field
+   platforms: [iphone, ipad]
+   since: "1.0.0"
+   parameters:
+      - name: value
+        type: Titanium.Buffer
+        summary: Titanium.Buffer object to update data on value
+   returns:
+      type: void
