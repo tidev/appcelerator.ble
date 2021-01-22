@@ -79,7 +79,7 @@ The BLE variable is a reference to the Module object.
   </ti:app>
   ```
 
-- Set the ``` <module> ``` element in tiapp.xml, such as this: 
+- Set the ``` <module> ``` element in tiapp.xml, such as this:
 ```
 <modules>
     <module platform="ios">appcelerator.ble</module>
@@ -115,8 +115,8 @@ The BLE variable is a reference to the Module object.
     centralManager.connectPeripheral({
             peripheral: peripheral,
             options: {
-                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
-                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true,
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true
             }
     });
     ```
@@ -141,14 +141,14 @@ The BLE variable is a reference to the Module object.
         service: service
     });
     ```
-    
+
     result will be return in `didDiscoverCharacteristics` event
-    
+
     ```
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
-    ```    
+    ```
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
-    ```  
+    ```
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -186,8 +186,8 @@ or the peripheral simulator in order to do the connection and data-exchange with
     centralManager.connectPeripheral({
         peripheral: peripheral,
         options: {
-            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
-            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true,
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true
         }
     });
     ```
@@ -213,16 +213,16 @@ or the peripheral simulator in order to do the connection and data-exchange with
         service: service
     });
     ```
-    
+
     result will be return in `didDiscoverCharacteristics` event
-    
+
     ```
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
-    ```   
+    ```
 
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
 
-    ```  
+    ```
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -255,7 +255,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
         if (e.errorCode !== null) {
             alert('Error while opening channel' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
                 return;
-        } 
+        }
         channel = e.channel;
         channel.addEventListener('onDataReceived', function (e) {
             var data = e.data;
@@ -268,7 +268,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `write` function from channel to write values
 
-    ```                   
+    ```
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
@@ -298,7 +298,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
- 
+
     ```
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
@@ -318,7 +318,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
-    
+
     ```
     peripheralManager.startAdvertising({
         localName: name,
@@ -351,7 +351,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
- 
+
     ```
      var characteristic = BLE.createMutableCharacteristic({
         uuid: BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING,
@@ -376,7 +376,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     peripheralManager.publishL2CAPChannel({
          encryptionRequired: false
     });
-          
+
     peripheralManager.startAdvertising({
         localName: name,
         serviceUUIDs: servicesUUIDs
@@ -409,19 +409,19 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 - Use `write` function from channel to write values
 
-    ```                   
+    ```
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
     });
     ```
-      
+
 - Use `close` function to close channel
 
     ```
     channel.close();
     ```
-      
+
 - Use `stopAdvertising` to stop advertising
     ```
     peripheralManager.stopAdvertising();
@@ -443,7 +443,9 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 ### Android
 
-- This behaviour is observed on certain android devices. While starting the ble scan, make sure the location service is turned-on in order to receive the scan results.
+- This behaviour is observed on certain android devices. While starting the BLE scan, make sure the location service is turned-on in order to receive the scan results.
+- It is observed with certain fitness watches (may be other BLE hardware too) that upon connecting them with android-central application, the connection gets auto-disconnected after certain period of time(ranging from immediately to up-to 50s or more).
+The fix is to first pair your peripheral-device(watch or any other hardware) with android device via Settings->Bluetooth screen and then do the connection procedure from central-application.
 
 ## Building
 
@@ -457,4 +459,4 @@ Axway
 
 ## License
 
-Copyright (c) 2020 by Axway, Inc. Please see the LICENSE file for further details.  
+Copyright (c) 2020 by Axway, Inc. Please see the LICENSE file for further details.

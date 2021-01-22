@@ -192,12 +192,15 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		}
 	});
 
+	const descriptorUUID = '00002902-0000-1000-8000-00805f9b34fb';
 	subscribeButton.addEventListener('click', function () {
 		if (peripheral) {
 			if (peripheral.isConnected) {
 				if (global.charactersticObject) {
 					peripheral.subscribeToCharacteristic({
-						characteristic: global.charactersticObject
+						characteristic: global.charactersticObject,
+						descriptorUUID: descriptorUUID,
+						descriptorValue: BLE.ENABLE_INDICATION_VALUE
 					});
 				} else {
 					alert('Heart Rate Characteristic (2A37) Not found');
@@ -214,7 +217,9 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		if (peripheral.isConnected) {
 			if (global.charactersticObject) {
 				peripheral.unsubscribeFromCharacteristic({
-					characteristic: global.charactersticObject
+					characteristic: global.charactersticObject,
+					descriptorUUID: descriptorUUID,
+					descriptorValue: BLE.DISABLE_NOTIFICATION_VALUE
 				});
 			} else {
 				alert('No registered characteristic available to unsubscribe');
