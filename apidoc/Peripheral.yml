@@ -1,6 +1,7 @@
 ---
 name: Modules.BLE.Peripheral
 summary: A remote peripheral device.
+createable: false
 description: |
     The CBPeripheral class represents remote peripheral devices that your app discovers with a central manager (an instance of CentralManager).
     In iOS, Peripherals use universally unique identifiers (UUIDs), to identify themselves. For Android, Peripherals use address to be uniqely identified.

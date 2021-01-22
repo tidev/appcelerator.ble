@@ -32,6 +32,7 @@
 		F7BEE02224C95E80005DB480 /* TiBLEServiceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */; };
 		F7BEE02324C95E80005DB480 /* TiBLECharacteristicProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */; };
 		F7BEE02424C95E80005DB480 /* TiBLEPeripheralProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */; };
+		F7CF07092591CD6C00359046 /* TiBeaconIdentityConstraintProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CF07082591CD6C00359046 /* TiBeaconIdentityConstraintProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		F7BEE01C24C95E80005DB480 /* TiBLEServiceProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEServiceProxy.swift; path = Classes/TiBLEServiceProxy.swift; sourceTree = "<group>"; };
 		F7BEE01D24C95E80005DB480 /* TiBLECharacteristicProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLECharacteristicProxy.swift; path = Classes/TiBLECharacteristicProxy.swift; sourceTree = "<group>"; };
 		F7BEE01E24C95E80005DB480 /* TiBLEPeripheralProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TiBLEPeripheralProxy.swift; path = Classes/TiBLEPeripheralProxy.swift; sourceTree = "<group>"; };
+		F7CF07082591CD6C00359046 /* TiBeaconIdentityConstraintProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TiBeaconIdentityConstraintProxy.swift; path = Classes/TiBeaconIdentityConstraintProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				F7883209257906AE003E0130 /* TiBLEBeaconProxy.swift */,
 				F788320C2579071F003E0130 /* TiBLEBeaconRegionProxy.swift */,
 				F788320F25790786003E0130 /* TiBLERegionManagerProxy.swift */,
+				F7CF07082591CD6C00359046 /* TiBeaconIdentityConstraintProxy.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F78D846A24EAA70800189DD7 /* TiBLECentralManager.swift in Sources */,
+				F7CF07092591CD6C00359046 /* TiBeaconIdentityConstraintProxy.swift in Sources */,
 				F7BEE02324C95E80005DB480 /* TiBLECharacteristicProxy.swift in Sources */,
 				F7707A6C2546C196004FEBD2 /* TiBLEIOStream.swift in Sources */,
 				DB34CDE0207B998A005F8E8C /* AppceleratorBleModuleAssets.m in Sources */,

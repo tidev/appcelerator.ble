@@ -663,6 +663,90 @@ properties:
     platforms: [iphone, ipad, android]
     since: "1.0.0"
 
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS
+    type: Number
+    summary: User has granted authorization to use their location only while they are using your app. 
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE
+    type: Number
+    summary: Write a characteristic value, with a response from the peripheral to indicate whether the write was successful.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED
+    type: Number
+    summary: User has explicitly denied authorization for this application, or location services are disabled in Settings.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED
+    type: Number
+    summary: User has not yet made a choice with regards to this application
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED
+    type: Number
+    summary: This application is not authorized to use location services. Due  to active restrictions on location services, the user cannot change this status, and may not have personally denied authorization
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_UNKNOWN
+    type: Number
+    summary: The current state of the device with reference to a region is unknown
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_INSIDE
+    type: Number
+    summary: The current state of the device with reference to a region is inside
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_OUTSIDE
+    type: Number
+    summary: The current state of the device with reference to a region is outside
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_UNKNOWN
+    type: Number
+    summary: current state of the device with reference to a region is unknown
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_IMMEDIATE
+    type: Number
+    summary: current state of the device with reference to a region is immediate
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_NEAR
+    type: Number
+    summary: current state of the device with reference to a region is near
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_FAR
+    type: Number
+    summary: current state of the device with reference to a region is far
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
@@ -745,6 +829,31 @@ methods:
         summary: An array of the characteristic’s descriptors.
     returns:
       type: Modules.BLE.MutableCharacteristic
+
+  - name: createBeaconIdentityConstraint
+    summary: create a constraint that describes the identity caracteristics of a beacon.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}
+    since: "1.1.0"
+    parameters:
+      - name: uuid
+        type: String
+        summary: UUID associated with the constraint.
+      - name: major
+        type: Number
+        summary: Most significant value associated with the constraint. If a major value wasn't specified, this will be nil.
+      - name: minor
+        type: Number
+        summary: Least significant value associated with the constraint. If a minor value wasn't specified, this will be nil.
+    returns:
+      type: Modules.BLE.BeaconIdentityConstraint
+
+  - name: createRegionManager
+    summary: create a region manager to scan beacons.
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    returns:
+      type: Modules.BLE.RegionManager
 
   - name: disable
     summary: Disables the local Bluetooth adapter.

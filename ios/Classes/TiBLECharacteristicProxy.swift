@@ -75,8 +75,8 @@ class TiBLECharacteristicProxy: TiProxy {
     @objc(equal:)
     func equal(arg: Any?) -> NSNumber {
         guard let options = (arg as? [[String: Any]])?.first,
-            let characteristic = options["characteristic"] as? TiBLECharacteristicProxy else {
-                return NSNumber(false)
+              let characteristic = options["characteristic"] as? TiBLECharacteristicProxy else {
+            return NSNumber(false)
         }
         if self.uuid() == characteristic.uuid() {
             return NSNumber(true)
