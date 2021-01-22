@@ -1,6 +1,7 @@
 ---
 name: Modules.BLE.Central
 summary: represent a remote device acting as central, connected to a local app, which is acting as a peripheral.
+createable: false
 description: |
     This class represents remote central devices (or centrals) that have connected to an
     app implementing the peripheral role on a local device. Remote centrals use universally unique
