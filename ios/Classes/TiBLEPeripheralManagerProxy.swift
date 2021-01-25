@@ -136,11 +136,11 @@ class TiBLEPeripheralManagerProxy: TiProxy {
     }
 
     @objc(updateValue:)
-    func updateValue(arg: Any?) -> Bool {
+    func updateValue(arg: Any?) -> NSNumber {
         guard let options = (arg as? [[String: Any]])?.first,
               let data = options["data"] as? TiBuffer,
               let characteristic = (options["characteristic"] as? TiBLEMutableCharacteristicProxy)?.mutableCharacteristic() else {
-            return false
+            return NSNumber(value: false)
         }
         var cbCentrals = [CBCentral]()
         if let centrals = options["centrals"] as? [TiBLECentralProxy] {
@@ -148,7 +148,7 @@ class TiBLEPeripheralManagerProxy: TiProxy {
                 cbCentrals.append(proxy.central())
             })
         }
-        return _peripheralManager.updateValue(data.data as Data, for: characteristic, onSubscribedCentrals: cbCentrals.isEmpty ? nil : cbCentrals)
+        return NSNumber(value: _peripheralManager.updateValue(data.data as Data, for: characteristic, onSubscribedCentrals: cbCentrals.isEmpty ? nil : cbCentrals))
     }
 
     @objc(setDesiredConnectionLatency:)
