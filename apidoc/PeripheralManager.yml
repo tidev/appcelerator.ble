@@ -70,8 +70,8 @@ methods:
 
   - name: respondToRequest
     summary: Used to respond to request(s) received via the didReceiveReadRequest or didReceiveWriteRequests event.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: request
         type: Modules.BLE.Request
@@ -81,6 +81,20 @@ methods:
         summary: The result code; see the ATT_ERROR* constants.      
     returns:
       type: void  
+
+  - name: respondToDescriptorRequest
+    summary: Used to respond to request(s) received via the didReceiveDescriptorReadRequest or didReceiveDescriptorWriteRequest event.
+    platforms: [android]
+    since: "1.1.0"
+    parameters:
+      - name: descriptorRequest
+        type: Modules.BLE.DescriptorRequest
+        summary: The request to which the peripheral is responding.
+      - name: result
+        type: Number
+        summary: The result code; see the ATT_ERROR* constants.      
+    returns:
+      type: void
 
   - name: publishL2CAPChannel
     summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
@@ -141,21 +155,21 @@ methods:
 
   - name: updateValue
     summary: Instructs the module's internal peripheral manager to send an updated characteristic value to one or more centrals, via a notification or indication.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: characteristic
         type: Modules.BLE.MutableCharacteristic
         summary: The value of the characteristic.
       - name: data
         type: Titanium.Buffer
-        summary: An array of service UUIDs.  
+        summary: updated characteristic value. 
       - name: centrals
         type: Array<Modules.BLE.Central>
         summary: The list of centrals that need to be updated. If not specified, all subscribed centrals will be updated.
     returns:
       type: Boolean
-      summary: True if the update could be sent, or false if the underlying transmit queue is full. If false was returned, the readyToUpdateSubscribers event will be fired once space has become available, and the update should be re-sent if so desired.  
+      summary: True if the update could be sent, otherwise false. In iOS, if false was returned, the readyToUpdateSubscribers event will be fired once space has become available, and the update should be re-sent if so desired. In Android, if there are multiple centrals need to be updated, then for any of the central, if the update could not be sent, it returns false.
 
   - name: setDesiredConnectionLatency
     summary: Sets the desired connection latency for an existing connection on the module's internal peripheral manager.
@@ -295,8 +309,12 @@ events:
 
   - name: didSubscribeToCharacteristic
     summary:  This event is fired when a central configures a characteristic to notify or indicate. It should be used as a cue to start sending updates as the characteristic value changes.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    description: |
+        In Android, this event is fired by writing on the Client Configuration UUID (00002902-0000-1000-8000-00805f9b34fb)
+        descriptor for given characteristic by central with descriptor values,BLE.ENABLE_NOTIFICATION_VALUE
+        or BLE.ENABLE_INDICATION_VALUE.
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: central
         type: Modules.BLE.Central
@@ -307,8 +325,11 @@ events:
 
   - name: didUnsubscribeFromCharacteristic
     summary: This event is fired when a central removes notifications/indications from a characteristic.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    description: |
+        In Android, this event is fired by writing on the Client Configuration UUID (00002902-0000-1000-8000-00805f9b34fb)
+        descriptor for given characteristic by central with value BLE.DISABLE_NOTIFICATION_VALUE
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: central
         type: Modules.BLE.Central
@@ -319,8 +340,8 @@ events:
 
   - name: didReceiveReadRequest
     summary: This event is fired when the module's internal peripheral manager receives a read request.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: request
         type: Modules.BLE.Request
@@ -330,12 +351,30 @@ events:
     summary: This event is fired when the module's internal peripheral manager receives a write request for one or more characteristics.
     description: |
      For every invocation of this method, respondToRequest should be called exactly once. If the requests parameter contains multiple requests, they must be treated as an atomic unit. If the execution of one of the requests would cause a failure, the request and error reason should be provided and none of the requests should be executed.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: request
         type: Array<Modules.BLE.Request>
         summary: request objects describing the incoming write request
+
+  - name: didReceiveDescriptorReadRequest
+    summary: This event is fired when the module's internal peripheral manager receives a read request on descriptor.
+    platforms: [android]
+    since: "1.1.0"
+    properties:
+      - name: descriptorRequest
+        type: Modules.BLE.DescriptorRequest
+        summary: An object representing the descriptor request.
+
+  - name: didReceiveDescriptorWriteRequests
+    summary: This event is fired when the module's internal peripheral manager receives a write request on descriptor.
+    platforms: [android]
+    since: "1.1.0"
+    properties:
+      - name: descriptorRequests
+        type: Modules.BLE.DescriptorRequest
+        summary: An object representing the descriptor request.
 
   - name: readyToUpdateSubscribers
     summary: This event is fired when the module's internal peripheral manager receives a write request for one or more characteristics.This event is fired after a failed call to updateValue, when the module's internal peripheral manager is again ready to send characteristic value updates.
