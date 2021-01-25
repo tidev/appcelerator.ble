@@ -4,15 +4,15 @@ summary: A characteristic of a local peripheral’s service.
 description: |
     It objects represent the characteristics of a local peripheral’s service. This class adds write access to many of the properties in the Characteristic class, which it inherits from.
 extends: Titanium.Proxy
-since: "1.0.0"
-platforms: [iphone, ipad]
+since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+platforms: [android, iphone, ipad]
 
 properties:
 
   - name: subscribedCentrals
     summary: For notifying characteristics, the set of currently subscribed centrals.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     type: Modules.BLE.Central
 
   - name: permissions
