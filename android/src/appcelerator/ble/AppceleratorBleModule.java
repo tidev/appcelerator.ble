@@ -88,15 +88,6 @@ public class AppceleratorBleModule extends KrollModule
 	@SuppressLint("InlinedApi")
 	@Kroll.constant
 	public static final int CONNECTION_PRIORITY_LOW_POWER = BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER;
-	@Kroll.constant
-	public static final BufferProxy ENABLE_NOTIFICATION_VALUE =
-		new BufferProxy(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-	@Kroll.constant
-	public static final BufferProxy ENABLE_INDICATION_VALUE =
-		new BufferProxy(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-	@Kroll.constant
-	public static final BufferProxy DISABLE_NOTIFICATION_VALUE =
-		new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
 
 	public AppceleratorBleModule()
 	{
@@ -108,6 +99,24 @@ public class AppceleratorBleModule extends KrollModule
 	public String getApiName()
 	{
 		return "appcelerator.ble";
+	}
+
+	@Kroll.getProperty(name = "ENABLE_NOTIFICATION_VALUE")
+	public BufferProxy getEnableNotificationValue()
+	{
+		return new BufferProxy(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+	}
+
+	@Kroll.getProperty(name = "ENABLE_INDICATION_VALUE")
+	public BufferProxy getEnableIndicationValue()
+	{
+		return new BufferProxy(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+	}
+
+	@Kroll.getProperty(name = "DISABLE_NOTIFICATION_VALUE")
+	public BufferProxy getDisableNotificationValue()
+	{
+		return new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
 	}
 
 	@Kroll.method

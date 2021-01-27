@@ -157,6 +157,9 @@ methods:
 
   - name: subscribeToCharacteristic
     summary: Enables notifications/indications for a characteristic. If the characteristic allows both, notifications will be used.
+    description: |
+        In Android, subscribing to a characteristic is a two step process in which, first the setCharacteristicNotification() is called which enables the notification locally(on Android device), followed by writing on the descriptor, which is optional.
+        If the second paramater(descriptorUUID) not provided, then writing on the descriptor would not be done. Reference (https://developer.android.com/guide/topics/connectivity/bluetooth-le#notification)
     platforms: [android, iphone, ipad]
     since: "1.0.0"
     parameters:
