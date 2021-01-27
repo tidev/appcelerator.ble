@@ -79,6 +79,20 @@ The BLE variable is a reference to the Module object.
   </ti:app>
   ```
 
+ - Edit the `plist` with following `uses-permission` element to the ios plist section, if your are adding iBeacon Scan
+  ```
+  <ti:app>
+    <ios>
+      <plist>
+       <key>NSLocationWhenInUseUsageDescription</key>
+       <string>Allow Location permission</string>
+       <key>NSLocationAlwaysUsageDescription</key>
+       <string>Allow Location permission</string> 
+      </plist>
+    </ios>
+  </ti:app>
+  ```
+
 - Set the ``` <module> ``` element in tiapp.xml, such as this: 
 ```
 <modules>
@@ -426,6 +440,111 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
     peripheralManager.stopAdvertising();
     ```
+
+# iBeacon Application (iOS Only)
+
+## Follow basic steps to adverstise iBeacon:
+
+- Use `initPeripheralManager` to create Peripheral Manager
+
+    ```
+    var peripheralManager = BLE.initPeripheralManager();
+    ```
+
+- Use `createBeaconRegion` to create BeaconRegion
+ 
+    ```
+	var beaconRegion = BLE.createBeaconRegion({
+		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
+		major: 1,
+		minor: 100,
+		identifier: 'com.appcelerator.BluetoothLowEnergy.beacon'
+	});
+    ```
+- Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertisingBeaconRegion`
+    ```
+    peripheralManager.startAdvertisingBeaconRegion({
+		beaconRegion: beaconRegion
+	});
+    ```
+
+## Follow basic steps to create iBeacon Scanner application:
+
+- Use `initPeripheralManager` to create Region Manager
+
+    ```
+    var regionManager = BLE.createRegionManager();
+    ```
+- Use `requestWhenInUseAuthorization` to request location permission
+    ```
+    	regionManager.requestWhenInUseAuthorization();
+    ```
+
+- Use `createBeaconRegion` to create BeaconRegion
+    ```
+	var beaconRegion = BLE.createBeaconRegion({
+		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
+		major: 1,
+		minor: 100,
+		identifier: 'com.appcelerator.BluetoothLowEnergy.beacon'
+	});
+    ```
+
+- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
+    ```
+	regionManager.startRegionMonitoring({
+				beaconRegion: beaconRegion
+	});
+    regionManager.startRangingBeaconsInRegion({
+				beaconRegion: beaconRegion
+    });
+    ```
+
+- Get ranged beacons from `didRangeBeacons` event and check `proximity` and `accuracy` to check beacon location
+
+    ```
+    var didRangeBeacons = (e) => {
+		var becaons = e.beacons;
+		if (becaons.length === 0) {
+			alert('No beacon in range');
+			return;
+		}
+		var proximity = becaons[0].proximity;
+		var accuracy = becaons[0].accuracy;
+		switch (proximity) {
+			case BLE.BEACON_PROXIMITY_UNKNOWN:
+				alert('Beacon Location : UNKNOWN');
+				break;
+
+			case BLE.BEACON_PROXIMITY_IMMEDIATE:
+				alert('Beacon Location : IMMEDIATE (approx. ' + accuracy + 'm)');
+				break;
+
+			case BLE.BEACON_PROXIMITY_NEAR:
+				alert('Beacon Location : NEAR (approx. ' + accuracy + 'm)');
+				break;
+
+			case BLE.BEACON_PROXIMITY_FAR:
+				alert('Beacon Location : FAR (approx. ' + accuracy + 'm)');
+				break;
+			default:
+				alert('Beacon Location : UNKNOWN');
+				break;
+		}
+	};
+    regionManager.addEventListener('didRangeBeacons', didRangeBeacons);
+    ```
+- Use `stopRegionMonitoring` to stop monitoring and stop ranging using `stopRangingBeaconsInRegion`
+
+    ```                   
+	regionManager.stopRegionMonitoring({
+				beaconRegion: beaconRegion
+	});
+	regionManager.stopRangingBeaconsInRegion({
+				beaconRegion: beaconRegion
+	});
+    ```
+
 ## Read Data from TiBuffer
 - you can access bytes from TiBuffer using:
 
@@ -438,6 +557,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Please see the `example/` folder.
 - Please see the `example/ImageTransferUsingChannelStream` folder for how to use channel stream API's to transfer bigger data like images.
+- Please see the `example/beacon` folder for iBeacon sample.
 
 ## Observations
 
