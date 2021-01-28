@@ -9,13 +9,18 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
 		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
 	} else {
-		charProperties = BLE.CHARACTERISTIC_PROPERTIES_READ;
+		charProperties = BLE.CHARACTERISTIC_PROPERTIES_NOTIFY;
 		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
 	}
+	var descriptor = BLE.createDescriptor({
+		uuid: BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING,
+		permission: BLE.DESCRIPTOR_PERMISSION_WRITE
+	});
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
 		properties: charProperties,
-		permissions: charPermissions
+		permissions: charPermissions,
+		descriptors: [ descriptor ]
 	});
 	var heartRateService = null;
 
@@ -63,59 +68,18 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				setData(logs);
 			}
 
-			manager.addEventListener('didSubscribeToCharacteristic', function (e) {
-				Ti.API.info('Peripheral Manager subscribed to characteristic');
-				central = e.central;
-				logs.push('Central Manager Subscribed to ' + e.characteristic.uuid);
-				setData(logs);
-			});
+			manager.addEventListener('didSubscribeToCharacteristic', didSubscribeToCharacteristicListener);
+			manager.addEventListener('didUnsubscribeFromCharacteristic', didUnsubscribeFromCharacteristicListener);
+			manager.addEventListener('didReceiveReadRequest', didReceiveReadRequestListener);
+			manager.addEventListener('didReceiveWriteRequests', didReceiveWriteRequestsListener);
 
-			manager.addEventListener('didUnsubscribeFromCharacteristic', function (e) {
-				Ti.API.info('Peripheral Manager unsubscribed to characteristic');
-				central = null;
-				logs.push('Central Manager Unsubscribed to ' + e.characteristic.uuid);
-				setData(logs);
-			});
-
-			manager.addEventListener('didReceiveReadRequest', function (e) {
-				Ti.API.info('Peripheral Manager received read request');
-				logs.push('Received Read Request from Central Manager');
-				setData(logs);
-			});
-			manager.addEventListener('didReceiveWriteRequests', function (e) {
-				Ti.API.info('Peripheral Manager received write request');
-				var requests = e.requests;
-				if (requests.length !== 0) {
-					for (var i = 0; i < requests.length; i++) {
-						logs.push('Value from Central Manager: ' + requests[i].value);
-					}
-				} else {
-					logs.push('Received Write Request from Central Manager');
-				}
-				setData(logs);
-			});
-
-			manager.addEventListener('readyToUpdateSubscribers', function (e) {
-				Ti.API.info('Peripheral Manager ready to update subscribers');
-				logs.push('readyToUpdateSubscribers');
-				setData(logs);
-			});
-
-			manager.addEventListener('didPublishL2CAPChannel', function (e) {
-				Ti.API.info('Peripheral Manager published L2CAP channel');
-				logs.push('didPublishL2CAPChannel');
-				setData(logs);
-			});
-			manager.addEventListener('didUnpublishL2CAPChannel', function (e) {
-				Ti.API.info('Peripheral Manager unpublished L2CAP channel');
-				logs.push('didUnpublishL2CAPChannel');
-				setData(logs);
-			});
-			manager.addEventListener('didOpenL2CAPChannel', function (e) {
-				Ti.API.info('Peripheral Manager opened L2CAP channel');
-				logs.push('didOpenL2CAPChannel');
-				setData(logs);
-			});
+			if (IOS) {
+				manager.addEventListener('readyToUpdateSubscribers', function (e) {
+					Ti.API.info('Peripheral Manager ready to update subscribers');
+					logs.push('readyToUpdateSubscribers');
+					setData(logs);
+				});
+			}
 		} else {
 			Ti.API.info('Peripheral Manager already Initialized');
 			alert('Peripheral Manager already Initialized');
@@ -152,6 +116,50 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		}
 		Ti.API.info('Peripheral Manager started advertising');
 		logs.push('Peripheral Manager started advertising');
+		setData(logs);
+	};
+
+	var didSubscribeToCharacteristicListener = (e) => {
+		Ti.API.info('Peripheral Manager subscribed to characteristic');
+		central = e.central;
+		logs.push('Central Manager Subscribed to ' + e.characteristic.uuid);
+		setData(logs);
+	};
+
+	var didUnsubscribeFromCharacteristicListener = (e) => {
+		Ti.API.info('Peripheral Manager unsubscribed to characteristic');
+		central = null;
+		logs.push('Central Manager Unsubscribed to ' + e.characteristic.uuid);
+		setData(logs);
+	};
+
+	var didReceiveReadRequestListener = (e) => {
+		Ti.API.info('Peripheral Manager received read request');
+		logs.push('Received Read Request from Central Manager');
+		var buffer = Ti.createBuffer({ length: 4 });
+		buffer[0] = 0;
+		buffer[1] = 50;
+		var req = e.request;
+		req.updateValue({
+			value: buffer
+		});
+		manager.respondToRequest({
+			request: req,
+			result: BLE.ATT_SUCCESS
+		});
+		setData(logs);
+	};
+
+	var didReceiveWriteRequestsListener = (e) => {
+		Ti.API.info('Peripheral Manager received write request');
+		var requests = e.requests;
+		if (requests.length !== 0) {
+			for (var i = 0; i < requests.length; i++) {
+				logs.push('Value from Central Manager: ' + requests[i].value);
+			}
+		} else {
+			logs.push('Received Write Request from Central Manager');
+		}
 		setData(logs);
 	};
 
@@ -272,10 +280,6 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 		} else {
-			if (isAndroid) {
-				alert('Android Work is in progress');
-				return;
-			}
 			var data = valueField.value === '' || valueField.value === null ? '60' : valueField.value;
 			if (isNaN(data)) {
 				alert('Value should be number only');
@@ -297,7 +301,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			manager.updateValue({
 				characteristic: heartRateCharacteristic,
 				data: buffer,
-				central: centrals
+				centrals: centrals
 			});
 		}
 	});
@@ -347,6 +351,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		manager.removeEventListener('didAddService', didAddServiceListener);
 		manager.removeEventListener('didStartAdvertising', didStartAdvertisingListener);
 		manager.removeEventListener('didUpdateState', didUpdateStateListener);
+		manager.removeEventListener('didSubscribeToCharacteristic', didSubscribeToCharacteristicListener);
+		manager.removeEventListener('didUnsubscribeToCharacteristic', didUnsubscribeFromCharacteristicListener);
+		manager.removeEventListener('didReceiveReadRequest', didReceiveReadRequestListener);
+		manager.removeEventListener('didReceiveWriteRequests', didReceiveWriteRequestsListener);
 	});
 
 	return win;
