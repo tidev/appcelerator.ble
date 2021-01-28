@@ -15,8 +15,8 @@ properties:
     platforms: [iphone, ipad]
     since: "1.0.0"
 
-      - name: address
-        summary: The address (UUID) of device acting as a central.
-        type: String
-        platforms: [android, iphone, ipad]
-        since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+  - name: address
+    summary: The address (UUID) of device acting as a central.
+    type: String
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
