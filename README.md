@@ -79,20 +79,6 @@ The BLE variable is a reference to the Module object.
   </ti:app>
   ```
 
- - Edit the `plist` with following `uses-permission` element to the ios plist section, if your are adding iBeacon Scan
-  ```
-  <ti:app>
-    <ios>
-      <plist>
-       <key>NSLocationWhenInUseUsageDescription</key>
-       <string>Allow Location permission</string>
-       <key>NSLocationAlwaysUsageDescription</key>
-       <string>Allow Location permission</string> 
-      </plist>
-    </ios>
-  </ti:app>
-  ```
-
 - Set the ``` <module> ``` element in tiapp.xml, such as this: 
 ```
 <modules>
@@ -469,6 +455,20 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 ## Follow basic steps to create iBeacon Scanner application:
+
+ - Edit the `plist` with following `uses-permission` element to the ios plist section
+    ```
+    <ti:app>
+        <ios>
+        <plist>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Allow Location permission</string>
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>Allow Location permission</string> 
+        </plist>
+        </ios>
+    </ti:app>
+    ```
 
 - Use `initPeripheralManager` to create Region Manager
 
