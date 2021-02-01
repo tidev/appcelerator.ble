@@ -4,6 +4,7 @@ summary: An object that represents a remote device.
 description: |
    The Peer class is defines common behavior for objects representing remote devices.
    You typically don’t create instances of either Peer or its concrete subclasses. Instead, the system creates them for you during the process of peer discovery
+createable: false
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
 since: "1.0.0"
