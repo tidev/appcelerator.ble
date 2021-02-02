@@ -6,8 +6,7 @@
   - Central can scan nearby peripheral, connect and exchange data with the peripherals
   - Central can subscribe with peripheral to get latest updates for peripheral
 - Act as BLE Peripheral:
-  - Peripheral can advertise services, connect and exchange data with multiple central. This feature
-is currently available on iOS platform only.
+  - Peripheral can advertise services, connect and exchange data with multiple central.
 - Use L2CAP Channel:
   - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
 peripheral at real time. This feature is currently available on iOS platform only.
@@ -287,7 +286,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
   channel.close();
   ```
 
-# Act As Peripheral Application (iOS Only)
+# Act As Peripheral Application
 
 ## Follow basic steps to create Peripheral application:
 
@@ -300,10 +299,17 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Use `createMutableCharacteristic` to create charracteristic
  
     ```
+    if (IOS) {
+		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
+	} else {
+		charProperties = BLE.CHARACTERISTIC_PROPERTIES_NOTIFY;
+		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
+	}
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
-            properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
-            permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ]
+            properties: charProperties,
+            permissions: charPermissions
     });
     ```
 
@@ -320,6 +326,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
     
     ```
+    var name = IOS ? 'BLE-Sample' : true;
     peripheralManager.startAdvertising({
         localName: name,
         serviceUUIDs: servicesUUIDs
@@ -342,7 +349,12 @@ or the peripheral simulator in order to do the connection and data-exchange with
         peripheralManager.stopAdvertising();
     ```
 
-## Follow basic steps to create Peripheral application which use channels for communication:
+- Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
+```
+    peripheralManager.closePeripheral();
+```
+
+## Follow basic steps to create Peripheral application which use channels for communication: (iOS Only)
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
