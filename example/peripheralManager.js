@@ -49,6 +49,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			manager.addEventListener('didUpdateState', didUpdateStateListener);
 			manager.addEventListener('didStartAdvertising', didStartAdvertisingListener);
 			manager.addEventListener('didAddService', didAddServiceListener);
+			manager.addEventListener('didSubscribeToCharacteristic', didSubscribeToCharacteristicListener);
+			manager.addEventListener('didUnsubscribeFromCharacteristic', didUnsubscribeFromCharacteristicListener);
+			manager.addEventListener('didReceiveReadRequest', didReceiveReadRequestListener);
+			manager.addEventListener('didReceiveWriteRequests', didReceiveWriteRequestsListener);
 
 			if (IOS) {
 				manager.addEventListener('willRestoreState', function (e) {
@@ -56,30 +60,16 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 					logs.push('Peripheral Manager will restore state');
 					setData(logs);
 				});
-			}
-
-			if (manager.peripheralManagerState === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
-				heartRateService = manager.addService({
-					uuid: serviceUUID,
-					primary: true,
-					characteristics: [ heartRateCharacteristic ]
-				});
-				logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
-				setData(logs);
-			}
-
-			manager.addEventListener('didSubscribeToCharacteristic', didSubscribeToCharacteristicListener);
-			manager.addEventListener('didUnsubscribeFromCharacteristic', didUnsubscribeFromCharacteristicListener);
-			manager.addEventListener('didReceiveReadRequest', didReceiveReadRequestListener);
-			manager.addEventListener('didReceiveWriteRequests', didReceiveWriteRequestsListener);
-
-			if (IOS) {
 				manager.addEventListener('readyToUpdateSubscribers', function (e) {
 					Ti.API.info('Peripheral Manager ready to update subscribers');
 					logs.push('readyToUpdateSubscribers');
 					setData(logs);
 				});
 			}
+
+			logs.push('Peripheral Manager initialized');
+			setData(logs);
+
 		} else {
 			Ti.API.info('Peripheral Manager already Initialized');
 			alert('Peripheral Manager already Initialized');
@@ -184,6 +174,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			case BLE.MANAGER_STATE_POWERED_OFF:
 				logs.push('Manager state updated to powered Off');
 				alert('Peripheral Manager is powered Off');
+				heartRateService = null;
 				break;
 
 			case BLE.MANAGER_STATE_POWERED_ON:
@@ -210,8 +201,35 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		setData(logs);
 	};
 
-	var startAdvertisingButton = Titanium.UI.createButton({
+	var addServiceButton  = Titanium.UI.createButton({
 		top: 180,
+		title: 'Add Heart Rate Service'
+	});
+
+	addServiceButton.addEventListener('click', function () {
+		if (heartRateService !== null) {
+			Ti.API.info('Heart Rate service already added');
+			alert('Heart Rate service already added');
+			return;
+		}
+		if (manager.peripheralManagerState !== BLE.MANAGER_STATE_POWERED_ON) {
+			Ti.API.info('Bluetooth is not enabled');
+			alert('Bluetooth is not enabled');
+			return;
+		}
+		heartRateService = manager.addService({
+			uuid: serviceUUID,
+			primary: true,
+			characteristics: [ heartRateCharacteristic ]
+		});
+		logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+		setData(logs);
+	});
+
+	win.add(addServiceButton);
+
+	var startAdvertisingButton = Titanium.UI.createButton({
+		top: 220,
 		title: 'Start Advertising'
 	});
 	startAdvertisingButton.addEventListener('click', function () {
@@ -228,6 +246,10 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			var servicesUUIDs = [];
 			if (heartRateService !== null) {
 				servicesUUIDs.push(heartRateService.uuid);
+			} else {
+				Ti.API.info('Heart Rate service not added');
+				alert('Heart Rate service not added');
+				return;
 			}
 			manager.startAdvertising({
 				localName: name,
@@ -238,7 +260,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	win.add(startAdvertisingButton);
 
 	var stopAdvertisingButton = Titanium.UI.createButton({
-		top: 220,
+		top: 260,
 		title: 'Stop Advertising'
 	});
 	stopAdvertisingButton.addEventListener('click', function () {
@@ -260,7 +282,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	win.add(stopAdvertisingButton);
 
 	var valueField = Ti.UI.createTextField({
-		top: 260,
+		top: 310,
 		borderStyle: Ti.UI.INPUT_BORDERSTYLE_BEZEL,
 		hintText: 'Enter Value',
 		hintTextColor: '#000000',
@@ -272,7 +294,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	win.add(valueField);
 
 	var updateValue = Titanium.UI.createButton({
-		top: 300,
+		top: 350,
 		title: 'Update Value'
 	});
 	updateValue.addEventListener('click', function () {
@@ -308,7 +330,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	win.add(updateValue);
 
 	var tableView = Titanium.UI.createTableView({
-		top: 350,
+		top: 400,
 		scrollable: true,
 		backgroundColor: 'White',
 		separatorColor: '#DBE1E2',
