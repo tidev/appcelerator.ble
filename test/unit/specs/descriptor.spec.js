@@ -1,7 +1,7 @@
 const BLE = require('appcelerator.ble');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
-var UUID = IOS ? BLE.CBUUID_CHARACTERISTIC_EXTENDED_PROPERTIES_STRING : BLE.MOCK_UUID_FOR_DESCRIPTOR_UT;
-const descriptor = IOS ? BLE.createDescriptor({ value: 1, uuid: UUID }) : BLE.mockDescriptorForUT({ value: 1, permission: 1, uuid: UUID });
+let UUID = BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING;
+const descriptor = BLE.createDescriptor({ value: 1, permission: 1, uuid: UUID });
 
 describe('appcelerator.ble.descriptor', function () {
 	describe('.descriptor', () => {

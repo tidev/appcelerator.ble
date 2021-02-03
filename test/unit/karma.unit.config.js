@@ -9,7 +9,8 @@ function projectManagerHook(projectManager) {
 		var contents = fs.readFileSync(tiapp, 'utf8');
 		contents = contents.replace('</android>', `<manifest>
                                                    			<uses-permission android:name="android.permission.BLUETOOTH"/>
-                                                   			<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+															   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+															   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
                                                    		</manifest>
 		</android>`);
 		fs.writeFileSync(tiapp, contents, 'utf8');
@@ -22,6 +23,7 @@ module.exports = config => {
 		basePath: '../..',
 		frameworks: [ 'jasmine', 'projectManagerHook' ],
 		files: [
+			'test/unit/specs/bluetoothinit.spec.js',
 			'test/unit/specs/**/*spec.js'
 		],
 		reporters: [ 'mocha', 'junit' ],

@@ -25,22 +25,6 @@ public class TiBLEServiceProxy extends KrollProxy
 		this.service = service;
 	}
 
-	public static TiBLEServiceProxy mockServiceForUT(KrollDict dict)
-	{
-		//temporary method for service UT.
-		//TODO: Address or remove this temp method in MOD-2689.
-		if (dict.containsKey("uuid") && dict.containsKey("primary")) {
-			String uuid = (String) dict.get("uuid");
-			UUID id = UUID.fromString(uuid);
-			boolean isPrimary = dict.getBoolean("primary");
-			int serviceType =
-				isPrimary ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
-
-			return new TiBLEServiceProxy(new BluetoothGattService(id, serviceType));
-		}
-		return null;
-	}
-
 	public static TiBLEServiceProxy createServiceProxy(KrollDict dict)
 	{
 		if (dict == null || !dict.containsKey("uuid") || !dict.containsKey("primary")) {

@@ -1,6 +1,4 @@
 const BLE = require('appcelerator.ble');
-const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
-
 var buffer = Ti.createBuffer({ value: 'hello world' });
 
 describe('appcelerator.service', function () {
@@ -14,15 +12,12 @@ describe('appcelerator.service', function () {
 		uuid: '0C50D390-DC8E-436B-8AD0-A36D1B304B18'
 	};
 
-	if (IOS) {
-		const peripheralManager = BLE.initPeripheralManager();
-		service = peripheralManager.addService(serviceInfo);
-	} else {
-		// service object creation for android.
-		service = BLE.mockServiceForUT(serviceInfo);
-	}
-
+	const peripheralManager = BLE.initPeripheralManager();
 	describe('property', function () {
+		beforeAll(function () {
+			service = peripheralManager.addService(serviceInfo);
+		});
+
 		it('should be defined', () => {
 			expect(service).toBeDefined();
 		});
