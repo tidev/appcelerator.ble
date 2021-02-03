@@ -20,8 +20,8 @@ properties:
   - name: isMutable
     summary: Indicates whether this characteristic is mutable.
     description: |
-        Since android does not supports peripheral role, this property always returns false on android. 
-    since: "1.0.0"
+        For android, this property will always return false. 
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     type: Boolean
     platforms: [android,iphone, ipad]
 

@@ -32,13 +32,7 @@ public class AppceleratorBleModule extends KrollModule
 	private TiBLECentralManagerProxy centralManagerProxy;
 	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 
-	//Temp constant for descriptor UUID
-	//TODO Address or remove this temp constant in MOD-2849.
-	@Kroll.constant
-	public static final String MOCK_UUID_FOR_DESCRIPTOR_UT = "4f448481-bf5b-49fb-bb84-794303e3dc33";
-
-	//Temp constant for Characteristic UUID
-	//TODO Address or remove this temp constant in MOD-2849.
+	//constant for Characteristic UUID for UT.
 	@Kroll.constant
 	public static final String MOCK_UUID_FOR_CHARACTERISTIC_UT = "3b07719f-d2fc-4d09-82f4-806e07702397";
 
@@ -231,34 +225,6 @@ public class AppceleratorBleModule extends KrollModule
 		if (peripheralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
 			peripheralManagerProxy.cleanup();
 		}
-	}
-
-	//temporary method for descriptor UT.
-	//TODO Address or remove this temp method in MOD-2849.
-	@Kroll.method
-	public TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
-	{
-		return TiBLEDescriptorProxy.mockDescriptorForUT(dict);
-	}
-
-	//temporary method for Characteristic UT.
-	//TODO Address or remove this temp method in MOD-2849.
-	@Kroll.method
-	public TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
-	{
-		KrollDict serviceInfo = new KrollDict();
-		serviceInfo.put("primary", true);
-		serviceInfo.put("uuid", "4b08819f-d2fc-4d09-82f4-806e07702397");
-
-		return TiBLECharacteristicProxy.mockCharacteristicForUT(dict);
-	}
-
-	//temporary method for Service UT.
-	//TODO: Address or remove this temp method in MOD-2849.
-	@Kroll.method
-	public TiBLEServiceProxy mockServiceForUT(KrollDict dict)
-	{
-		return TiBLEServiceProxy.mockServiceForUT(dict);
 	}
 
 	@Kroll.method

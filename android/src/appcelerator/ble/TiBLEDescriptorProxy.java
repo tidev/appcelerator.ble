@@ -28,28 +28,6 @@ public class TiBLEDescriptorProxy extends KrollProxy
 		this.descriptor = descriptor;
 	}
 
-	//temporary method for descriptor UT.
-	//TODO Address or remove this temp method in MOD-2849.
-	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
-	{
-		if (dict.containsKey("permission") && dict.containsKey("uuid") && dict.containsKey("value")) {
-			int permission = (int) dict.get("permission");
-			String uuid = (String) dict.get("uuid");
-			Object value = dict.get("value");
-			BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
-			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				 ObjectOutput out = new ObjectOutputStream(bos)) {
-				out.writeObject(value);
-				byte[] bytes = bos.toByteArray();
-				descriptor.setValue(bytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return new TiBLEDescriptorProxy(descriptor);
-		}
-		return null;
-	}
-
 	public static TiBLEDescriptorProxy createDescriptorProxy(KrollDict dict)
 	{
 		if (dict == null || !dict.containsKey("permission") || !dict.containsKey("uuid")) {
