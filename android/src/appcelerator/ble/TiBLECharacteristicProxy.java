@@ -24,22 +24,6 @@ public class TiBLECharacteristicProxy extends KrollProxy
 		this.characteristic = characteristic;
 	}
 
-	//temporary method for Characteristic UT.
-	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLECharacteristicProxy mockCharacteristicForUT(KrollDict dict)
-	{
-		if (dict.containsKey("properties") && dict.containsKey("uuid") && dict.containsKey("permissions")) {
-			int properties = (int) dict.get("properties");
-			String uuid = (String) dict.get("uuid");
-			int permissions = (int) dict.get("permissions");
-
-			BluetoothGattCharacteristic characteristic =
-				new BluetoothGattCharacteristic(UUID.fromString(uuid), properties, permissions);
-			return new TiBLECharacteristicProxy(characteristic);
-		}
-		return null;
-	}
-
 	public BluetoothGattCharacteristic getCharacteristic()
 	{
 		return characteristic;
@@ -92,7 +76,6 @@ public class TiBLECharacteristicProxy extends KrollProxy
 	@Kroll.getProperty
 	public boolean isMutable()
 	{
-		//Android doesn't support the peripheral role so this property will always be false.
 		return false;
 	}
 }
