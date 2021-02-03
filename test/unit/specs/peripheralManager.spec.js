@@ -54,6 +54,10 @@ describe('appcelerator.ble.peripheralManager', function () {
 			it('should have closePeripheral function', () => {
 				expect(peripheralManager.closePeripheral).toEqual(jasmine.any(Function));
 			});
+
+			it('should have respondToDescriptorRequest function', () => {
+				expect(peripheralManager.respondToDescriptorRequest).toEqual(jasmine.any(Function));
+			});
 		}
 	});
 });
