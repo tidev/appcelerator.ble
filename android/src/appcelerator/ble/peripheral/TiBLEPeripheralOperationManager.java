@@ -163,9 +163,9 @@ public class TiBLEPeripheralOperationManager
 	{
 		boolean isServiceRemoved = bluetoothGattServer.removeService(service);
 		if (isServiceRemoved) {
-			Log.d(LCAT, "removeService(): Service removed successfully" + service.getUuid().toString());
+			Log.d(LCAT, "removeService(): Service removed successfully: " + service.getUuid().toString());
 		} else {
-			Log.e(LCAT, "removeService(): Unable to remove the provided service" + service.getUuid().toString());
+			Log.e(LCAT, "removeService(): Unable to remove the provided service: " + service.getUuid().toString());
 		}
 	}
 
