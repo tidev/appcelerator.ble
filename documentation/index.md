@@ -490,7 +490,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 	});
     ```
 
-- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
+- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE | BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
     ```
 	regionManager.startRegionMonitoring({
 				beaconRegion: beaconRegion
@@ -564,6 +564,10 @@ or the peripheral simulator in order to do the connection and data-exchange with
 ### Android
 
 - This behaviour is observed on certain android devices. While starting the ble scan, make sure the location service is turned-on in order to receive the scan results.
+
+### IOS
+
+- Beacon do not have background support
 
 ## Building
 
