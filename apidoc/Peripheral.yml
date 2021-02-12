@@ -256,14 +256,18 @@ methods:
 
   - name: openL2CAPChannel
     summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    osver: {ios: {min: "11.0"}}
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    osver: {ios: {min: "11.0"}, android: {min: "10"}}
     parameters:
       - name: psmIdentifier
         type: Number
         summary: The PSM of the channel to open.
         optional: false
+      - name: encryptionRequired
+        type: Boolean
+        summary: The bool can be true if the service requires the link to be encrypted before a stream can be established. false if the service can be used over an unsecured link. This parameter is applicable in android only and the default value is false.
+        optional: true
     returns:
       type: void
 
@@ -535,8 +539,8 @@ events:
     summary: This method delivers the result of a previous call to openL2CAPChannel.
     description: |
         Delivers the result of an attempt to open an L2CAP channel.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: sourcePeripheral
         type: Modules.BLE.Peripheral

@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.os.Build;
 import android.util.Log;
 import java.util.List;
 import org.appcelerator.kroll.KrollDict;
@@ -238,6 +239,25 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		handler.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
 	}
 
+	@Kroll.method
+	public void openL2CAPChannel(KrollDict dict)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+			Log.e(
+				LCAT,
+				"openL2CAPChannel(): unable to open the channel. This feature is supported on Android OS Version 'Q' and above.");
+			return;
+		}
+		if (dict == null || !dict.containsKey("psmIdentifier")) {
+			Log.e(LCAT, "openL2CAPChannel(): unable to open l2cap channel as psmIdentifier not provided.");
+			return;
+		}
+
+		int psmIdentifier = dict.getInt("psmIdentifier");
+		boolean isEncryptionRequired = dict.containsKey("encryptionRequired") && dict.getBoolean("encryptionRequired");
+		handler.openL2CAPChannel(this, psmIdentifier, isEncryptionRequired);
+	}
+
 	public BluetoothDevice getDevice()
 	{
 		return device;
@@ -259,5 +279,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 									   BufferProxy enableValue);
 		void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
 										   BufferProxy disableValue);
+
+		void openL2CAPChannel(TiBLEPeripheralProxy peripheralProxy, int psmIdentifier, boolean isEncryptionRequired);
 	}
 }
