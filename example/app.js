@@ -35,7 +35,6 @@ var centralWithChannel = Ti.UI.createButton({
 	font: { fontSize: 20 },
 	title: 'Central With Channel',
 	top: 140,
-	visible: IOS
 });
 centralWithChannel.addEventListener('click', function () {
 	var devices = require('centralManager.js');
