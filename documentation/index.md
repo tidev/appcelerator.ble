@@ -502,7 +502,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 	});
     ```
 
-- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
+- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE | BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
     ```
 	regionManager.startRegionMonitoring({
 				beaconRegion: beaconRegion
@@ -578,6 +578,10 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - This behaviour is observed on certain android devices. While starting the BLE scan, make sure the location service is turned-on in order to receive the scan results.
 - It is observed with certain fitness watches (may be other BLE hardware too) that upon connecting them with android-central application, the connection gets auto-disconnected after certain period of time(ranging from immediately to up-to 50s or more).
 The fix is to first pair your peripheral-device(watch or any other hardware) with android device via Settings->Bluetooth screen and then do the connection procedure from central-application.
+
+### IOS
+
+- Beacon do not have background support
 
 ## Building
 
