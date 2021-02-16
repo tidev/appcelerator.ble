@@ -112,12 +112,17 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	}
 
 	@Kroll.method
-	public void removeService(TiBLEServiceProxy serviceProxy)
+	public void removeService(KrollDict dict)
 	{
+		if (dict == null || !dict.containsKeyAndNotNull("service")) {
+			Log.e(LCAT, "removeService(): Cannot remove service, required parameter not provided");
+			return;
+		}
 		if (bleService == null) {
 			Log.e(LCAT, "removeService(): Cannot remove service, GATT server not opened");
 			return;
 		}
+		TiBLEServiceProxy serviceProxy = (TiBLEServiceProxy) dict.get("service");
 		bleService.removeServiceFromServer(serviceProxy.getService());
 	}
 
