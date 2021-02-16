@@ -579,7 +579,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - It is observed with certain fitness watches (may be other BLE hardware too) that upon connecting them with android-central application, the connection gets auto-disconnected after certain period of time(ranging from immediately to up-to 50s or more).
 The fix is to first pair your peripheral-device(watch or any other hardware) with android device via Settings->Bluetooth screen and then do the connection procedure from central-application.
 
-### IOS
+### iOS
 
 - Beacon do not have background support
 
