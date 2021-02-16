@@ -565,7 +565,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - This behaviour is observed on certain android devices. While starting the ble scan, make sure the location service is turned-on in order to receive the scan results.
 
-### IOS
+### iOS
 
 - Beacon do not have background support
 
