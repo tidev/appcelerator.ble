@@ -9,6 +9,7 @@ description: |
       of its services become disabled when it’s in the background or in a suspended state. In this 
       scenario, any remote central trying to access the service’s characteristic value or characteristic
       descriptors receives an error.
+createable: false
 extends: Titanium.Proxy
 platforms: [android, iphone, ipad]
 since: "1.0.0"
