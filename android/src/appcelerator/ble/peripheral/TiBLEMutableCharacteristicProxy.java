@@ -27,15 +27,40 @@ public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 
 	public static TiBLEMutableCharacteristicProxy createMutableCharacteristicProxy(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("properties") || !dict.containsKey("permissions")
-			|| !dict.containsKey("uuid")) {
+		if (dict == null || !dict.containsKeyAndNotNull("properties") || !dict.containsKeyAndNotNull("permissions")
+			|| !dict.containsKeyAndNotNull("uuid")) {
 			Log.e(
 				LCAT,
 				"createMutableCharacteristicProxy(): Unable to create characteristic, required parameters not provided");
 			return null;
 		}
-		int properties = (int) dict.get("properties");
-		int permissions = (int) dict.get("permissions");
+
+		int[] propertiesArr = dict.getIntArray("properties");
+		if (propertiesArr.length == 0) {
+			Log.e(
+				LCAT,
+				"createMutableCharacteristicProxy(): Unable to create characteristic, no characteristic properties are provided.");
+			return null;
+		}
+
+		int[] permissionsArr = dict.getIntArray("permissions");
+		if (permissionsArr.length == 0) {
+			Log.e(
+				LCAT,
+				"createMutableCharacteristicProxy(): Unable to create characteristic, no characteristic permissions are provided.");
+			return null;
+		}
+
+		int properties = propertiesArr[0];
+		for (int i = 1; i < propertiesArr.length; i++) {
+			properties = properties | propertiesArr[i];
+		}
+
+		int permissions = permissionsArr[0];
+		for (int i = 1; i < permissionsArr.length; i++) {
+			permissions = permissions | permissionsArr[i];
+		}
+
 		String uuid = (String) dict.get("uuid");
 		BluetoothGattCharacteristic characteristic =
 			new BluetoothGattCharacteristic(UUID.fromString(uuid), properties, permissions);
