@@ -27,6 +27,7 @@ public class TiBLEManagePeripheralService extends Service
 	private WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
 	private TiBLEPeripheralOperationManager peripheralOperationManager;
 	private TiBLEPeripheralAdvertiseManager advertiseManager;
+	private TiBLEPeripheralL2capOperationManager l2capManager;
 	private final IBinder binder = new LocalBinder();
 
 	@Override
@@ -139,6 +140,25 @@ public class TiBLEManagePeripheralService extends Service
 	public void sendResponseToDescriptor(TiBLEDescriptorRequestProxy descriptorRequestProxy, int result)
 	{
 		peripheralOperationManager.sendResponseToDescriptor(descriptorRequestProxy, result);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	public void publishL2CAPChannel(boolean encryptionRequired, TiBLEPeripheralManagerProxy proxy)
+	{
+		if (l2capManager == null) {
+			l2capManager = new TiBLEPeripheralL2capOperationManager();
+		}
+		l2capManager.publishL2CAPChannel(encryptionRequired, proxy);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	public void unpublishL2CAPChannel(TiBLEPeripheralManagerProxy proxy)
+	{
+		if (l2capManager == null) {
+			Log.e(LCAT, "unpublishL2CAPChannel(): unable to unpublish as no l2cap channel has been published.");
+			return;
+		}
+		l2capManager.unpublishL2CAPChannel(proxy);
 	}
 
 	public class LocalBinder extends Binder
