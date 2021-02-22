@@ -84,10 +84,6 @@ describe('appcelerator.ble', function () {
 			it('CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING', () => {
 				expect(BLE.CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING).toEqual('2905');
 			});
-
-			it('CBUUID_L2CAPPSM_CHARACTERISTIC_STRING', () => {
-				expect(BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING).toEqual('ABDD3056-28FA-441D-A470-55A75A52553A');
-			});
 		});
 
 		describe('PERIPHERAL_STATE_*', () => {
@@ -349,6 +345,12 @@ describe('appcelerator.ble', function () {
 		const CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = IOS ? '2902' : '00002902-0000-1000-8000-00805f9b34fb';
 		it('should be a String', () => {
 			expect(BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING).toEqual(CLIENT_CHARACTERISTIC_CONFIGURATION_UUID);
+		});
+	});
+
+	describe('CBUUID_L2CAPPSM_CHARACTERISTIC_STRING', () => {
+		it('should be a String', () => {
+			expect(BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING).toEqual('ABDD3056-28FA-441D-A470-55A75A52553A');
 		});
 	});
 
