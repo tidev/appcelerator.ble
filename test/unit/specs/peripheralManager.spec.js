@@ -46,6 +46,14 @@ describe('appcelerator.ble.peripheralManager', function () {
 			expect(peripheralManager.updateValue).toEqual(jasmine.any(Function));
 		});
 
+		it('should have publishL2CAPChannel function', () => {
+			expect(peripheralManager.publishL2CAPChannel).toEqual(jasmine.any(Function));
+		});
+
+		it('should have unpublishL2CAPChannel function', () => {
+			expect(peripheralManager.unpublishL2CAPChannel).toEqual(jasmine.any(Function));
+		});
+
 		if (IOS) {
 			it('should have setDesiredConnectionLatency function', () => {
 				expect(peripheralManager.setDesiredConnectionLatency).toEqual(jasmine.any(Function));
