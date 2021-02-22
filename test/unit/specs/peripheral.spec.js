@@ -67,6 +67,10 @@ if (android) {
 			it('should have unsubscribeFromCharacteristic function', () => {
 				expect(peripheral.unsubscribeFromCharacteristic).toEqual(jasmine.any(Function));
 			});
+
+			it('should have openL2CAPChannel function', () => {
+				expect(peripheral.openL2CAPChannel).toEqual(jasmine.any(Function));
+			});
 		});
 	});
 }
