@@ -98,6 +98,8 @@ public class AppceleratorBleModule extends KrollModule
 	@SuppressLint("InlinedApi")
 	@Kroll.constant
 	public static final int CONNECTION_PRIORITY_LOW_POWER = BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER;
+	@Kroll.constant
+	public static final String CBUUID_L2CAPPSM_CHARACTERISTIC_STRING = "ABDD3056-28FA-441D-A470-55A75A52553A";
 
 	//Constants for BLE Descriptors permissions
 	@Kroll.constant
