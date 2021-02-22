@@ -4,6 +4,7 @@ summary: A collection of data and associated behaviors that accomplish a functio
 description: |
     represent services of a remote peripheral. Services are either primary or secondary and may contain multiple characteristics 
     or included services (references to other services).
+createable: false
 extends: Titanium.Proxy
 platforms: [android, iphone, ipad]
 since: "1.0.0"
