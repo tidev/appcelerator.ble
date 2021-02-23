@@ -9,6 +9,7 @@ description: |
     iOS Note: You must use only one of the two currently supported descriptor 
     types: CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING or CBUUID_CHARACTERISTIC_FORMAT_STRING. 
     Reference (https://developer.apple.com/documentation/corebluetooth/cbmutabledescriptor/1518999-init)
+createable: false
 since: "1.0.0"
 properties:
   - name: characteristic
