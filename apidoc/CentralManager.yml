@@ -2,6 +2,7 @@ name: Modules.BLE.CentralManager
 summary: An object that scans for, discovers, connects to, and manages peripherals.
 description: |
       CentralManager objects manage discovered or connected remote peripheral devices (represented by Peripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
+createable: false
 extends: Titanium.Proxy
 platforms: [android, iphone, ipad]
 since: "1.0.0"

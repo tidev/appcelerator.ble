@@ -5,6 +5,7 @@ description: |
     It represent the characteristics of a remote peripheral’s service. A characteristic contains a
     single value and any number of descriptors describing that value. The properties of a characteristic
     determine how you can use a characteristic’s value, and how you access the descriptors.
+createable: false
 extends: Titanium.Proxy
 platforms: [iphone, ipad]
 since: "1.0.0"
