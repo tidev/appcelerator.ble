@@ -98,9 +98,9 @@ methods:
 
   - name: publishL2CAPChannel
     summary: Attempts to open an L2CAP channel to the peripheral using the supplied Protocol/Service Multiplexer (PSM).
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    osver: {ios: {min: "11.0"}}
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    osver: {ios: {min: "11.0"}, android: {min: "10"}}
     parameters:
       - name: encryptionRequired
         type: Boolean
@@ -110,9 +110,9 @@ methods:
 
   - name: unpublishL2CAPChannel
     summary: The service PSM to be removed from the system.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    osver: {ios: {min: "11.0"}}
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    osver: {ios: {min: "11.0"}, android: {min: "10"}}
     parameters:
       - name: PSM
         type: Number
@@ -210,8 +210,8 @@ events:
 
   - name: didPublishL2CAPChannel
     summary: Tells the delegate that the peripheral manager created a listener for incoming L2CAP channel connections.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: psm
         type: Number
@@ -228,8 +228,8 @@ events:
 
   - name: didUnpublishL2CAPChannel
     summary: Tells the delegate that the peripheral manager removed a published service from the local system.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: psm
         type: Number
@@ -246,8 +246,8 @@ events:
 
   - name: didOpenL2CAPChannel
     summary: Tells the delegate that the peripheral manager opened an L2CAP channel.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: channel
         type: Modules.BLE.L2CAPChannel

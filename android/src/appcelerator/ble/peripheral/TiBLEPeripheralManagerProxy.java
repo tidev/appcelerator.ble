@@ -245,6 +245,45 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 		bleService.sendResponseToDescriptor(descriptorRequestProxy, result);
 	}
 
+	@Kroll.method
+	public void publishL2CAPChannel(KrollDict dict)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+			Log.e(
+				LCAT,
+				"publishL2CAPChannel(): unable to publish. This feature is supported on Android OS Version 'Q' and above.");
+			return;
+		}
+		if (dict == null || !dict.containsKey("encryptionRequired")) {
+			Log.e(LCAT, "publishL2CAPChannel(): cannot publish l2cap channel as required params not provided.");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "publishL2CAPChannel(): Cannot publish l2cap channel, GATT server not opened.");
+			return;
+		}
+
+		boolean encryptionRequired = dict.getBoolean("encryptionRequired");
+		bleService.publishL2CAPChannel(encryptionRequired, this);
+	}
+
+	@Kroll.method
+	public void unpublishL2CAPChannel(KrollDict dict)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+			Log.e(
+				LCAT,
+				"publishL2CAPChannel(): unable to publish. This feature is supported on Android OS Version 'Q' and above.");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "unpublishL2CAPChannel(): Cannot unpublish l2cap channel, GATT server not opened.");
+			return;
+		}
+
+		bleService.unpublishL2CAPChannel(this);
+	}
+
 	public void cleanup()
 	{
 		try {
