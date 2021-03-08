@@ -13,6 +13,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.os.Build;
 import android.os.ParcelUuid;
 import androidx.annotation.RequiresApi;
+import appcelerator.ble.KeysConstants;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
@@ -48,7 +49,7 @@ public class TiBLEPeripheralAdvertiseManager
 		{
 			super.onStartFailure(errorCode);
 			KrollDict dict = new KrollDict();
-			dict.put("errorCode", errorCode);
+			dict.put(KeysConstants.errorCode.name(), errorCode);
 			String errorDescription;
 			switch (errorCode) {
 				case ADVERTISE_FAILED_ALREADY_STARTED:
@@ -75,7 +76,7 @@ public class TiBLEPeripheralAdvertiseManager
 					advertisingState = AdvertisingState.Stopped;
 					break;
 			}
-			dict.put("errorDescription", errorDescription);
+			dict.put(KeysConstants.errorDescription.name(), errorDescription);
 			managerProxyRef.get().fireEvent(DID_START_ADVERTISING_KEY, dict);
 			Log.e(LCAT, "onStartFailure: Cannot start advertising, errorDescription: " + errorDescription
 							+ "errorCode: " + errorCode);

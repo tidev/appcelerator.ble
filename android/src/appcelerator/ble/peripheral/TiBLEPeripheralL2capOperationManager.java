@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLEL2CAPChannelProxy;
 import java.io.IOException;
 import org.appcelerator.kroll.KrollDict;
@@ -43,13 +44,13 @@ public class TiBLEPeripheralL2capOperationManager
 			serverSocket =
 				encryptionRequired ? btAdapter.listenUsingL2capChannel() : btAdapter.listenUsingInsecureL2capChannel();
 			psm = serverSocket.getPsm();
-			publishEventDict.put("psm", psm);
-			proxy.fireEvent("didPublishL2CAPChannel", publishEventDict);
+			publishEventDict.put(KeysConstants.psm.name(), psm);
+			proxy.fireEvent(KeysConstants.didPublishL2CAPChannel.name(), publishEventDict);
 		} catch (IOException e) {
 			Log.e(TAG, "publishL2CAPChannel(): unable to publish l2cap channel.", e);
 			isPublished = false;
-			publishEventDict.put("errorDescription", "" + e.getMessage());
-			proxy.fireEvent("didPublishL2CAPChannel", publishEventDict);
+			publishEventDict.put(KeysConstants.errorDescription.name(), "" + e.getMessage());
+			proxy.fireEvent(KeysConstants.didPublishL2CAPChannel.name(), publishEventDict);
 			return;
 		}
 
@@ -58,15 +59,15 @@ public class TiBLEPeripheralL2capOperationManager
 				KrollDict openChannelEventDict = new KrollDict();
 				try {
 					BluetoothSocket socket = serverSocket.accept();
-					openChannelEventDict.put("channel", new TiBLEL2CAPChannelProxy(psm, socket));
-					proxy.fireEvent("didOpenL2CAPChannel", openChannelEventDict);
+					openChannelEventDict.put(KeysConstants.channel.name(), new TiBLEL2CAPChannelProxy(psm, socket));
+					proxy.fireEvent(KeysConstants.didOpenL2CAPChannel.name(), openChannelEventDict);
 				} catch (IOException e) {
 					if (!isPublished) {
 						return; // exception occurred due to explicitly closing of the serversocket.
 					}
 					Log.e(TAG, "publishL2CAPChannel(): Channel unpublished. IOException on serverSocket.accept()", e);
-					openChannelEventDict.put("errorDescription", "" + e.getMessage());
-					proxy.fireEvent("didOpenL2CAPChannel", openChannelEventDict);
+					openChannelEventDict.put(KeysConstants.errorDescription.name(), "" + e.getMessage());
+					proxy.fireEvent(KeysConstants.didOpenL2CAPChannel.name(), openChannelEventDict);
 					isPublished = false;
 					return;
 				}
@@ -86,14 +87,14 @@ public class TiBLEPeripheralL2capOperationManager
 
 		if (serverSocket != null) {
 			KrollDict unpublishEventDict = new KrollDict();
-			unpublishEventDict.put("psm", serverSocket.getPsm());
+			unpublishEventDict.put(KeysConstants.psm.name(), serverSocket.getPsm());
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "unpublishL2CAPChannel(): exception while closing serversocket.", e);
-				unpublishEventDict.put("errorDescription", "" + e.getMessage());
+				unpublishEventDict.put(KeysConstants.errorDescription.name(), "" + e.getMessage());
 			}
-			proxy.fireEvent("didUnpublishL2CAPChannel", unpublishEventDict);
+			proxy.fireEvent(KeysConstants.didUnpublishL2CAPChannel.name(), unpublishEventDict);
 		}
 	}
 }

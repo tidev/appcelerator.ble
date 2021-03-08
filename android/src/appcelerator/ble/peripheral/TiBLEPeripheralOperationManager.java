@@ -16,6 +16,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.util.Log;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLECharacteristicProxy;
 import appcelerator.ble.TiBLEServiceProxy;
 import java.lang.ref.WeakReference;
@@ -32,8 +33,8 @@ public class TiBLEPeripheralOperationManager
 	private static final String ERROR_DESCRIPTION_KEY = "errorDescription";
 	private static final String ERROR_CODE_KEY = "errorCode";
 	private static final String DID_ADD_SERVICE_KEY = "didAddService";
-	private WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
-	private Context context;
+	private final WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
+	private final Context context;
 	private BluetoothGattServer bluetoothGattServer;
 	private HashSet<BluetoothDevice> bluetoothDevices = new HashSet<>();
 
@@ -43,7 +44,7 @@ public class TiBLEPeripheralOperationManager
 		this.peripheralManagerProxyRef = new WeakReference<>(peripheralManagerProxy);
 	}
 
-	private BluetoothGattServerCallback serverCallback = new BluetoothGattServerCallback() {
+	private final BluetoothGattServerCallback serverCallback = new BluetoothGattServerCallback() {
 		@Override
 		public void onConnectionStateChange(BluetoothDevice device, int status, int newState)
 		{
@@ -72,7 +73,7 @@ public class TiBLEPeripheralOperationManager
 				dict.put(ERROR_CODE_KEY, status);
 				dict.put(ERROR_DESCRIPTION_KEY, "Unable to add service");
 			} else {
-				dict.put("service", new TiBLEServiceProxy(service));
+				dict.put(KeysConstants.service.name(), new TiBLEServiceProxy(service));
 			}
 			peripheralManagerProxyRef.get().fireEvent(DID_ADD_SERVICE_KEY, dict);
 		}
@@ -86,8 +87,8 @@ public class TiBLEPeripheralOperationManager
 			TiBLECharacteristicRequestProxy characteristicRequestProxy =
 				new TiBLECharacteristicRequestProxy(characteristic, device, requestId, true, offset, null);
 			KrollDict dict = new KrollDict();
-			dict.put("request", characteristicRequestProxy);
-			peripheralManagerProxyRef.get().fireEvent("didReceiveReadRequest", dict);
+			dict.put(KeysConstants.request.name(), characteristicRequestProxy);
+			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveReadRequest.name(), dict);
 		}
 
 		@Override
@@ -102,8 +103,9 @@ public class TiBLEPeripheralOperationManager
 				new TiBLECharacteristicRequestProxy(characteristic, device, requestId, responseNeeded, offset, value);
 			characteristic.setValue(value);
 			KrollDict dict = new KrollDict();
-			dict.put("requests", new TiBLECharacteristicRequestProxy[] { characteristicRequestProxy });
-			peripheralManagerProxyRef.get().fireEvent("didReceiveWriteRequests", dict);
+			dict.put(KeysConstants.requests.name(),
+					 new TiBLECharacteristicRequestProxy[] { characteristicRequestProxy });
+			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveWriteRequests.name(), dict);
 		}
 
 		@Override
@@ -115,8 +117,8 @@ public class TiBLEPeripheralOperationManager
 			TiBLEDescriptorRequestProxy descriptorRequestProxy =
 				new TiBLEDescriptorRequestProxy(descriptor, device, requestId, offset, true, null);
 			KrollDict dict = new KrollDict();
-			dict.put("descriptorRequest", descriptorRequestProxy);
-			peripheralManagerProxyRef.get().fireEvent("didReceiveDescriptorReadRequest", dict);
+			dict.put(KeysConstants.descriptorRequest.name(), descriptorRequestProxy);
+			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveDescriptorReadRequest.name(), dict);
 		}
 
 		@Override
@@ -133,8 +135,9 @@ public class TiBLEPeripheralOperationManager
 			TiBLEDescriptorRequestProxy descriptorRequestProxy =
 				new TiBLEDescriptorRequestProxy(descriptor, device, requestId, offset, responseNeeded, value);
 			descriptor.setValue(value);
-			dict.put("descriptorRequests", new TiBLEDescriptorRequestProxy[] { descriptorRequestProxy });
-			peripheralManagerProxyRef.get().fireEvent("didReceiveDescriptorWriteRequests", dict);
+			dict.put(KeysConstants.descriptorRequests.name(),
+					 new TiBLEDescriptorRequestProxy[] { descriptorRequestProxy });
+			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveDescriptorWriteRequests.name(), dict);
 		}
 	};
 
@@ -206,8 +209,8 @@ public class TiBLEPeripheralOperationManager
 		TiBLESubscribedCentrals.getInstance().setSubscribedCentrals(isSubscribe, characteristicProxy.uuid(),
 																	centralProxy);
 		KrollDict dict = new KrollDict();
-		dict.put("central", centralProxy);
-		dict.put("characteristic", characteristicProxy);
+		dict.put(KeysConstants.central.name(), centralProxy);
+		dict.put(KeysConstants.characteristic.name(), characteristicProxy);
 		String subscribeEventKey = (isSubscribe) ? "didSubscribeToCharacteristic" : "didUnsubscribeFromCharacteristic";
 		peripheralManagerProxyRef.get().fireEvent(subscribeEventKey, dict);
 	}

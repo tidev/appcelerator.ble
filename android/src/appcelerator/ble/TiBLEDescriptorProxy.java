@@ -20,7 +20,7 @@ import ti.modules.titanium.BufferProxy;
 @Kroll.proxy
 public class TiBLEDescriptorProxy extends KrollProxy
 {
-	private BluetoothGattDescriptor descriptor;
+	private final BluetoothGattDescriptor descriptor;
 	private static final String LCAT = "TiBLEDescriptorProxy";
 
 	public TiBLEDescriptorProxy(BluetoothGattDescriptor descriptor)
@@ -30,15 +30,16 @@ public class TiBLEDescriptorProxy extends KrollProxy
 
 	public static TiBLEDescriptorProxy createDescriptorProxy(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("permission") || !dict.containsKey("uuid")) {
+		if (dict == null || !dict.containsKey(KeysConstants.permission.name())
+			|| !dict.containsKey(KeysConstants.uuid.name())) {
 			Log.e(LCAT, "createDescriptorProxy(): Unable to create Descriptor, required parameters not provided");
 			return null;
 		}
-		String uuid = (String) dict.get("uuid");
-		int permission = (int) dict.get("permission");
+		String uuid = (String) dict.get(KeysConstants.uuid.name());
+		int permission = (int) dict.get(KeysConstants.permission.name());
 		BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
-		if (dict.containsKey("value")) {
-			Object value = dict.get("value");
+		if (dict.containsKey(KeysConstants.value.name())) {
+			Object value = dict.get(KeysConstants.value.name());
 			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				 ObjectOutput out = new ObjectOutputStream(bos)) {
 				out.writeObject(value);
