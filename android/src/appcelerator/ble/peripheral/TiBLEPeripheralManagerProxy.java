@@ -18,6 +18,7 @@ import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.RequiresApi;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLECharacteristicProxy;
 import appcelerator.ble.TiBLEServiceProxy;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
@@ -114,7 +115,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method
 	public void removeService(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKeyAndNotNull("service")) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.service.name())) {
 			Log.e(LCAT, "removeService(): Cannot remove service, required parameter not provided");
 			return;
 		}
@@ -122,7 +123,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			Log.e(LCAT, "removeService(): Cannot remove service, GATT server not opened");
 			return;
 		}
-		TiBLEServiceProxy serviceProxy = (TiBLEServiceProxy) dict.get("service");
+		TiBLEServiceProxy serviceProxy = (TiBLEServiceProxy) dict.get(KeysConstants.service.name());
 		bleService.removeServiceFromServer(serviceProxy.getService());
 	}
 
@@ -140,7 +141,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void startAdvertising(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("serviceUUIDs") || !dict.containsKey("localName")) {
+		if (dict == null || !dict.containsKey(KeysConstants.serviceUUIDs.name())
+			|| !dict.containsKey(KeysConstants.localName.name())) {
 			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, required parameters not provided");
 			return;
 		}
@@ -148,8 +150,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, GATT server not opened");
 			return;
 		}
-		Object[] serviceUUIDObjects = (Object[]) dict.get("serviceUUIDs");
-		boolean name = (boolean) dict.get("localName");
+		Object[] serviceUUIDObjects = (Object[]) dict.get(KeysConstants.serviceUUIDs.name());
+		boolean name = (boolean) dict.get(KeysConstants.localName.name());
 		if (serviceUUIDObjects != null) {
 			String[] uuids = new String[serviceUUIDObjects.length];
 			for (int i = 0; i < serviceUUIDObjects.length; i++) {
@@ -184,7 +186,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method(name = "updateValue")
 	public boolean updateCharacteristicAndNotifySubscribers(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("characteristic") || !dict.containsKey("data")) {
+		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())
+			|| !dict.containsKey(KeysConstants.data.name())) {
 			Log.e(LCAT,
 				  "updateCharacteristicAndNotifySubscribers(): Cannot update value, required parameters not provided");
 			return false;
@@ -193,11 +196,12 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			Log.e(LCAT, "updateCharacteristicAndNotifySubscribers(): Cannot update value, GATT server not opened");
 			return false;
 		}
-		TiBLECharacteristicProxy characteristicProxy = (TiBLECharacteristicProxy) dict.get("characteristic");
+		TiBLECharacteristicProxy characteristicProxy =
+			(TiBLECharacteristicProxy) dict.get(KeysConstants.characteristic.name());
 		BluetoothGattCharacteristic characteristic = characteristicProxy.getCharacteristic();
-		BufferProxy value = (BufferProxy) dict.get("data");
-		if (dict.containsKey("centrals")) {
-			Object[] centralsObjects = (Object[]) dict.get("centrals");
+		BufferProxy value = (BufferProxy) dict.get(KeysConstants.data.name());
+		if (dict.containsKey(KeysConstants.centrals.name())) {
+			Object[] centralsObjects = (Object[]) dict.get(KeysConstants.centrals.name());
 			if (centralsObjects != null) {
 				TiBLECentralProxy[] centralProxies = new TiBLECentralProxy[centralsObjects.length];
 				for (int i = 0; i < centralsObjects.length; i++) {
@@ -215,7 +219,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method(name = "respondToRequest")
 	public void respondToCharacteristicRequest(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("request") || !dict.containsKey("result")) {
+		if (dict == null || !dict.containsKey(KeysConstants.request.name())
+			|| !dict.containsKey(KeysConstants.result.name())) {
 			Log.e(
 				LCAT,
 				"respondToCharacteristicRequest(): Cannot respond to characteristic request, required parameters not provided");
@@ -226,15 +231,17 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 				  "respondToCharacteristicRequest(): Cannot respond to characteristic request, GATT server not opened");
 			return;
 		}
-		TiBLECharacteristicRequestProxy requestProxy = (TiBLECharacteristicRequestProxy) dict.get("request");
-		int result = (int) dict.get("result");
+		TiBLECharacteristicRequestProxy requestProxy =
+			(TiBLECharacteristicRequestProxy) dict.get(KeysConstants.request.name());
+		int result = (int) dict.get(KeysConstants.result.name());
 		bleService.sendResponseToCharacteristic(requestProxy, result);
 	}
 
 	@Kroll.method
 	public void respondToDescriptorRequest(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("descriptorRequest") || !dict.containsKey("result")) {
+		if (dict == null || !dict.containsKey(KeysConstants.descriptorRequest.name())
+			|| !dict.containsKey(KeysConstants.result.name())) {
 			Log.e(
 				LCAT,
 				"respondToDescriptorRequest(): Cannot respond to descriptor request, required parameters not provided");
@@ -245,8 +252,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			return;
 		}
 		TiBLEDescriptorRequestProxy descriptorRequestProxy =
-			(TiBLEDescriptorRequestProxy) dict.get("descriptorRequest");
-		int result = (int) dict.get("result");
+			(TiBLEDescriptorRequestProxy) dict.get(KeysConstants.descriptorRequest.name());
+		int result = (int) dict.get(KeysConstants.result.name());
 		bleService.sendResponseToDescriptor(descriptorRequestProxy, result);
 	}
 
@@ -259,7 +266,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 				"publishL2CAPChannel(): unable to publish. This feature is supported on Android OS Version 'Q' and above.");
 			return;
 		}
-		if (dict == null || !dict.containsKey("encryptionRequired")) {
+		if (dict == null || !dict.containsKey(KeysConstants.encryptionRequired.name())) {
 			Log.e(LCAT, "publishL2CAPChannel(): cannot publish l2cap channel as required params not provided.");
 			return;
 		}
@@ -268,7 +275,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			return;
 		}
 
-		boolean encryptionRequired = dict.getBoolean("encryptionRequired");
+		boolean encryptionRequired = dict.getBoolean(KeysConstants.encryptionRequired.name());
 		bleService.publishL2CAPChannel(encryptionRequired, this);
 	}
 
@@ -320,8 +327,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	public void bluetoothStateChanged(int state)
 	{
 		HashMap<String, Integer> dict = new HashMap<>();
-		dict.put("state", state);
-		fireEvent("didUpdateState", dict);
+		dict.put(KeysConstants.state.name(), state);
+		fireEvent(KeysConstants.didUpdateState.name(), dict);
 		if (state == BluetoothAdapter.STATE_OFF && bleService != null) {
 			closePeripheral();
 		}

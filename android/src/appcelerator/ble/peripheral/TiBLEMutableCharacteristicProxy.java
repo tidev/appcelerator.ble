@@ -6,6 +6,7 @@
 package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothGattCharacteristic;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLECharacteristicProxy;
 import appcelerator.ble.TiBLEDescriptorProxy;
 import java.util.UUID;
@@ -27,15 +28,16 @@ public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 
 	public static TiBLEMutableCharacteristicProxy createMutableCharacteristicProxy(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKeyAndNotNull("properties") || !dict.containsKeyAndNotNull("permissions")
-			|| !dict.containsKeyAndNotNull("uuid")) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.properties.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.permissions.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.uuid.name())) {
 			Log.e(
 				LCAT,
 				"createMutableCharacteristicProxy(): Unable to create characteristic, required parameters not provided");
 			return null;
 		}
 
-		int[] propertiesArr = dict.getIntArray("properties");
+		int[] propertiesArr = dict.getIntArray(KeysConstants.properties.name());
 		if (propertiesArr.length == 0) {
 			Log.e(
 				LCAT,
@@ -43,7 +45,7 @@ public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 			return null;
 		}
 
-		int[] permissionsArr = dict.getIntArray("permissions");
+		int[] permissionsArr = dict.getIntArray(KeysConstants.permissions.name());
 		if (permissionsArr.length == 0) {
 			Log.e(
 				LCAT,
@@ -61,11 +63,11 @@ public class TiBLEMutableCharacteristicProxy extends TiBLECharacteristicProxy
 			permissions = permissions | permissionsArr[i];
 		}
 
-		String uuid = (String) dict.get("uuid");
+		String uuid = (String) dict.get(KeysConstants.uuid.name());
 		BluetoothGattCharacteristic characteristic =
 			new BluetoothGattCharacteristic(UUID.fromString(uuid), properties, permissions);
-		if (dict.containsKey("descriptors")) {
-			Object[] descriptorProxiesObject = (Object[]) dict.get("descriptors");
+		if (dict.containsKey(KeysConstants.descriptors.name())) {
+			Object[] descriptorProxiesObject = (Object[]) dict.get(KeysConstants.descriptors.name());
 			if (descriptorProxiesObject != null) {
 				TiBLEDescriptorProxy[] descriptorProxies = new TiBLEDescriptorProxy[descriptorProxiesObject.length];
 				for (int i = 0; i < descriptorProxiesObject.length; i++) {
