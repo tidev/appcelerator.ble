@@ -54,8 +54,8 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 					BufferProxy bufferProxy = new BufferProxy();
 					bufferProxy.write(0, buffer, 0, bytesRead);
 					KrollDict dict = new KrollDict();
-					dict.put("data", bufferProxy);
-					fireEvent("onDataReceived", dict);
+					dict.put(KeysConstants.data.name(), bufferProxy);
+					fireEvent(KeysConstants.onDataReceived.name(), dict);
 				} catch (IOException | ArrayIndexOutOfBoundsException e) {
 					if (isClosed) {
 						return; //exception while reading occurred due to closing the stream.
@@ -63,9 +63,9 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 					Log.e(TAG, "Exception while reading the inputstream.", e);
 					close();
 					KrollDict dict = new KrollDict();
-					dict.put("errorDescription",
+					dict.put(KeysConstants.errorDescription.name(),
 							 "Exception while reading the inputstream. Exception = " + e.getMessage());
-					fireEvent("onStreamError", dict);
+					fireEvent(KeysConstants.onStreamError.name(), dict);
 					return;
 				}
 			}
@@ -96,9 +96,9 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 					Log.e(TAG, "initWriter(): exception while writing data on the output stream.", e);
 					close();
 					KrollDict dict = new KrollDict();
-					dict.put("errorDescription",
+					dict.put(KeysConstants.errorDescription.name(),
 							 "Exception while writing data on the output stream. Exception = " + e.getMessage());
-					fireEvent("onStreamError", dict);
+					fireEvent(KeysConstants.onStreamError.name(), dict);
 					return;
 				}
 			}
@@ -132,12 +132,12 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 			return;
 		}
 
-		if (dict == null || !dict.containsKey("data")) {
+		if (dict == null || !dict.containsKey(KeysConstants.data.name())) {
 			Log.d(TAG, "write(): unable to write as the data is not provided.");
 			return;
 		}
 
-		sendDataQueue.offer(((BufferProxy) dict.get("data")).getBuffer());
+		sendDataQueue.offer(((BufferProxy) dict.get(KeysConstants.data.name())).getBuffer());
 	}
 
 	@Kroll.method

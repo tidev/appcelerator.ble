@@ -7,6 +7,7 @@ package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattDescriptor;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLEDescriptorProxy;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -72,11 +73,11 @@ public class TiBLEDescriptorRequestProxy extends KrollProxy
 	@Kroll.method
 	public void updateDescriptorValue(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("value")) {
+		if (dict == null || !dict.containsKey(KeysConstants.value.name())) {
 			Log.e(LCAT, "updateDescriptorValue(): Cannot update value, required parameter not provided");
 			return;
 		}
-		descriptorValue = (BufferProxy) dict.get("value");
+		descriptorValue = (BufferProxy) dict.get(KeysConstants.value.name());
 		if (descriptorValue != null) {
 			descriptor.setValue(descriptorValue.getBuffer());
 		}

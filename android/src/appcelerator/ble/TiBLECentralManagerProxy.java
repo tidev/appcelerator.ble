@@ -119,8 +119,8 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		peripheralProvider.removeAllPeripheral();
 
 		String[] servicesUUIDs = null;
-		if (dict != null && dict.containsKey("services")) {
-			servicesUUIDs = dict.getStringArray("services");
+		if (dict != null && dict.containsKey(KeysConstants.services.name())) {
+			servicesUUIDs = dict.getStringArray(KeysConstants.services.name());
 		}
 		scanManager.startScan(servicesUUIDs);
 	}
@@ -148,15 +148,15 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.method
 	public void connectPeripheral(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("peripheral")) {
+		if (dict == null || !dict.containsKey(KeysConstants.peripheral.name())) {
 			Log.e(LCAT, "connectPeripheral(): peripheral object not provided.");
 			return;
 		}
 
-		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get("peripheral");
+		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get(KeysConstants.peripheral.name());
 		boolean autoConnect = false;
-		if (dict.containsKey("autoConnect")) {
-			autoConnect = dict.getBoolean("autoConnect");
+		if (dict.containsKey(KeysConstants.autoConnect.name())) {
+			autoConnect = dict.getBoolean(KeysConstants.autoConnect.name());
 		}
 		this.peripheralProxy = peripheralProxy;
 		this.autoConnect = autoConnect;
@@ -166,12 +166,12 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.method
 	public void cancelPeripheralConnection(KrollDict dict)
 	{
-		if ((dict == null || !dict.containsKey("peripheral"))) {
+		if ((dict == null || !dict.containsKey(KeysConstants.peripheral.name()))) {
 			Log.e(LCAT, "cancelPeripheralConnection(): peripheral object not provided.");
 			return;
 		}
 
-		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get("peripheral");
+		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get(KeysConstants.peripheral.name());
 		bleService.cancelPeripheralConnection(peripheralProxy);
 	}
 
@@ -209,8 +209,8 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	public void bluetoothStateChanged(int state)
 	{
 		HashMap<String, Integer> dict = new HashMap<>();
-		dict.put("state", state);
-		fireEvent("didUpdateState", dict);
+		dict.put(KeysConstants.state.name(), state);
+		fireEvent(KeysConstants.didUpdateState.name(), dict);
 		if (state == BluetoothAdapter.STATE_OFF && bleService != null) {
 			// we have bluetooth turned off and an active connection exist.
 			bleService.handleBluetoothTurnedOff();
@@ -308,7 +308,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 					public void run()
 					{
 						KrollDict dict = new KrollDict();
-						dict.put("sourcePeripheral", proxy);
+						dict.put(KeysConstants.sourcePeripheral.name(), proxy);
 
 						try {
 							BluetoothSocket socket = isEncryptionRequired
@@ -316,14 +316,14 @@ public class TiBLECentralManagerProxy extends KrollProxy
 														 : proxy.getDevice().createInsecureL2capChannel(psmIdentifier);
 							socket.connect();
 							TiBLEL2CAPChannelProxy channelProxy = new TiBLEL2CAPChannelProxy(psmIdentifier, socket);
-							dict.put("channel", channelProxy);
+							dict.put(KeysConstants.channel.name(), channelProxy);
 						} catch (IOException e) {
 							Log.e(LCAT, "openL2CAPChannel(): IO exception while initiating l2cap connection.", e);
-							dict.put("errorDescription",
+							dict.put(KeysConstants.errorDescription.name(),
 									 "IO exception while initiating l2cap connection." + e.getMessage());
 						}
 
-						proxy.fireEvent("didOpenChannel", dict);
+						proxy.fireEvent(KeysConstants.didOpenChannel.name(), dict);
 					}
 				}.start();
 			}
@@ -337,13 +337,13 @@ public class TiBLECentralManagerProxy extends KrollProxy
 
 		KrollDict dict = new KrollDict();
 
-		dict.put("peripheral", peripheralProxy);
-		dict.put("RSSI", i);
+		dict.put(KeysConstants.peripheral.name(), peripheralProxy);
+		dict.put(KeysConstants.RSSI.name(), i);
 
 		BufferProxy bufferProxy = new BufferProxy();
 		bufferProxy.write(0, bytes, 0, bytes.length);
-		dict.put("rawAdvertisementData", bufferProxy);
+		dict.put(KeysConstants.rawAdvertisementData.name(), bufferProxy);
 
-		fireEvent("didDiscoverPeripheral", dict);
+		fireEvent(KeysConstants.didDiscoverPeripheral.name(), dict);
 	};
 }
