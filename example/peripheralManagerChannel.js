@@ -79,9 +79,17 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 						alert('Unknown');
 						break;
 				}
+				if (e.state === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
+					heartRateService = manager.addService({
+						uuid: serviceUUID,
+						primary: true,
+						characteristics: [ heartRateCharacteristic ]
+					});
+					logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+				}
 				setData(logs);
 			});
-			if (heartRateService === null) {
+			if (!IOS && heartRateService === null) {
 				heartRateService = manager.addService({
 					uuid: serviceUUID,
 					primary: true,
@@ -334,7 +342,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		if (channel) {
 			channel.close();
 		}
-		if (manager !== null) {
+		if (!IOS && manager !== null) {
 			manager.closePeripheral();
 		}
 	});

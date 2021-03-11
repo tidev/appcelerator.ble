@@ -299,13 +299,8 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Use `createMutableCharacteristic` to create charracteristic
 
     ```
-    if (IOS) {
-		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
-		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
-	} else {
-		charProperties = BLE.CHARACTERISTIC_PROPERTIES_NOTIFY;
-		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
-	}
+	charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+	charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
             properties: charProperties,
