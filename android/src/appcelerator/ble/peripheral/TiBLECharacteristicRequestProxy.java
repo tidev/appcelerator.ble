@@ -7,6 +7,7 @@ package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
+import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLECharacteristicProxy;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -65,11 +66,11 @@ public class TiBLECharacteristicRequestProxy extends KrollProxy
 	@Kroll.method
 	public void updateValue(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey("value")) {
+		if (dict == null || !dict.containsKey(KeysConstants.value.name())) {
 			Log.e(LCAT, "updateValue(): Cannot update value, required parameter not provided");
 			return;
 		}
-		value = (BufferProxy) dict.get("value");
+		value = (BufferProxy) dict.get(KeysConstants.value.name());
 		if (value != null) {
 			characteristic.setValue(value.getBuffer());
 		}

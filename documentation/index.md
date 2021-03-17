@@ -8,8 +8,8 @@
 - Act as BLE Peripheral:
   - Peripheral can advertise services, connect and exchange data with multiple central.
 - Use L2CAP Channel:
-  - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
-peripheral at real time. This feature is currently available on iOS platform only.
+  - L2CAP is introduced with IOS 11 and Android 10, its used to transfer large amount of data between central and
+peripheral at real time.
 - Main use case addressed by this module is Exchange of Data and Communicating with Central and
 Peripherals that supports Bluetooth Low Energy.
 
@@ -164,7 +164,7 @@ The BLE variable is a reference to the Module object.
 - As the module currently provides support to act only as central for the Android, hence to test the example application, user can use any heart-rate peripheral
 or the peripheral simulator in order to do the connection and data-exchange with the central.
 
-## Follow basic steps to create Central application and use Channel for communication: (iOS Only)
+## Follow basic steps to create Central application and use Channel for communication:
 
 - Use `initCentralManager` to create Central Manager
     ```
@@ -299,13 +299,8 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Use `createMutableCharacteristic` to create charracteristic
 
     ```
-    if (IOS) {
-		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
-		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
-	} else {
-		charProperties = BLE.CHARACTERISTIC_PROPERTIES_NOTIFY;
-		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
-	}
+	charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+	charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
             properties: charProperties,
@@ -354,7 +349,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     peripheralManager.closePeripheral();
 ```
 
-## Follow basic steps to create Peripheral application which use channels for communication: (iOS Only)
+## Follow basic steps to create Peripheral application which use channels for communication:
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
@@ -438,6 +433,11 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
     peripheralManager.stopAdvertising();
     ```
+
+- Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
+```
+    peripheralManager.closePeripheral();
+```
 ## Read Data from TiBuffer
 - you can access bytes from TiBuffer using:
 

@@ -8,8 +8,8 @@
 - Act as BLE Peripheral:
   - Peripheral can advertise services, connect and exchange data with multiple central.
 - Use L2CAP Channel:
-  - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
-peripheral at real time. This feature is currently available on iOS platform only.
+  - L2CAP is introduced with IOS 11 and Android 10, its used to transfer large amount of data between central and
+peripheral at real time.
 - Main use case addressed by this module is Exchange of Data and Communicating with Central and
 Peripherals that supports Bluetooth Low Energy.
 
@@ -78,7 +78,7 @@ The BLE variable is a reference to the Module object.
   </ti:app>
   ```
 
-- Set the ``` <module> ``` element in tiapp.xml, such as this: 
+- Set the ``` <module> ``` element in tiapp.xml, such as this:
 ```
 <modules>
     <module platform="ios">appcelerator.ble</module>
@@ -114,8 +114,8 @@ The BLE variable is a reference to the Module object.
     centralManager.connectPeripheral({
             peripheral: peripheral,
             options: {
-                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
-                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true,
+                [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true
             }
     });
     ```
@@ -140,14 +140,14 @@ The BLE variable is a reference to the Module object.
         service: service
     });
     ```
-    
+
     result will be return in `didDiscoverCharacteristics` event
-    
+
     ```
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
-    ```    
+    ```
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
-    ```  
+    ```
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -164,7 +164,7 @@ The BLE variable is a reference to the Module object.
 - As the module currently provides support to act only as central for the Android, hence to test the example application, user can use any heart-rate peripheral
 or the peripheral simulator in order to do the connection and data-exchange with the central.
 
-## Follow basic steps to create Central application and use Channel for communication: (iOS Only)
+## Follow basic steps to create Central application and use Channel for communication:
 
 - Use `initCentralManager` to create Central Manager
     ```
@@ -185,8 +185,8 @@ or the peripheral simulator in order to do the connection and data-exchange with
     centralManager.connectPeripheral({
         peripheral: peripheral,
         options: {
-            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true, 
-            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true 
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_CONNECTION]: true,
+            [BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_NOTIFY_ON_DISCONNECTION]: true
         }
     });
     ```
@@ -212,16 +212,16 @@ or the peripheral simulator in order to do the connection and data-exchange with
         service: service
     });
     ```
-    
+
     result will be return in `didDiscoverCharacteristics` event
-    
+
     ```
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
-    ```   
+    ```
 
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
 
-    ```  
+    ```
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -254,7 +254,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
         if (e.errorCode !== null) {
             alert('Error while opening channel' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
                 return;
-        } 
+        }
         channel = e.channel;
         channel.addEventListener('onDataReceived', function (e) {
             var data = e.data;
@@ -267,7 +267,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `write` function from channel to write values
 
-    ```                   
+    ```
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
@@ -297,15 +297,10 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
- 
+
     ```
-    if (IOS) {
-		charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
-		charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
-	} else {
-		charProperties = BLE.CHARACTERISTIC_PROPERTIES_NOTIFY;
-		charPermissions = BLE.CHARACTERISTIC_PERMISSION_READABLE;
-	}
+	charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+	charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
             properties: charProperties,
@@ -324,7 +319,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
-    
+
     ```
     var name = IOS ? 'BLE-Sample' : true;
     peripheralManager.startAdvertising({
@@ -354,7 +349,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     peripheralManager.closePeripheral();
 ```
 
-## Follow basic steps to create Peripheral application which use channels for communication: (iOS Only)
+## Follow basic steps to create Peripheral application which use channels for communication:
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
@@ -363,7 +358,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
- 
+
     ```
      var characteristic = BLE.createMutableCharacteristic({
         uuid: BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING,
@@ -388,7 +383,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     peripheralManager.publishL2CAPChannel({
          encryptionRequired: false
     });
-          
+
     peripheralManager.startAdvertising({
         localName: name,
         serviceUUIDs: servicesUUIDs
@@ -421,23 +416,28 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 - Use `write` function from channel to write values
 
-    ```                   
+    ```
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
     });
     ```
-      
+
 - Use `close` function to close channel
 
     ```
     channel.close();
     ```
-      
+
 - Use `stopAdvertising` to stop advertising
     ```
     peripheralManager.stopAdvertising();
     ```
+
+- Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
+```
+    peripheralManager.closePeripheral();
+```
 ## Read Data from TiBuffer
 - you can access bytes from TiBuffer using:
 
@@ -471,4 +471,4 @@ Axway
 
 ## License
 
-Copyright (c) 2020 by Axway, Inc. Please see the LICENSE file for further details.  
+Copyright (c) 2020 by Axway, Inc. Please see the LICENSE file for further details.

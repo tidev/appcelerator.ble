@@ -6,10 +6,17 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 	var channel = null;
 	var logs = [];
 	var psmBuffer = null;
+	var charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ];
+	var charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE ];
+	var descriptor = BLE.createDescriptor({
+		uuid: BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING,
+		permission: BLE.DESCRIPTOR_PERMISSION_WRITE
+	});
 	var heartRateCharacteristic = BLE.createMutableCharacteristic({
 		uuid: heartRateCharacteristicUUID,
-		properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
-		permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE ]
+		properties: charProperties,
+		permissions: charPermissions,
+		descriptors: [ descriptor ]
 	});
 	var heartRateService = null;
 
@@ -19,7 +26,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		title: 'Peripheral Manager',
 		titleAttributes: { color: 'blue' }
 	});
-	var win = Ti.UI.iOS.createNavigationWindow({
+	var win = Ti.UI.createNavigationWindow({
 		window: deviceWindow
 	});
 	var closeButton = Titanium.UI.createButton({
@@ -30,7 +37,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		win.close();
 	});
 
-	win.add(closeButton);
+	deviceWindow.add(closeButton);
 	var InitializePeripheralManager = Titanium.UI.createButton({
 		top: 140,
 		title: 'Initialize Peripheral Manager'
@@ -72,16 +79,17 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 						alert('Unknown');
 						break;
 				}
-				if (e.state === BLE.MANAGER_STATE_POWERED_ON && heartRateService === null) {
-					heartRateService = manager.addService({
-						uuid: serviceUUID,
-						primary: true,
-						characteristics: [ heartRateCharacteristic ]
-					});
-					logs.push('Adding Service (uuid: 180D) with characteristic (uuid: ' + heartRateCharacteristicUUID + ')');
-				}
 				setData(logs);
 			});
+			if (heartRateService === null) {
+				heartRateService = manager.addService({
+					uuid: serviceUUID,
+					primary: true,
+					characteristics: [ heartRateCharacteristic ]
+				});
+				logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
+				setData(logs);
+			}
 			manager.addEventListener('didStartAdvertising', function (e) {
 				Ti.API.info('Peripheral Manager started advertising');
 				logs.push('Peripheral Manager started advertising');
@@ -93,9 +101,9 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				setData(logs);
 			});
 			manager.addEventListener('didAddService', function (e) {
-				if (e.errorCode !== null || e.errorDomain !== null) {
+				if ((typeof e.errorCode !== 'undefined' && e.errorCode !== null) || (typeof e.errorDomain !== 'undefined' && e.errorDomain !== null)) {
 					Ti.API.info('Error while adding service');
-					if (e.errorDescription !== null) {
+					if (typeof e.errorDescription !== 'undefined' && e.errorDescription !== null) {
 						alert('Error while adding service (error: ' + e.errorDescription + ')');
 						return;
 					}
@@ -154,8 +162,8 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			});
 
 			manager.addEventListener('didPublishL2CAPChannel', function (e) {
-				Ti.API.info('Peripheral Manager published L2CAP channel');
-				logs.push('didPublishL2CAPChannel');
+				Ti.API.info('Peripheral Manager published L2CAP channel psm - ' + e.psm);
+				logs.push('didPublishL2CAPChannel psm - ' + e.psm);
 				setData(logs);
 				psmBuffer = Ti.createBuffer({ value: e.psm + '' });
 				var centrals = [];
@@ -195,7 +203,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		}
 	});
 
-	win.add(InitializePeripheralManager);
+	deviceWindow.add(InitializePeripheralManager);
 
 	var startAdvertisingButton = Titanium.UI.createButton({
 		top: 180,
@@ -211,11 +219,11 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				alert('Peripheral Manager is already advertising');
 				return;
 			}
+			var name = IOS ? 'BLE-Sample' : true;
 			var encryptionValue = 0;
 			manager.publishL2CAPChannel({
 				encryptionRequired: encryptionValue
 			});
-			var name = 'BLE-Sample';
 			var servicesUUIDs = [];
 			if (heartRateService !== null) {
 				servicesUUIDs.push(heartRateService.uuid);
@@ -226,7 +234,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			});
 		}
 	});
-	win.add(startAdvertisingButton);
+	deviceWindow.add(startAdvertisingButton);
 
 	var stopAdvertisingButton = Titanium.UI.createButton({
 		top: 220,
@@ -247,7 +255,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			manager.stopAdvertising();
 		}
 	});
-	win.add(stopAdvertisingButton);
+	deviceWindow.add(stopAdvertisingButton);
 
 	var updateValue = Titanium.UI.createButton({
 		top: 260,
@@ -283,7 +291,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			});
 		}
 	});
-	win.add(updateValue);
+	deviceWindow.add(updateValue);
 
 	var tableView = Titanium.UI.createTableView({
 		top: 300,
@@ -318,7 +326,16 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 		tableView.setData(tbl_data);
 	}
 	setData(logs);
-	win.add(tableView);
+	deviceWindow.add(tableView);
+
+	deviceWindow.addEventListener('close', function () {
+		if (channel) {
+			channel.close();
+		}
+		if (manager !== null) {
+			manager.closePeripheral();
+		}
+	});
 
 	return win;
 }

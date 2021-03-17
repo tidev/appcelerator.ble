@@ -244,8 +244,8 @@ properties:
     type: String
     summary: The PSM of an L2CAP channel associated with the GATT service containing this characteristic.This PSM is a little-endian UInt16. Servers can publish this characteristic with the UUID ABDD3056-28FA-441D-A470-55A75A52553A.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     value: 2906
 
   - name: PERIPHERAL_STATE_DISCONNECTED
@@ -799,11 +799,11 @@ methods:
     since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: properties
-        type: [Array<Number>, Number]
-        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.This parameter is of type Number in android.
+        type: Array<Number>
+        summary: Characteristic properties determine how the characteristic value can be used, or how the descriptor(s) can be accessed.
       - name: permissions
-        type: [Array<Number>, Number]
-        summary: The permissions of the characteristic value. This parameter is of type Number in android.
+        type: Array<Number>
+        summary: The permissions of the characteristic value.
       - name: uuid
         type: String
         summary: The Bluetooth-specific UUID of the characteristic.

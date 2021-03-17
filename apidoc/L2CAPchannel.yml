@@ -3,9 +3,9 @@ summary: L2Cap allow us to open a side channel, with it we can directly read and
 description: L2Cap Channel on the lowest level is the stream of data between two devices. It’s actually the protocol that has been used underneath for all types of communication between two devices. So L2Cap has been used from the first day of Bluetooth communications. but now with the L2CAP class, we use is directly talk over these channels.
 createable: false
 extends: Titanium.Proxy
-platforms: [iphone, ipad]
-since: "1.0.0"
-osver: {ios: {min: "11.0"}}
+platforms: [android, iphone, ipad]
+since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+osver: {ios: {min: "11.0"}, android: {min: "10.0"}}
 properties:
   - name: peer
     summary: The peer connected to the channel
@@ -16,14 +16,14 @@ properties:
   - name: psm
     summary: The PSM of the channel.
     type: Number
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
 methods:
  - name: write
    summary: write data to channel
-   platforms: [iphone, ipad]
-   since: "1.0.0"
+   platforms: [android, iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
    parameters:
       - name: data
         type: Titanium.Buffer
@@ -33,8 +33,8 @@ methods:
 
  - name: getReadBufferSize
    summary: Get the size of the read buffer in bytes.
-   since: "1.0.0"
-   platforms: [iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+   platforms: [android, iphone, ipad]
    returns: 
      type: Number 
      summary: "Size of the read buffer in bytes."
@@ -44,18 +44,25 @@ methods:
    description: |
       You can set the read buffer size at any time, but it will only take effect during the next read.
       By default, the buffer size is 1024 bytes.
-   since: "1.0.0"
-   platforms: [iphone, ipad]
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+   platforms: [android, iphone, ipad]
    parameters:
      - name: size
        summary: The desired size of the read buffer in bytes.
-       type: Number      
+       type: Number
+
+ - name: close
+   summary: closes the l2cap channel
+   since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+   platforms: [android, iphone, ipad]
+   returns:
+     type: void
 
 events:
   - name: onDataReceived
     summary: Fired whenever new data recived on channel.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: data
         type: Titanium.Buffer
@@ -63,8 +70,8 @@ events:
 
   - name: onStreamError
     summary: Fired whenever there is some error in reading or writing.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     properties:
       - name: errorCode
         type: String
