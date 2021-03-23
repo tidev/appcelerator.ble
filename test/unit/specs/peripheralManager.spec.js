@@ -38,6 +38,10 @@ describe('appcelerator.ble.peripheralManager', function () {
 			expect(peripheralManager.startAdvertising).toEqual(jasmine.any(Function));
 		});
 
+		it('should have startAdvertisingBeaconRegion function', () => {
+			expect(peripheralManager.startAdvertisingBeaconRegion).toEqual(jasmine.any(Function));
+		});
+
 		it('should have stopAdvertising function', () => {
 			expect(peripheralManager.stopAdvertising).toEqual(jasmine.any(Function));
 		});
