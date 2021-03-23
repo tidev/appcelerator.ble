@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/appcelerator/appcelerator.ble#readme",
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
+    "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^11.0.0",
     "@seadub/clang-format-lint": "0.0.2",
     "@seadub/danger-plugin-dependencies": "^0.1.0",
