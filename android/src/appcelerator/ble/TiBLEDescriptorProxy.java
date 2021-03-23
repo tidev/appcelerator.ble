@@ -14,38 +14,43 @@ import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
 public class TiBLEDescriptorProxy extends KrollProxy
 {
-	private BluetoothGattDescriptor descriptor;
+	private final BluetoothGattDescriptor descriptor;
+	private static final String LCAT = "TiBLEDescriptorProxy";
 
 	public TiBLEDescriptorProxy(BluetoothGattDescriptor descriptor)
 	{
 		this.descriptor = descriptor;
 	}
 
-	//temporary method for descriptor UT.
-	//TODO Address or remove this temp method in MOD-2689.
-	public static TiBLEDescriptorProxy mockDescriptorForUT(KrollDict dict)
+	public static TiBLEDescriptorProxy createDescriptorProxy(KrollDict dict)
 	{
-		if (dict.containsKey("permission") && dict.containsKey("uuid") && dict.containsKey("value")) {
-			int permission = (int) dict.get("permission");
-			String uuid = (String) dict.get("uuid");
-			Object value = dict.get("value");
-			BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
+		if (dict == null || !dict.containsKey(KeysConstants.permission.name())
+			|| !dict.containsKey(KeysConstants.uuid.name())) {
+			Log.e(LCAT, "createDescriptorProxy(): Unable to create Descriptor, required parameters not provided");
+			return null;
+		}
+		String uuid = (String) dict.get(KeysConstants.uuid.name());
+		int permission = (int) dict.get(KeysConstants.permission.name());
+		BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
+		if (dict.containsKey(KeysConstants.value.name())) {
+			Object value = dict.get(KeysConstants.value.name());
 			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				 ObjectOutput out = new ObjectOutputStream(bos)) {
 				out.writeObject(value);
 				byte[] bytes = bos.toByteArray();
 				descriptor.setValue(bytes);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(LCAT,
+					  "createDescriptorProxy(): Error while converting Object into byte Array: " + e.getMessage());
 			}
-			return new TiBLEDescriptorProxy(descriptor);
 		}
-		return null;
+		return new TiBLEDescriptorProxy(descriptor);
 	}
 
 	public BluetoothGattDescriptor getDescriptor()

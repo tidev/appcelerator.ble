@@ -1,0 +1,55 @@
+name: Modules.BLE.Beacon
+summary: Represents a beacon that was encountered during region monitoring. You do not create instances of this class directly. They will be delivered via the rangedBeacons event.
+description: |
+    The Beacon class represents a beacon that was observed during beacon ranging. You do not create instances of this class directly. The region manager (RegionManager) object reports observed beacons to its associated delegate object.
+    The identity of a beacon is defined by its uuid, major, and minor properties. These values are coded into the beacon itself. For a more thorough description of the meaning of those values, see BeaconRegion.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+createable: false
+since: "1.1.0"
+properties:
+      - name: accuracy
+        summary: Indicates the one sigma horizontal accuracy in meters.
+        description: |
+         Use this property to differentiate between beacons with the same proximity value. Do not use it to identify a precise location for the beacon. Accuracy values may fluctuate due to RF interference. A negative value in this property signifies that the actual accuracy could not be determined.
+        type: String
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: major
+        summary: The value identifying a group of beacons.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: minor
+        summary: The value identifying a specific beacon within a group.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: proximity
+        summary: The relative distance to the beacon.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"    
+
+      - name: rssi
+        summary: The received signal strength of the beacon, measured in decibels.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+        
+      - name: uuid
+        summary: The unique ID of the beacons being targeted.
+        type: String
+        platforms: [iphone, ipad]
+        since: "1.1.0" 
+        osver: {ios: {min: "13.0"}}      
+
+      - name: timestamp
+        summary: The time when this beacon was observed.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0" 
+        osver: {ios: {min: "13.0"}}             

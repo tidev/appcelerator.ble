@@ -1,0 +1,38 @@
+name: Modules.BLE.BeaconRegion
+summary: A region used to detect the presence of iBeacon devices.
+description: |
+ A BeaconRegion object defines a region that you use to detect Bluetooth beacons conforming to the iBeacon specification.
+extends: Titanium.Proxy
+platforms: [iphone, ipad]
+since: "1.1.0"
+properties:
+      - name: identifier
+        summary: This is a value that you specify and can use to identify this region inside your application.
+        type: String
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: major
+        summary: The value identifying a group of beacons.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: minor
+        summary: The value identifying a specific beacon within a group.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"
+
+      - name: notifyEntryStateOnDisplay
+        summary: The relative distance to the beacon. A Boolean indicating whether beacon notifications are sent when the device’s display is on.
+         When set to true, the region manager sends beacon notifications when the user turns on the display and the device is already inside the region. These notifications are sent even if your app is not running. In that situation, the system launches your app into the background so that it can handle the notifications. In both situations, the app will receive a BLE.determinedStateForRegion:event event.
+        type: Number
+        platforms: [iphone, ipad]
+        since: "1.1.0"    
+
+      - name: uuid
+        summary: The unique ID of the beacons being targeted.
+        type: String
+        platforms: [iphone, ipad]
+        since: "1.1.0"          

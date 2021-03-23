@@ -73,10 +73,6 @@ describe('appcelerator.ble', function () {
 				expect(BLE.CBUUID_CHARACTERISTIC_USER_DESCRIPTION_STRING).toEqual('2901');
 			});
 
-			it('CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING', () => {
-				expect(BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING).toEqual('2902');
-			});
-
 			it('CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING', () => {
 				expect(BLE.CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING).toEqual('2903');
 			});
@@ -87,10 +83,6 @@ describe('appcelerator.ble', function () {
 
 			it('CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING', () => {
 				expect(BLE.CBUUID_CHARACTERISTIC_AGGREGATE_FORMAT_STRING).toEqual('2905');
-			});
-
-			it('CBUUID_L2CAPPSM_CHARACTERISTIC_STRING', () => {
-				expect(BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING).toEqual('ABDD3056-28FA-441D-A470-55A75A52553A');
 			});
 		});
 
@@ -170,37 +162,61 @@ describe('appcelerator.ble', function () {
 			});
 		});
 
-		describe('ATT_*', () => {
-			it('ATT_SUCCESS', () => {
-				expect(BLE.ATT_SUCCESS).toEqual(jasmine.any(Number));
+		describe('PERIPHERAL_MANAGER_CONNECTION_LATENCY_*', () => {
+			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW', () => {
+				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW).toEqual(jasmine.any(Number));
 			});
 
+			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM', () => {
+				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM).toEqual(jasmine.any(Number));
+			});
+
+			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH', () => {
+				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH).toEqual(jasmine.any(Number));
+			});
+		});
+	}
+
+	describe('ATT_*', () => {
+		it('ATT_SUCCESS', () => {
+			expect(BLE.ATT_SUCCESS).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_READ_NOT_PERMITTED_ERROR', () => {
+			expect(BLE.ATT_READ_NOT_PERMITTED_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_WRITE_NOT_PERMITTED_ERROR', () => {
+			expect(BLE.ATT_WRITE_NOT_PERMITTED_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_INSUFFICIENT_AUTHENTICATION_ERROR', () => {
+			expect(BLE.ATT_INSUFFICIENT_AUTHENTICATION_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_REQUEST_NOT_SUPPORTED_ERROR', () => {
+			expect(BLE.ATT_REQUEST_NOT_SUPPORTED_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_INVALID_OFFSET_ERROR', () => {
+			expect(BLE.ATT_INVALID_OFFSET_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR', () => {
+			expect(BLE.ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		it('ATT_INSUFFICIENT_ENCRYPTION_ERROR', () => {
+			expect(BLE.ATT_INSUFFICIENT_ENCRYPTION_ERROR).toEqual(jasmine.any(Number));
+		});
+
+		if (IOS) {
 			it('ATT_INVALID_HANDLE_ERROR', () => {
 				expect(BLE.ATT_INVALID_HANDLE_ERROR).toEqual(jasmine.any(Number));
 			});
 
-			it('ATT_READ_NOT_PERMITTED_ERROR', () => {
-				expect(BLE.ATT_READ_NOT_PERMITTED_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_WRITE_NOT_PERMITTED_ERROR', () => {
-				expect(BLE.ATT_WRITE_NOT_PERMITTED_ERROR).toEqual(jasmine.any(Number));
-			});
-
 			it('ATT_INVALID_PDU_ERROR', () => {
 				expect(BLE.ATT_INVALID_PDU_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_INSUFFICIENT_AUTHENTICATION_ERROR', () => {
-				expect(BLE.ATT_INSUFFICIENT_AUTHENTICATION_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_REQUEST_NOT_SUPPORTED_ERROR', () => {
-				expect(BLE.ATT_REQUEST_NOT_SUPPORTED_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_INVALID_OFFSET_ERROR', () => {
-				expect(BLE.ATT_INVALID_OFFSET_ERROR).toEqual(jasmine.any(Number));
 			});
 
 			it('ATT_INSUFFICIENT_AUTHORIZATION_ERROR', () => {
@@ -223,18 +239,6 @@ describe('appcelerator.ble', function () {
 				expect(BLE.ATT_INSUFFICIENT_ENCRYPTION_KEY_SIZE_ERROR).toEqual(jasmine.any(Number));
 			});
 
-			it('ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR', () => {
-				expect(BLE.ATT_INVALID_ATTRIBUTE_VALUE_LENGTH_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_UNLIKELY_ERROR', () => {
-				expect(BLE.ATT_UNLIKELY_ERROR).toEqual(jasmine.any(Number));
-			});
-
-			it('ATT_INSUFFICIENT_ENCRYPTION_ERROR', () => {
-				expect(BLE.ATT_INSUFFICIENT_ENCRYPTION_ERROR).toEqual(jasmine.any(Number));
-			});
-
 			it('ATT_UNSUPPORTED_GROUP_TYPE_ERROR', () => {
 				expect(BLE.ATT_UNSUPPORTED_GROUP_TYPE_ERROR).toEqual(jasmine.any(Number));
 			});
@@ -242,23 +246,71 @@ describe('appcelerator.ble', function () {
 			it('ATT_INSUFFICIENT_RESOURCES_ERROR', () => {
 				expect(BLE.ATT_INSUFFICIENT_RESOURCES_ERROR).toEqual(jasmine.any(Number));
 			});
+
+			it('ATT_UNLIKELY_ERROR', () => {
+				expect(BLE.ATT_UNLIKELY_ERROR).toEqual(jasmine.any(Number));
+			});
+		} else {
+			it('ATT_FAILURE', () => {
+				expect(BLE.ATT_FAILURE).toEqual(jasmine.any(Number));
+			});
+		}
+	});
+	if (IOS) {
+		describe('LOCATION_MANAGER_AUTHORIZATION_STATUS_*', () => {
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED).toEqual(jasmine.any(Number));
+			});
+
+			it('LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED', () => {
+				expect(BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED).toEqual(jasmine.any(Number));
+			});
 		});
 
-		describe('PERIPHERAL_MANAGER_CONNECTION_LATENCY_*', () => {
-			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW', () => {
-				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_LOW).toEqual(jasmine.any(Number));
+		describe('REGION_STATE_*', () => {
+			it('REGION_STATE_UNKNOWN', () => {
+				expect(BLE.REGION_STATE_UNKNOWN).toEqual(jasmine.any(Number));
 			});
 
-			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM', () => {
-				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_MEDIUM).toEqual(jasmine.any(Number));
+			it('REGION_STATE_INSIDE', () => {
+				expect(BLE.REGION_STATE_INSIDE).toEqual(jasmine.any(Number));
 			});
 
-			it('PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH', () => {
-				expect(BLE.PERIPHERAL_MANAGER_CONNECTION_LATENCY_HIGH).toEqual(jasmine.any(Number));
+			it('REGION_STATE_OUTSIDE', () => {
+				expect(BLE.REGION_STATE_OUTSIDE).toEqual(jasmine.any(Number));
+			});
+		});
+
+		describe('BEACON_PROXIMITY_*', () => {
+			it('BEACON_PROXIMITY_UNKNOWN', () => {
+				expect(BLE.BEACON_PROXIMITY_UNKNOWN).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_IMMEDIATE', () => {
+				expect(BLE.BEACON_PROXIMITY_IMMEDIATE).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_NEAR', () => {
+				expect(BLE.BEACON_PROXIMITY_NEAR).toEqual(jasmine.any(Number));
+			});
+
+			it('BEACON_PROXIMITY_FAR', () => {
+				expect(BLE.BEACON_PROXIMITY_FAR).toEqual(jasmine.any(Number));
 			});
 		});
 	}
-
 	describe('CHARACTERISTIC_PERMISSION_*', function () {
 		it('CHARACTERISTIC_PERMISSION_READABLE', () => {
 			expect(BLE.CHARACTERISTIC_PERMISSION_READABLE).toEqual(jasmine.any(Number));
@@ -343,6 +395,19 @@ describe('appcelerator.ble', function () {
 		}
 	});
 
+	describe('CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING', () => {
+		const CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = IOS ? '2902' : '00002902-0000-1000-8000-00805f9b34fb';
+		it('should be a String', () => {
+			expect(BLE.CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING).toEqual(CLIENT_CHARACTERISTIC_CONFIGURATION_UUID);
+		});
+	});
+
+	describe('CBUUID_L2CAPPSM_CHARACTERISTIC_STRING', () => {
+		it('should be a String', () => {
+			expect(BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING).toEqual('ABDD3056-28FA-441D-A470-55A75A52553A');
+		});
+	});
+
 	if (!IOS) {
 		describe('CONNECTION_PRIORITY_*', () => {
 			it('CONNECTION_PRIORITY_HIGH', () => {
@@ -355,6 +420,24 @@ describe('appcelerator.ble', function () {
 
 			it('CONNECTION_PRIORITY_LOW_POWER', () => {
 				expect(BLE.CONNECTION_PRIORITY_LOW_POWER).toEqual(jasmine.any(Number));
+			});
+		});
+
+		describe('DESCRIPTOR_PERMISSION_*', () => {
+			it('DESCRIPTOR_PERMISSION_READ', () => {
+				expect(BLE.DESCRIPTOR_PERMISSION_READ).toEqual(jasmine.any(Number));
+			});
+
+			it('DESCRIPTOR_PERMISSION_READ_ENCRYPTED', () => {
+				expect(BLE.DESCRIPTOR_PERMISSION_READ_ENCRYPTED).toEqual(jasmine.any(Number));
+			});
+
+			it('DESCRIPTOR_PERMISSION_WRITE', () => {
+				expect(BLE.DESCRIPTOR_PERMISSION_WRITE).toEqual(jasmine.any(Number));
+			});
+
+			it('DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED', () => {
+				expect(BLE.DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED).toEqual(jasmine.any(Number));
 			});
 		});
 	}

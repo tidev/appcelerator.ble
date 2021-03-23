@@ -35,7 +35,6 @@ var centralWithChannel = Ti.UI.createButton({
 	font: { fontSize: 20 },
 	title: 'Central With Channel',
 	top: 140,
-	visible: IOS
 });
 centralWithChannel.addEventListener('click', function () {
 	var devices = require('centralManager.js');
@@ -48,10 +47,21 @@ mainWindow.add(centralWithChannel);
 var buttonPeripheral = Ti.UI.createButton({
 	font: { fontSize: 20 },
 	title: 'Peripheral',
-	top: 240,
-	visible: IOS
+	top: 240
 });
 buttonPeripheral.addEventListener('click', function () {
+	if (isAndroid) {
+		if (!BLE.isEnabled()) {
+			alert('Please Enable Bluetooth');
+			Ti.API.info('Please Enable Bluetooth');
+			return;
+		}
+		if (!BLE.isAdvertisingSupported()) {
+			alert('Bluetooth Advertising is not supported in this device');
+			Ti.API.info('Bluetooth Advertising is not supported in this device');
+			return;
+		}
+	}
 	var devices = require('peripheralManager.js');
 	var devicePage = new devices.peripheralManagerWin(BLE, serviceUUID, characteristicUUID);
 	devicePage.open();
@@ -61,8 +71,7 @@ mainWindow.add(buttonPeripheral);
 var buttonPeripheralChannel = Ti.UI.createButton({
 	font: { fontSize: 20 },
 	title: 'Peripheral With Channel',
-	top: 300,
-	visible: IOS
+	top: 300
 });
 buttonPeripheralChannel.addEventListener('click', function () {
 	var devices = require('peripheralManagerChannel.js');

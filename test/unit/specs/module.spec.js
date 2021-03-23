@@ -11,13 +11,25 @@ describe('appcelerator.ble', function () {
 		expect(BLE.initCentralManager).toEqual(jasmine.any(Function));
 	});
 
-	if (IOS) {
-		describe('methods', function () {
-			it('should have createMutableCharacteristic function', () => {
-				expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
-			});
-		});
+	it('should have initPeripheralManager function', () => {
+		expect(BLE.initPeripheralManager).toEqual(jasmine.any(Function));
+	});
 
+	if (IOS) {
+		it('should have createBeaconRegion function', () => {
+			expect(BLE.createBeaconRegion).toEqual(jasmine.any(Function));
+		});
+	}
+
+	it('should have createMutableCharacteristic function', () => {
+		expect(BLE.createMutableCharacteristic).toEqual(jasmine.any(Function));
+	});
+
+	it('should have createDescriptor function', () => {
+		expect(BLE.createDescriptor).toEqual(jasmine.any(Function));
+	});
+
+	if (IOS) {
 		describe('property', () => {
 			describe('authorizationState', () => {
 				it('should be number', () => {
@@ -52,19 +64,11 @@ describe('appcelerator.ble', function () {
 			it('enable is a Function', () => {
 				expect(BLE.enable).toEqual(jasmine.any(Function));
 			});
-
-			it('enable returns a boolean', () => {
-				expect(BLE.enable()).toEqual(jasmine.any(Boolean));
-			});
 		});
 
 		describe('.disable()', () => {
 			it('disable is a Function', () => {
 				expect(BLE.disable).toEqual(jasmine.any(Function));
-			});
-
-			it('disable returns a boolean', () => {
-				expect(BLE.disable()).toEqual(jasmine.any(Boolean));
 			});
 		});
 

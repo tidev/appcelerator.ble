@@ -12,31 +12,45 @@ import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 
 @Kroll.proxy
 public class TiBLEServiceProxy extends KrollProxy
 {
 	private final BluetoothGattService service;
+	private static final String LCAT = "TiBLEServiceProxy";
 
 	public TiBLEServiceProxy(BluetoothGattService service)
 	{
 		this.service = service;
 	}
 
-	public static TiBLEServiceProxy mockServiceForUT(KrollDict dict)
+	public static TiBLEServiceProxy createServiceProxy(KrollDict dict)
 	{
-		//temporary method for service UT.
-		//TODO: Address or remove this temp method in MOD-2689.
-		if (dict.containsKey("uuid") && dict.containsKey("primary")) {
-			String uuid = (String) dict.get("uuid");
-			UUID id = UUID.fromString(uuid);
-			boolean isPrimary = dict.getBoolean("primary");
-			int serviceType =
-				isPrimary ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
-
-			return new TiBLEServiceProxy(new BluetoothGattService(id, serviceType));
+		if (dict == null || !dict.containsKey(KeysConstants.uuid.name())
+			|| !dict.containsKey(KeysConstants.primary.name())) {
+			Log.e(LCAT, "createServiceProxy(): Cannot create service, required parameters not provided");
+			return null;
 		}
-		return null;
+		String uuid = (String) dict.get(KeysConstants.uuid.name());
+		boolean isPrimary = (boolean) dict.get(KeysConstants.primary.name());
+		int primary =
+			(isPrimary) ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
+		BluetoothGattService service = new BluetoothGattService(UUID.fromString(uuid), primary);
+		if (dict.containsKey(KeysConstants.characteristics.name())) {
+			Object[] characteristicObject = (Object[]) dict.get(KeysConstants.characteristics.name());
+			if (characteristicObject != null) {
+				TiBLECharacteristicProxy[] characteristicProxies =
+					new TiBLECharacteristicProxy[characteristicObject.length];
+				for (int i = 0; i < characteristicObject.length; i++) {
+					characteristicProxies[i] = (TiBLECharacteristicProxy) characteristicObject[i];
+				}
+				for (TiBLECharacteristicProxy characteristicProxy : characteristicProxies) {
+					service.addCharacteristic(characteristicProxy.getCharacteristic());
+				}
+			}
+		}
+		return new TiBLEServiceProxy(service);
 	}
 
 	@Kroll.getProperty
@@ -73,5 +87,10 @@ public class TiBLEServiceProxy extends KrollProxy
 	public String uuid()
 	{
 		return service.getUuid().toString();
+	}
+
+	public BluetoothGattService getService()
+	{
+		return service;
 	}
 }

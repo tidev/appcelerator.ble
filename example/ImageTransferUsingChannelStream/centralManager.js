@@ -199,10 +199,6 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 				btDevicesRow.add(nameLabel);
 				btDevicesRow.add(idLabel);
 				btDevicesRow.addEventListener('click', function (e) {
-					if (isAndroid) {
-						alert('Android work in progress.');
-						return;
-					}
 					var periPheralObject;
 					var indexRow = e.row;
 					if (indexRow.hasChild) {

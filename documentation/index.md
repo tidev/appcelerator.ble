@@ -6,11 +6,10 @@
   - Central can scan nearby peripheral, connect and exchange data with the peripherals
   - Central can subscribe with peripheral to get latest updates for peripheral
 - Act as BLE Peripheral:
-  - Peripheral can advertise services, connect and exchange data with multiple central. This feature
-is currently available on iOS platform only.
+  - Peripheral can advertise services, connect and exchange data with multiple central.
 - Use L2CAP Channel:
-  - L2CAP is introduced with IOS 11, its used to transfer large amount of data between central and
-peripheral at real time. This feature is currently available on iOS platform only.
+  - L2CAP is introduced with IOS 11 and Android 10, its used to transfer large amount of data between central and
+peripheral at real time.
 - Main use case addressed by this module is Exchange of Data and Communicating with Central and
 Peripherals that supports Bluetooth Low Energy.
 
@@ -165,7 +164,7 @@ The BLE variable is a reference to the Module object.
 - As the module currently provides support to act only as central for the Android, hence to test the example application, user can use any heart-rate peripheral
 or the peripheral simulator in order to do the connection and data-exchange with the central.
 
-## Follow basic steps to create Central application and use Channel for communication: (iOS Only)
+## Follow basic steps to create Central application and use Channel for communication:
 
 - Use `initCentralManager` to create Central Manager
     ```
@@ -287,7 +286,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
   channel.close();
   ```
 
-# Act As Peripheral Application (iOS Only)
+# Act As Peripheral Application
 
 ## Follow basic steps to create Peripheral application:
 
@@ -300,10 +299,12 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Use `createMutableCharacteristic` to create charracteristic
 
     ```
+	charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
+	charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
     var characteristic = BLE.createMutableCharacteristic({
             uuid: characteristicUUID,
-            properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ],
-            permissions: [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ]
+            properties: charProperties,
+            permissions: charPermissions
     });
     ```
 
@@ -320,6 +321,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
 
     ```
+    var name = IOS ? 'BLE-Sample' : true;
     peripheralManager.startAdvertising({
         localName: name,
         serviceUUIDs: servicesUUIDs
@@ -341,6 +343,11 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
         peripheralManager.stopAdvertising();
     ```
+
+- Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
+```
+    peripheralManager.closePeripheral();
+```
 
 ## Follow basic steps to create Peripheral application which use channels for communication:
 
@@ -426,6 +433,130 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
     peripheralManager.stopAdvertising();
     ```
+
+- Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
+```
+    peripheralManager.closePeripheral();
+```
+
+# iBeacon Application (iOS Only)
+
+## Follow basic steps to adverstise iBeacon:
+
+- Use `initPeripheralManager` to create Peripheral Manager
+
+    ```
+    var peripheralManager = BLE.initPeripheralManager();
+    ```
+
+- Use `createBeaconRegion` to create BeaconRegion
+ 
+    ```
+	var beaconRegion = BLE.createBeaconRegion({
+		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
+		major: 1,
+		minor: 100,
+		identifier: 'com.appcelerator.BluetoothLowEnergy.beacon'
+	});
+    ```
+- Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertisingBeaconRegion`
+    ```
+    peripheralManager.startAdvertisingBeaconRegion({
+		beaconRegion: beaconRegion
+	});
+    ```
+
+## Follow basic steps to create iBeacon Scanner application:
+
+ - Edit the `plist` with following `uses-permission` element to the ios plist section
+    ```
+    <ti:app>
+        <ios>
+        <plist>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Allow Location permission</string>
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>Allow Location permission</string> 
+        </plist>
+        </ios>
+    </ti:app>
+    ```
+
+- Use `initPeripheralManager` to create Region Manager
+
+    ```
+    var regionManager = BLE.createRegionManager();
+    ```
+- Use `requestWhenInUseAuthorization` to request location permission
+    ```
+    	regionManager.requestWhenInUseAuthorization();
+    ```
+
+- Use `createBeaconRegion` to create BeaconRegion
+    ```
+	var beaconRegion = BLE.createBeaconRegion({
+		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
+		major: 1,
+		minor: 100,
+		identifier: 'com.appcelerator.BluetoothLowEnergy.beacon'
+	});
+    ```
+
+- Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE | BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
+    ```
+	regionManager.startRegionMonitoring({
+				beaconRegion: beaconRegion
+	});
+    regionManager.startRangingBeaconsInRegion({
+				beaconRegion: beaconRegion
+    });
+    ```
+
+- Get ranged beacons from `didRangeBeacons` event and check `proximity` and `accuracy` to check beacon location
+
+    ```
+    var didRangeBeacons = (e) => {
+		var becaons = e.beacons;
+		if (becaons.length === 0) {
+			alert('No beacon in range');
+			return;
+		}
+		var proximity = becaons[0].proximity;
+		var accuracy = becaons[0].accuracy;
+		switch (proximity) {
+			case BLE.BEACON_PROXIMITY_UNKNOWN:
+				alert('Beacon Location : UNKNOWN');
+				break;
+
+			case BLE.BEACON_PROXIMITY_IMMEDIATE:
+				alert('Beacon Location : IMMEDIATE (approx. ' + accuracy + 'm)');
+				break;
+
+			case BLE.BEACON_PROXIMITY_NEAR:
+				alert('Beacon Location : NEAR (approx. ' + accuracy + 'm)');
+				break;
+
+			case BLE.BEACON_PROXIMITY_FAR:
+				alert('Beacon Location : FAR (approx. ' + accuracy + 'm)');
+				break;
+			default:
+				alert('Beacon Location : UNKNOWN');
+				break;
+		}
+	};
+    regionManager.addEventListener('didRangeBeacons', didRangeBeacons);
+    ```
+- Use `stopRegionMonitoring` to stop monitoring and stop ranging using `stopRangingBeaconsInRegion`
+
+    ```                   
+	regionManager.stopRegionMonitoring({
+				beaconRegion: beaconRegion
+	});
+	regionManager.stopRangingBeaconsInRegion({
+				beaconRegion: beaconRegion
+	});
+    ```
+
 ## Read Data from TiBuffer
 - you can access bytes from TiBuffer using:
 
@@ -438,6 +569,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Please see the `example/` folder.
 - Please see the `example/ImageTransferUsingChannelStream` folder for how to use channel stream API's to transfer bigger data like images.
+- Please see the `example/beacon` folder for iBeacon sample.
 
 ## Observations
 
@@ -446,6 +578,10 @@ or the peripheral simulator in order to do the connection and data-exchange with
 - This behaviour is observed on certain android devices. While starting the BLE scan, make sure the location service is turned-on in order to receive the scan results.
 - It is observed with certain fitness watches (may be other BLE hardware too) that upon connecting them with android-central application, the connection gets auto-disconnected after certain period of time(ranging from immediately to up-to 50s or more).
 The fix is to first pair your peripheral-device(watch or any other hardware) with android device via Settings->Bluetooth screen and then do the connection procedure from central-application.
+
+### iOS
+
+- Beacon do not have background support
 
 ## Building
 

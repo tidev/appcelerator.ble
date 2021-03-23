@@ -210,11 +210,11 @@ properties:
 
   - name: CBUUID_CLIENT_CHARACTERISTIC_CONFIGURATION_STRING
     type: String
-    summary: The UUID for the Client Configuration descriptor, as a string. The corresponding value for this descriptor is an NSNumber object.
+    summary: The UUID for the Client Configuration descriptor, as a string. In iOS, the corresponding value for this descriptor is an NSNumber object. In android, it is a 32 bit uuid.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
-    value: 2902
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+    value: 00002902-0000-1000-8000-00805f9b34fb in android and 2902 in iOS.
 
   - name: CBUUID_SERVER_CHARACTERISTIC_CONFIGURATION_STRING
     type: String
@@ -244,8 +244,8 @@ properties:
     type: String
     summary: The PSM of an L2CAP channel associated with the GATT service containing this characteristic.This PSM is a little-endian UInt16. Servers can publish this characteristic with the UUID ABDD3056-28FA-441D-A470-55A75A52553A.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     value: 2906
 
   - name: PERIPHERAL_STATE_DISCONNECTED
@@ -487,8 +487,15 @@ properties:
     type: Number
     summary: The ATT command or request successfully completed.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android,iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
+
+  - name: ATT_FAILURE
+    type: Number
+    summary: The ATT command or request failed.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
 
   - name: ATT_INVALID_HANDLE_ERROR
     type: Number
@@ -501,15 +508,15 @@ properties:
     type: Number
     summary: The permissions prohibit reading the attribute’s value.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_WRITE_NOT_PERMITTED_ERROR
     type: Number
     summary: The permissions prohibit writing the attribute’s value.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_INVALID_PDU_ERROR
     type: Number
@@ -522,29 +529,29 @@ properties:
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of authentication.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_REQUEST_NOT_SUPPORTED_ERROR
     type: Number
     summary: The attribute server doesn’t support the request received from the client.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_INVALID_OFFSET_ERROR
     type: Number
     summary: The specified offset value was past the end of the attribute’s value.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_INSUFFICIENT_AUTHORIZATION_ERROR
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of authorization.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_PREPARE_QUEUE_FULL_ERROR
     type: Number
@@ -578,8 +585,8 @@ properties:
     type: Number
     summary: The length of the attribute’s value is invalid for the intended operation.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_UNLIKELY_ERROR
     type: Number
@@ -592,8 +599,8 @@ properties:
     type: Number
     summary: Reading or writing the attribute’s value failed for lack of encryption.
     permission: read-only
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
 
   - name: ATT_UNSUPPORTED_GROUP_TYPE_ERROR
     type: Number
@@ -708,6 +715,118 @@ properties:
     platforms: [android]
     since: "1.0.0"
 
+  - name: DESCRIPTOR_PERMISSION_READ
+    type: Number
+    summary: A read permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_READ_ENCRYPTED
+    type: Number
+    summary: An encrypted read permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_WRITE
+    type: Number
+    summary: A write permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: DESCRIPTOR_PERMISSION_WRITE_ENCRYPTED
+    type: Number
+    summary: An encrypted write permission for descriptor.
+    permission: read-only
+    platforms: [android]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS
+    type: Number
+    summary: User has granted authorization to use their location only while they are using your app. 
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE
+    type: Number
+    summary: Write a characteristic value, with a response from the peripheral to indicate whether the write was successful.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_DENIED
+    type: Number
+    summary: User has explicitly denied authorization for this application, or location services are disabled in Settings.
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_NOT_DETERMINED
+    type: Number
+    summary: User has not yet made a choice with regards to this application
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: LOCATION_MANAGER_AUTHORIZATION_STATUS_RESTRICTED
+    type: Number
+    summary: This application is not authorized to use location services. Due  to active restrictions on location services, the user cannot change this status, and may not have personally denied authorization
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_UNKNOWN
+    type: Number
+    summary: The current state of the device with reference to a region is unknown
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_INSIDE
+    type: Number
+    summary: The current state of the device with reference to a region is inside
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: REGION_STATE_OUTSIDE
+    type: Number
+    summary: The current state of the device with reference to a region is outside
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_UNKNOWN
+    type: Number
+    summary: current state of the device with reference to a region is unknown
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_IMMEDIATE
+    type: Number
+    summary: current state of the device with reference to a region is immediate
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_NEAR
+    type: Number
+    summary: current state of the device with reference to a region is near
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
+  - name: BEACON_PROXIMITY_FAR
+    type: Number
+    summary: current state of the device with reference to a region is far
+    permission: read-only
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+
 methods:
   - name: initCentralManager
     summary:  Initializes the module's central manager. This function must be called in an app that acts as a central before any other function can be used.
@@ -725,8 +844,8 @@ methods:
 
   - name: initPeripheralManager
     summary: Initializes the module's peripheral manager object. This function must be called in an app that acts as a peripheral before any other function can be used.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: showPowerAlert
         type: Boolean
@@ -737,10 +856,30 @@ methods:
     returns:
       type: Modules.BLE.PeripheralManager
 
+  - name: createBeaconRegion
+    summary: create Beacon Region.
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    parameters:
+      - name: uuid
+        type: String
+        summary: The value of uuid.
+      - name: identifier
+        type: String
+        summary: The value of beacon identifier.
+      - name: major
+        type: Number
+        summary: The value of major.
+      - name: minor
+        type: Number
+        summary: The value of minor.
+    returns:
+      type: Modules.BLE.BeaconRegion
+
   - name: createDescriptor
     summary: create descriptor.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: value
         type: Object
@@ -748,13 +887,20 @@ methods:
       - name: uuid
         type: String
         summary: The Bluetooth-specific UUID of the descriptor.
+      - name: permission
+        type: Number
+        summary: The permission for descriptor. This parameter is only for android. In android, the
+            permissions can be different for characteristic and descriptor. If Characteristic have the
+            read permission then it is only readable and if descriptor have the write permission, then
+            it is only writable. 
+        optional: false
     returns:
       type: Modules.BLE.Descriptor
 
   - name: createMutableCharacteristic
     summary: create mutable characteristic.
-    platforms: [iphone, ipad]
-    since: "1.0.0"
+    platforms: [android, iphone, ipad]
+    since: {android: "1.1.0", iphone: "1.0.0", ipad: "1.0.0"}
     parameters:
       - name: properties
         type: Array<Number>
@@ -770,6 +916,31 @@ methods:
         summary: An array of the characteristic’s descriptors.
     returns:
       type: Modules.BLE.MutableCharacteristic
+
+  - name: createBeaconIdentityConstraint
+    summary: create a constraint that describes the identity caracteristics of a beacon.
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "13.0"}}
+    since: "1.1.0"
+    parameters:
+      - name: uuid
+        type: String
+        summary: UUID associated with the constraint.
+      - name: major
+        type: Number
+        summary: Most significant value associated with the constraint. If a major value wasn't specified, this will be nil.
+      - name: minor
+        type: Number
+        summary: Least significant value associated with the constraint. If a minor value wasn't specified, this will be nil.
+    returns:
+      type: Modules.BLE.BeaconIdentityConstraint
+
+  - name: createRegionManager
+    summary: create a region manager to scan beacons.
+    platforms: [iphone, ipad]
+    since: "1.1.0"
+    returns:
+      type: Modules.BLE.RegionManager
 
   - name: disable
     summary: Disables the local Bluetooth adapter.
@@ -822,4 +993,11 @@ methods:
     returns:
       type: "Boolean"
       summary: "Returns true if BLE is supported on the device, false otherwise."
-      
+
+  - name: isAdvertisingSupported
+    summary: Determines whether Bluetooth Low Energy Advertising feature is supported on the local Bluetooth device.
+    since: "1.1.0"
+    platforms: [android]
+    returns:
+      type: "Boolean"
+      summary: "Returns true if BLE Advertising is supported on the device, false on bluetooth off or if BLE Advertising is not supported."
