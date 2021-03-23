@@ -1,3 +1,4 @@
+---
 name: Modules.BLE.RegionManager
 summary: An object that manages and scan beacons.
 extends: Titanium.Proxy
