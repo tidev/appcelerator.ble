@@ -17,6 +17,8 @@ jobs:
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       USE_CCACHE: 1
+      SDK_VERSION: 9.3.2.GA
+      MODULE_ID: appcelerator.ble
     steps:
     - uses: actions/checkout@v2
 
@@ -56,8 +58,8 @@ jobs:
       name: Install Titanium CLI
 
 # TODO: Cache sdk install
-    - run: ti sdk install 9.3.2.GA --force
-      name: Install SDK 9.3.2.GA
+    - run: ti sdk install ${{ env.SDK_VERSION }} --force
+      name: Install Titanium SDK
 
     - name: Install ccache
       run: brew install ccache
@@ -75,7 +77,7 @@ jobs:
       with:
         api-level: 29
         target: playstore
-        script: npm run test:android -- --sdkVersion 9.3.2.GA
+        script: npm run test:android -- --sdkVersion ${{ env.SDK_VERSION }}
 
     - name: Show summary of ccache configuration and statistics counters
       run: ccache --show-stats
@@ -85,9 +87,9 @@ jobs:
     - name: Archive Android zip
       uses: actions/upload-artifact@v2
       with:
-        name: appcelerator.ble-android
+        name: ${{ env.MODULE_ID }}-android
         path: |
-          android/dist/appcelerator.ble-android-*.zip
+          android/dist/${{ env.MODULE_ID }}-android-*.zip
 
     - name: Cleanup Gradle Cache
       # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
