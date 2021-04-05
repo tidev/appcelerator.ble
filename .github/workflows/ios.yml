@@ -14,6 +14,9 @@ jobs:
   ios:
     runs-on: macos-latest
     name: iOS
+    env:
+      SDK_VERSION: 9.3.2.GA
+      MODULE_ID: appcelerator.ble
     steps:
     - uses: actions/checkout@v2
 
@@ -44,18 +47,18 @@ jobs:
 
 # TODO cache SDK install
 
-    - run: ti sdk install 9.3.2.GA --force
-      name: Install SDK 9.3.2.GA
+    - run: ti sdk install ${{ env.SDK_VERSION }} --force
+      name: Install Titanium SDK
 
-    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 9.3.2.GA/' ios/titanium.xcconfig
-      name: Set to Build with 9.3.2.GA SDK
+    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = ${{ env.SDK_VERSION }}/' ios/titanium.xcconfig
+      name: Set to Build with newly installed SDK
 
-    - run: npm run test:ios -- --sdkVersion 9.3.2.GA
+    - run: npm run test:ios -- --sdkVersion ${{ env.SDK_VERSION }}
       name: Build and Test
 
     - name: Archive iOS artifact
       uses: actions/upload-artifact@v2
       with:
-        name: appcelerator.ble-ios
+        name: ${{ env.MODULE_ID }}-ios
         path: |
-          ios/dist/appcelerator.ble-iphone-*.zip
+          ios/dist/${{ env.MODULE_ID }}-iphone-*.zip
