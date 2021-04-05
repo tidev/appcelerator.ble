@@ -18,7 +18,7 @@ Peripherals that supports Bluetooth Low Energy.
 ### Android
 
 - Edit the manifest with following uses-permission element to the Android manifest section of the tiapp.xml file.
-```
+``` xml
 <ti:app>
 <android xmlns:android="http://schemas.android.com/apk/res/android">
   <manifest>
@@ -32,7 +32,7 @@ Peripherals that supports Bluetooth Low Energy.
 ```
 
 - Set the ``` <module> ``` element in tiapp.xml, such as this:
-```
+``` xml
 <modules>
 	<module platform="android">appcelerator.ble</module>
 </modules>
@@ -40,7 +40,7 @@ Peripherals that supports Bluetooth Low Energy.
 
 - To access this module from JavaScript, you would do the following:
 
-```
+``` js
 var BLE = require("appcelerator.ble");
 ```
 The BLE variable is a reference to the Module object.
@@ -49,7 +49,7 @@ The BLE variable is a reference to the Module object.
 
  - Edit the `plist` with following `uses-permission` element to the ios plist section of the
   tiapp.xml file.
-  ```
+  ``` xml
   <ti:app>
     <ios>
       <plist>
@@ -64,7 +64,7 @@ The BLE variable is a reference to the Module object.
 
  - If your app needs to run in background to perform certain Bluetooth-related tasks, Edit the `plist` with following `uses-permission` element to the ios plist section of the
   tiapp.xml file.
-  ```
+  ``` xml
   <ti:app>
     <ios>
       <plist>
@@ -80,7 +80,7 @@ The BLE variable is a reference to the Module object.
 
 - Set the ``` <module> ``` element in tiapp.xml, such as this:
  - Edit the `plist` with following `uses-permission` element to the ios plist section, if your are adding iBeacon Scan
-  ```
+  ``` xml
   <ti:app>
     <ios>
       <plist>
@@ -94,7 +94,7 @@ The BLE variable is a reference to the Module object.
   ```
 
 - Set the ``` <module> ``` element in tiapp.xml, such as this: 
-```
+``` xml
 <modules>
     <module platform="ios">appcelerator.ble</module>
 </modules>
@@ -102,7 +102,7 @@ The BLE variable is a reference to the Module object.
 
 - To access this module from JavaScript, you would do the following:
 
-```
+``` js
 var BLE = require("appcelerator.ble");
 ```
 The BLE variable is a reference to the Module object.
@@ -112,20 +112,20 @@ The BLE variable is a reference to the Module object.
 ## Follow basic steps to create Central application:
 
 - Use `initCentralManager` to create Central Manager
-    ```
+    ``` js
     var centralManager = BLE.initCentralManager();
     ```
 - Check for `didUpdateState` event for `centralManager` status
 - Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for peripherals using `startScan`
-    ```
+    ``` js
     centralManager.startScan();
     ```
 - Use `peripherals` property to get all discovered peripherals
-    ```
+    ``` js
     var peripherals = centralManager.peripherals;
     ```
 - Use `connect` to connect to peripheral
-    ```
+    ``` js
     centralManager.connectPeripheral({
             peripheral: peripheral,
             options: {
@@ -135,22 +135,22 @@ The BLE variable is a reference to the Module object.
     });
     ```
 - Use `isConnected` to check if connected
-    ```
+    ``` js
     peripheral.isConnected
     ```
 
 - Use `discoverServices` to discover services
-    ```
+    ``` js
     peripheral.discoverServices();
     ```
    result will be return in `didDiscoverServices` event
 
-    ```
+    ``` js
     peripheral.addEventListener('didDiscoverServices', function (e) {});
     ```
 
 - Use `discoverCharacteristics`
-    ```
+    ``` js
     peripheral.discoverCharacteristics({
         service: service
     });
@@ -158,11 +158,11 @@ The BLE variable is a reference to the Module object.
 
     result will be return in `didDiscoverCharacteristics` event
 
-    ```
+    ``` js
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
     ```
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
-    ```
+    ``` js
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -172,7 +172,7 @@ The BLE variable is a reference to the Module object.
     ```
 
 - Use `cancelPeripheralConnection` to disconnect the connection
-    ```
+    ``` js
     centralManager.cancelPeripheralConnection({ peripheral: peripheral });
     ```
 
@@ -182,21 +182,21 @@ or the peripheral simulator in order to do the connection and data-exchange with
 ## Follow basic steps to create Central application and use Channel for communication:
 
 - Use `initCentralManager` to create Central Manager
-    ```
+    ``` js
     var centralManager = BLE.initCentralManager();
     ```
 - Check for `didUpdateState` event for `centralManager` status
 
 - Once `centralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, scan for perpherals using `startScan`
-    ```
+    ``` js
     centralManager.startScan();
     ```
 - Use `peripherals` property to get all discovered peripherals
-    ```
+    ``` js
     var peripherals = centralManager.peripherals;
     ```
 - Use `connect` to connect to peripheral
-    ```
+    ``` js
     centralManager.connectPeripheral({
         peripheral: peripheral,
         options: {
@@ -207,22 +207,22 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `isConnected` to check if connected
-    ```
+    ``` js
     peripheral.isConnected
     ```
 
 - Use `discoverServices` to discover services
-    ```
+    ``` js
     peripheral.discoverServices();
     ```
    result will be return in `didDiscoverServices` event
 
-    ```
+    ``` js
     peripheral.addEventListener('didDiscoverServices', function (e) {});
     ```
 
 - Use `discoverCharacteristics`
-    ```
+    ``` js
     peripheral.discoverCharacteristics({
         service: service
     });
@@ -230,13 +230,13 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
     result will be return in `didDiscoverCharacteristics` event
 
-    ```
+    ``` js
     connectedPeripheral.addEventListener('didDiscoverCharacteristics', function (e) {});
     ```
 
 - Use `subscribeToCharacteristic` and `unsubscribeFromCharacteristic` to subscribe or unsubscribe
 
-    ```
+    ``` js
     peripheral.subscribeToCharacteristic({
         characteristic: charactersticObject
     });
@@ -247,7 +247,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Get `psmIdentifier` from `didUpdateValueForCharacteristic` event and open `channel`
 
-    ```
+    ``` js
     peripheral.addEventListener('didUpdateValueForCharacteristic', function (e) {
         if (e.errorCode !== null) {
             alert('Error while didUpdateValueForCharacteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
@@ -264,7 +264,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Get `channel` object from `didOpenChannel` event and set event `onDataReceived` for received data and `onStreamError` for stream errors
 
-    ```
+    ``` js
     connectedPeripheral.addEventListener('didOpenChannel', function (e) {
         if (e.errorCode !== null) {
             alert('Error while opening channel' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
@@ -282,7 +282,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `write` function from channel to write values
 
-    ```
+    ``` js
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
@@ -291,13 +291,13 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `cancelPeripheralConnection` to disconnect the connection
 
-    ```
+    ``` js
     centralManager.cancelPeripheralConnection({ peripheral: peripheral });
     ```
 
 - Use `close` function to close channel
 
-  ```
+  ``` js
   channel.close();
   ```
 
@@ -307,13 +307,13 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
-    ```
+    ``` js
     var peripheralManager = BLE.initPeripheralManager();
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
 
-    ```
+    ``` js
 	charProperties = [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_WRITE_WITHOUT_RESPONSE, BLE.CHARACTERISTIC_PROPERTIES_NOTIFY ];
 	charPermissions = [ BLE.CHARACTERISTIC_PERMISSION_READABLE, BLE.CHARACTERISTIC_PERMISSION_WRITEABLE ];
     var characteristic = BLE.createMutableCharacteristic({
@@ -325,7 +325,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `addService` to add service
 
-    ```
+    ``` js
     service = peripheralManager.addService({
         uuid: serviceUUID,
         primary: true,
@@ -335,7 +335,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertising`
 
-    ```
+    ``` js
     var name = IOS ? 'BLE-Sample' : true;
     peripheralManager.startAdvertising({
         localName: name,
@@ -345,7 +345,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `updateValue` to update charracteristic value
 
-    ```
+    ``` js
     var buffer = Ti.createBuffer({ value: 'hello world' });
         peripheralManager.updateValue({
         characteristic: characteristic,
@@ -355,12 +355,12 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Use `stopAdvertising` to stop advertising
-    ```
+    ``` js
         peripheralManager.stopAdvertising();
     ```
 
 - Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
-```
+``` js
     peripheralManager.closePeripheral();
 ```
 
@@ -368,13 +368,13 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
-    ```
+    ``` js
     var peripheralManager = BLE.initPeripheralManager();
     ```
 
 - Use `createMutableCharacteristic` to create charracteristic
 
-    ```
+    ``` js
      var characteristic = BLE.createMutableCharacteristic({
         uuid: BLE.CBUUID_L2CAPPSM_CHARACTERISTIC_STRING,
         properties: [ BLE.CHARACTERISTIC_PROPERTIES_READ, BLE.CHARACTERISTIC_PROPERTIES_INDICATE ],
@@ -384,7 +384,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `addService` to add service
 
-    ```
+    ``` js
     var service = peripheralManager.addService({
         uuid: serviceUUID,
         primary: true,
@@ -394,7 +394,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, use `publishL2CAPChannel` to publish channel and start advertising using `startAdvertising`
-    ```
+    ``` js
     peripheralManager.publishL2CAPChannel({
          encryptionRequired: false
     });
@@ -407,7 +407,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Update `psmIdentifier` to characteristic in `didPublishL2CAPChannel` event
 
-    ```
+    ``` js
     peripheralManager.addEventListener('didPublishL2CAPChannel', function (e) {
         var psmBuffer = Ti.createBuffer({ value: e.psm + '' });
         manager.updateValue({
@@ -420,7 +420,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Get Channel from `didOpenL2CAPChannel` event and set `onDataReceived` event to read values and `onStreamError` event for check stream errors
 
-    ```
+    ``` js
     peripheralManager.addEventListener('didOpenL2CAPChannel', function (e) {
         var channel = e.channel;
         channel.addEventListener('onDataReceived', function (e) {
@@ -431,7 +431,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 - Use `write` function from channel to write values
 
-    ```
+    ``` js
     var newBuffer = Ti.createBuffer({ value: 'hello world' });
     channel.write({
         data: newBuffer
@@ -440,17 +440,17 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `close` function to close channel
 
-    ```
+    ``` js
     channel.close();
     ```
 
 - Use `stopAdvertising` to stop advertising
-    ```
+    ``` js
     peripheralManager.stopAdvertising();
     ```
 
 - Use `closePeripheral` to close the peripheral after it is done with the peripheral operations. (Android only)
-```
+``` js
     peripheralManager.closePeripheral();
 ```
 # iBeacon Application (iOS Only)
@@ -459,13 +459,13 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `initPeripheralManager` to create Peripheral Manager
 
-    ```
+    ``` js
     var peripheralManager = BLE.initPeripheralManager();
     ```
 
 - Use `createBeaconRegion` to create BeaconRegion
  
-    ```
+    ``` js
 	var beaconRegion = BLE.createBeaconRegion({
 		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
 		major: 1,
@@ -474,7 +474,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 	});
     ```
 - Once `peripheralManager` is in `BLE.MANAGER_STATE_POWERED_ON` state, start advertising using `startAdvertisingBeaconRegion`
-    ```
+    ``` js
     peripheralManager.startAdvertisingBeaconRegion({
 		beaconRegion: beaconRegion
 	});
@@ -483,7 +483,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 ## Follow basic steps to create iBeacon Scanner application:
 
  - Edit the `plist` with following `uses-permission` element to the ios plist section
-    ```
+    ``` xml
     <ti:app>
         <ios>
         <plist>
@@ -498,16 +498,16 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Use `initPeripheralManager` to create Region Manager
 
-    ```
+    ``` js
     var regionManager = BLE.createRegionManager();
     ```
 - Use `requestWhenInUseAuthorization` to request location permission
-    ```
+    ``` js
     	regionManager.requestWhenInUseAuthorization();
     ```
 
 - Use `createBeaconRegion` to create BeaconRegion
-    ```
+    ``` js
 	var beaconRegion = BLE.createBeaconRegion({
 		uuid: '135C8F13-6A2D-46ED-AA71-FB956FC23742',
 		major: 1,
@@ -517,7 +517,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 
 - Once `regionManager` is in `BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_WHEN_IN_USE | BLE.LOCATION_MANAGER_AUTHORIZATION_STATUS_AUTHORIZED_ALWAYS` state, use `startRegionMonitoring` to start monitoring and start ranging using `startRangingBeaconsInRegion`
-    ```
+    ``` js
 	regionManager.startRegionMonitoring({
 				beaconRegion: beaconRegion
 	});
@@ -528,7 +528,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 
 - Get ranged beacons from `didRangeBeacons` event and check `proximity` and `accuracy` to check beacon location
 
-    ```
+    ``` js
     var didRangeBeacons = (e) => {
 		var becaons = e.beacons;
 		if (becaons.length === 0) {
@@ -562,7 +562,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
 - Use `stopRegionMonitoring` to stop monitoring and stop ranging using `stopRangingBeaconsInRegion`
 
-    ```                   
+    ``` js
 	regionManager.stopRegionMonitoring({
 				beaconRegion: beaconRegion
 	});
@@ -574,7 +574,7 @@ or the peripheral simulator in order to do the connection and data-exchange with
 ## Read Data from TiBuffer
 - you can access bytes from TiBuffer using:
 
-    ```
+    ``` js
     for (i = 0; i < buffer.length; i++) {
         var byte = buffer[i];
     }
@@ -601,7 +601,7 @@ The fix is to first pair your peripheral-device(watch or any other hardware) wit
 
 Simply run `appc run -p ios --build-only` and `appc run -p android --build-only` which will compile and package your module.
 
-Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. /Library/Application Support/Titanium).
+Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. `/Library/Application Support/Titanium`).
 
 ## Author
 
