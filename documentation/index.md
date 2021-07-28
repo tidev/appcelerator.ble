@@ -17,20 +17,6 @@ Peripherals that supports Bluetooth Low Energy.
 
 ### Android
 
-- Edit the manifest with following uses-permission element to the Android manifest section of the tiapp.xml file.
-```
-<ti:app>
-<android xmlns:android="http://schemas.android.com/apk/res/android">
-  <manifest>
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-  </manifest>
-</android>
-</ti:app>
-```
-
 - Set the ``` <module> ``` element in tiapp.xml, such as this:
 ```
 <modules>
@@ -53,10 +39,10 @@ The BLE variable is a reference to the Module object.
   <ti:app>
     <ios>
       <plist>
-            <key>NSBluetoothAlwaysUsageDescription</key>
-				  <string>usage description string</string>
-	        <key>NSBluetoothPeripheralUsageDescription</key>
-				  <string>usage description string</string>
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>usage description string</string>
+        <key>NSBluetoothPeripheralUsageDescription</key>
+        <string>usage description string</string>
       </plist>
     </ios>
   </ti:app>
@@ -68,11 +54,11 @@ The BLE variable is a reference to the Module object.
   <ti:app>
     <ios>
       <plist>
-            <key>UIBackgroundModes</key>
-            <array>
-            <string>bluetooth-central</string>
-            <string>bluetooth-peripheral</string>
-      </array>
+        <key>UIBackgroundModes</key>
+        <array>
+          <string>bluetooth-central</string>
+          <string>bluetooth-peripheral</string>
+        </array>
       </plist>
     </ios>
   </ti:app>
@@ -472,12 +458,12 @@ or the peripheral simulator in order to do the connection and data-exchange with
     ```
     <ti:app>
         <ios>
-        <plist>
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Allow Location permission</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>Allow Location permission</string> 
-        </plist>
+            <plist>
+                <key>NSLocationWhenInUseUsageDescription</key>
+                <string>Allow Location permission</string>
+                <key>NSLocationAlwaysUsageDescription</key>
+                <string>Allow Location permission</string> 
+            </plist>
         </ios>
     </ti:app>
     ```

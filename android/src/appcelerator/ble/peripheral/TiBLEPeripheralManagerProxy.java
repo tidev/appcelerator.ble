@@ -11,7 +11,9 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -34,7 +36,7 @@ import ti.modules.titanium.BufferProxy;
 public class TiBLEPeripheralManagerProxy extends KrollProxy
 {
 	private static final String LCAT = "TiBLEPeripheralManager";
-	private final BluetoothAdapter btAdapter;
+	private BluetoothAdapter btAdapter;
 	private final StateBroadcastReceiver stateReceiver;
 	private TiBLEManagePeripheralService bleService;
 	private BluetoothGattService gattServiceToAddInServer;
@@ -42,18 +44,25 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 
 	public TiBLEPeripheralManagerProxy()
 	{
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		final Context context = TiApplication.getInstance();
+		BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+		if (bluetoothManager != null) {
+			btAdapter = bluetoothManager.getAdapter();
+		}
 
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 		stateReceiver = new StateBroadcastReceiver(this);
-		getActivity().registerReceiver(stateReceiver, intentFilter);
+		context.registerReceiver(stateReceiver, intentFilter);
 	}
 
 	@SuppressLint("MissingPermission")
 	@Kroll.getProperty(name = "peripheralManagerState")
 	public int peripheralManagerState()
 	{
+		if (btAdapter == null) {
+			return BluetoothAdapter.STATE_OFF;
+		}
 		return btAdapter.getState();
 	}
 
@@ -299,7 +308,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	public void cleanup()
 	{
 		try {
-			getActivity().unregisterReceiver(stateReceiver);
+			TiApplication.getInstance().unregisterReceiver(stateReceiver);
 		} catch (IllegalArgumentException e) {
 			Log.e(LCAT, "cleanup(): Error during unregistering the receiver," + e.getMessage());
 		}

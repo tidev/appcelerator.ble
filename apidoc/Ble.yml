@@ -29,22 +29,7 @@ description: |
     The Apple documentation states that applications are allowed to scan while backgrounded but the
     scan must specify the service types. wild card scan is not supported in the background.
 
-    - Note(Android): Add the following `uses-permission` element to the Android manifest section of
-      the tiapp.xml file required for this module. You may need to add the `manifest elements. Starting
-      Android 9(API level 28), its mandatory to request the FOREGROUND_SERVICE for using the foreground service.
-      ``` xml
-        <ti:app>
-            <android xmlns:android="http://schemas.android.com/apk/res/android">
-                <manifest>
-                    <uses-permission android:name="android.permission.BLUETOOTH" />
-                    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-                    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-                    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-                </manifest>
-            </android>
-        </ti:app>
-      ```
-      Note: A detailed information about how to use module in your application, can be found with artifacts at path modules/iphone (platform)/appcelerator.ble/x.y.z (version of module)/documentation/index.html
+    Note: A detailed information about how to use module in your application, can be found with artifacts at path modules/iphone (platform)/appcelerator.ble/x.y.z (version of module)/documentation/index.html
 platforms: [android, iphone, ipad] 
 
 properties:
@@ -945,7 +930,7 @@ methods:
   - name: disable
     summary: Disables the local Bluetooth adapter.
     description: |
-        This method requires the BLUETOOTH and BLUETOOTH_ADMIN permissions to successfully work. To check
+        This method requires bluetooth permissions to successfully work. To check
         whether these permissions are granted or not, call
         [isBluetoothAndBluetoothAdminPermissionsGranted](Modules.BLE.isBluetoothAndBluetoothAdminPermissionsGranted) method.
         Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the local
@@ -959,7 +944,7 @@ methods:
   - name: enable
     summary: Enables the local Bluetooth adapter.
     description: |
-        This method requires the BLUETOOTH and BLUETOOTH_ADMIN permissions to successfully work. To check
+        This method requires bluetooth permissions to successfully work. To check
         whether these permissions are granted or not, call
         [isBluetoothAndBluetoothAdminPermissionsGranted](Modules.BLE.isBluetoothAndBluetoothAdminPermissionsGranted) method.
         Listen for the [didUpdateState](Modules.BLE.didUpdateState) event to be notified when the local
@@ -979,12 +964,40 @@ methods:
       summary: "Returns true if the local adapter is on."
 
   - name: isBluetoothAndBluetoothAdminPermissionsGranted
-    summary: Determines whether the BLUETOOTH and BLUETOOTH_ADMIN permissions are granted or not.
+    summary: Determines if bluetooth permissions have been granted.
+    description: |
+        If this method returns `false`, then you'll need to call the
+        [requestPermissions](Modules.BLE.requestPermissions) method to request these permissions from the user.
     since: "1.0.0"
     platforms: [android]
     returns:
       type: "Boolean"
-      summary: "Returns true if the BLUETOOTH and BLUETOOTH_ADMIN permissions are granted"
+      summary: "Returns true if bluetooth permissions have been granted"
+
+  - name: requestPermissions
+    summary: Displays a dialog requesting bluetooth permissions from the user.
+    description: |
+        Displays a dialog requesting the `BLUETOOTH_ADVERTISE`, `BLUETOOTH_CONNECT`, and `BLUETOOTH_SCAN` permissions
+        if running on Android 12 or higher. These permission are required by this module to
+        discover devices and to make the app's device discoverable by other devices. On older Android OS versions,
+        a dialog will not be displayed and will instead check if permissions `BLUETOOTH` and `BLUETOOTH_ADMIN`
+        are defined in the app's manifest.
+
+        The given optional callback argument and returned `Promise` will provide a `success` property
+        indicating if permissions were granted or not.
+
+        A dialog will not be displayed if permissions have already been granted and will immediately invoke
+        the optional callback and returned promise with a success result.
+    parameters:
+      - name: callback
+        summary: Function to be invoked indicating if permissions were granted or not.
+        type: Callback<Titanium.Android.RequestPermissionAccessResult>
+        optional: true
+    returns:
+      summary: Returns a `Promise` whose resolved value is equivalent to that passed to the optional callback argument.
+      type: Promise<Titanium.Android.RequestPermissionAccessResult>
+    since: "2.0.0"
+    platforms: [android]
 
   - name: isSupported
     summary: Determines whether Bluetooth Low Energy feature is supported on the local Bluetooth device.
