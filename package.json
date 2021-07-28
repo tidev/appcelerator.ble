@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/appcelerator.ble",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Provides bluetooth low energy (BLE) elements for Titanium applications",
   "scripts": {
@@ -52,7 +52,6 @@
     "socket.io": "^4.0.1",
     "titanium-docgen": "^4.10.3"
   },
-  "dependencies": {},
   "lint-staged": {
     "ios/**/*.{m,h}": [
       "npx clang-format -style=file -i"

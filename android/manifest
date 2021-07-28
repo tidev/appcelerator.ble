@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.1.0
+version: 2.0.0
 apiversion: 4
 architectures: arm64-v8a armeabi-v7a x86 x86_64
 description: Provides BluetoothLowEnergy module for Titanium applications.
@@ -15,4 +15,4 @@ name: BluetoothLowEnergy
 moduleid: appcelerator.ble
 guid: 8d0b486f-27ff-4029-a989-56e4a6755e6f
 platform: android
-minsdk: 9.0.0
+minsdk: 10.0.0
