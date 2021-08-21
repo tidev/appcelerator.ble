@@ -2,7 +2,7 @@
 library 'pipeline-library'
 
 buildModule {
-	sdkVersion = '9.3.1.GA'
+	sdkVersion = '10.1.0.v20210820083427'
 	npmPublish = false // By default it'll do github release on master anyways too
 	iosLabels = 'osx && xcode-12'
 	androidBuildToolsVersion = '30.0.2'
