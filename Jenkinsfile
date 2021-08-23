@@ -1,5 +1,5 @@
 #!groovy
-library 'pipeline-library@use_java_11'
+library 'pipeline-library'
 
 buildModule {
 	sdkVersion = '10.1.0.v20210820083427'
