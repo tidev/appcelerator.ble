@@ -1,5 +1,5 @@
 #!groovy
-library 'pipeline-library'
+library 'pipeline-library@use_java_11'
 
 buildModule {
 	sdkVersion = '10.1.0.v20210820083427'
@@ -7,6 +7,4 @@ buildModule {
 	iosLabels = 'osx && xcode-12'
 	androidBuildToolsVersion = '30.0.2'
 	androidAPILevel = '30' // unit-tests of BLE module are executable on emulator with api level 30.
-	env.JAVA_HOME="${tool name:'OpenJDK 11.0.11+9', type: 'jdk'}"
-	env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 }
