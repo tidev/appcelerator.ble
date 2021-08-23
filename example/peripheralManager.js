@@ -49,12 +49,12 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 			manager.addEventListener('didReceiveWriteRequests', didReceiveWriteRequestsListener);
 
 			if (IOS) {
-				manager.addEventListener('willRestoreState', function (e) {
+				manager.addEventListener('willRestoreState', function () {
 					Ti.API.info('Peripheral Manager will restore state');
 					logs.push('Peripheral Manager will restore state');
 					setData(logs);
 				});
-				manager.addEventListener('readyToUpdateSubscribers', function (e) {
+				manager.addEventListener('readyToUpdateSubscribers', function () {
 					Ti.API.info('Peripheral Manager ready to update subscribers');
 					logs.push('readyToUpdateSubscribers');
 					setData(logs);

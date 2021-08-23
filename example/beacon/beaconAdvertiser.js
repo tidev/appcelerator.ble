@@ -12,7 +12,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 40,
 		title: 'Initialize Peripheral Manager'
 	});
-	var InitializePeripheralManagerClick = (e) => {
+	var InitializePeripheralManagerClick = () => {
 		if (manager === null) {
 			manager = BLE.initPeripheralManager();
 			setPeripheralManagerEventListeners(manager);
@@ -28,7 +28,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 90,
 		title: 'Start Advertising'
 	});
-	var startAdvertisingButtonClick = (e) => {
+	var startAdvertisingButtonClick = () => {
 		if (manager === null) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
@@ -58,7 +58,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 140,
 		title: 'Stop Advertising'
 	});
-	var stopAdvertisingButtonClick = (e) => {
+	var stopAdvertisingButtonClick = () => {
 		if (manager === null) {
 			Ti.API.info('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
 			alert('Peripheral Manager is Not Initialized. Please click \'Initialize Peripheral Manager\'');
@@ -147,7 +147,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		}
 		setData(logs);
 	};
-	var didStartAdvertising = (e) => {
+	var didStartAdvertising = () => {
 		Ti.API.info('Peripheral Manager started advertising');
 		logs.push('Peripheral Manager started advertising');
 		setData(logs);

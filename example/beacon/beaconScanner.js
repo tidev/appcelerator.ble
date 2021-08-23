@@ -51,7 +51,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 190,
 		title: 'Initialize Manager'
 	});
-	var initializeManagerClick = (e) => {
+	var initializeManagerClick = () => {
 		if (manager === null) {
 			manager = BLE.createRegionManager();
 			setRegionManagerEventListeners(manager);
@@ -69,7 +69,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 240,
 		title: 'Request Authorization'
 	});
-	var requestAuthClick = (e) => {
+	var requestAuthClick = () => {
 		if (manager === null) {
 			Ti.API.info('Manager is Not Initialized. Please click \'Initialize Manager\'');
 			alert('Manager is Not Initialized. Please click \'Initialize Manager\'');
@@ -91,7 +91,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 290,
 		title: 'Start Scan'
 	});
-	var startScanClick = (e) => {
+	var startScanClick = () => {
 		if (manager === null) {
 			Ti.API.info('Manager is Not Initialized. Please click \'Initialize Manager\'');
 			alert('Manager is Not Initialized. Please click \'Initialize Manager\'');
@@ -145,7 +145,7 @@ function deviceWin(BLE, beaconUUID, major, minor, beaconId) {
 		top: 340,
 		title: 'Stop Scan'
 	});
-	var stopScanClick = (e) => {
+	var stopScanClick = () => {
 		if (manager === null) {
 			Ti.API.info('Manager is Not Initialized. Please click \'Initialize Manager\'');
 			alert('Manager is Not Initialized. Please click \'Initialize Manager\'');

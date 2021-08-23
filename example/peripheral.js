@@ -250,8 +250,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			alert('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 			return;
 		}
-		let discoverCharacteristicPeripheral = e.sourcePeripheral;
-		discoverHeartRateCharacteristic(discoverCharacteristicPeripheral);// Subscribe To Characteristic
+		discoverHeartRateCharacteristic();
 	};
 	var descriptorDiscoveredListener = (e) => {
 		Ti.API.info('didDiscoverDescriptorsForCharacteristics');
@@ -407,9 +406,8 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		});
 	}
 
-	function discoverHeartRateCharacteristic (sourcePeripheral) {
-		var characteristics;
-		characteristics = global.serviceObject.characteristics;
+	function discoverHeartRateCharacteristic() {
+		const characteristics = global.serviceObject.characteristics;
 		Ti.API.info('characteristics ' + characteristics);
 		characteristics.forEach(function (characteristic) {
 			Ti.API.info('Discovered characteristic ' + characteristic.uuid);

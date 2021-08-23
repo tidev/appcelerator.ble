@@ -98,12 +98,12 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				logs.push('Adding Heart Rate Service (uuid: 180D) with characteristic (uuid: 2A37)');
 				setData(logs);
 			}
-			manager.addEventListener('didStartAdvertising', function (e) {
+			manager.addEventListener('didStartAdvertising', function () {
 				Ti.API.info('Peripheral Manager started advertising');
 				logs.push('Peripheral Manager started advertising');
 				setData(logs);
 			});
-			manager.addEventListener('willRestoreState', function (e) {
+			manager.addEventListener('willRestoreState', function () {
 				Ti.API.info('Peripheral Manager will restore state');
 				logs.push('Peripheral Manager will restore state');
 				setData(logs);
@@ -163,7 +163,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 				setData(logs);
 			});
 
-			manager.addEventListener('readyToUpdateSubscribers', function (e) {
+			manager.addEventListener('readyToUpdateSubscribers', function () {
 				Ti.API.info('Peripheral Manager ready to update subscribers');
 				logs.push('readyToUpdateSubscribers');
 				setData(logs);
@@ -184,7 +184,7 @@ function peripheralManagerWin(BLE, serviceUUID, heartRateCharacteristicUUID) {
 					central: centrals
 				});
 			});
-			manager.addEventListener('didUnpublishL2CAPChannel', function (e) {
+			manager.addEventListener('didUnpublishL2CAPChannel', function () {
 				Ti.API.info('Peripheral Manager unpublished L2CAP channel');
 				logs.push('Peripheral Manager unpublished L2CAP channel');
 				setData(logs);
