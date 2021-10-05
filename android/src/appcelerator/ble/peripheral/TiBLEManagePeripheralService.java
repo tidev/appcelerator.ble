@@ -78,6 +78,9 @@ public class TiBLEManagePeripheralService extends Service
 		this.peripheralManagerProxyRef = new WeakReference<>(peripheralManagerProxy);
 		peripheralOperationManager = new TiBLEPeripheralOperationManager(this, peripheralManagerProxy);
 		peripheralOperationManager.openGattServer();
+		if (advertiseManager == null) {
+			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxyRef.get());
+		}
 	}
 
 	public void addService(BluetoothGattService service)
@@ -99,7 +102,8 @@ public class TiBLEManagePeripheralService extends Service
 	public void startAdvertising(String[] serviceUUIDs, boolean localName)
 	{
 		if (advertiseManager == null) {
-			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxyRef.get());
+			Log.e(LCAT, "startAdvertising(): Advertise process is not initialized");
+			return;
 		}
 		advertiseManager.startAdvertising(serviceUUIDs, localName);
 	}

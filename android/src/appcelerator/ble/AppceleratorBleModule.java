@@ -13,22 +13,30 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import appcelerator.ble.peripheral.TiBLEMutableCharacteristicProxy;
 import appcelerator.ble.peripheral.TiBLEPeripheralManagerProxy;
+import java.util.ArrayList;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollModule;
+import org.appcelerator.kroll.KrollObject;
+import org.appcelerator.kroll.KrollPromise;
+import org.appcelerator.kroll.KrollRuntime;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
+import org.appcelerator.titanium.TiC;
 import ti.modules.titanium.BufferProxy;
 
 @SuppressLint("MissingPermission")
 @Kroll.module(name = "AppceleratorBleModule", id = "appcelerator.ble")
 public class AppceleratorBleModule extends KrollModule
 {
-
-	private final BluetoothAdapter btAdapter;
+	private BluetoothAdapter btAdapter;
 	private TiBLECentralManagerProxy centralManagerProxy;
 	private TiBLEPeripheralManagerProxy peripheralManagerProxy;
 
@@ -134,7 +142,30 @@ public class AppceleratorBleModule extends KrollModule
 	public AppceleratorBleModule()
 	{
 		super();
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		// Fetch bluetooth adapter.
+		final Context context = TiApplication.getInstance();
+		BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+		if (bluetoothManager != null) {
+			this.btAdapter = bluetoothManager.getAdapter();
+		}
+
+		// Release resources when the JS runtime is about to terminate.
+		KrollRuntime.addOnDisposingListener(new KrollRuntime.OnDisposingListener() {
+			@Override
+			public void onDisposing(KrollRuntime runtime)
+			{
+				KrollRuntime.removeOnDisposingListener(this);
+				if (centralManagerProxy != null) {
+					centralManagerProxy.cleanup();
+					centralManagerProxy = null;
+				}
+				if (peripheralManagerProxy != null) {
+					peripheralManagerProxy.cleanup();
+					peripheralManagerProxy = null;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -164,45 +195,121 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public boolean isBluetoothAndBluetoothAdminPermissionsGranted()
 	{
-		return getActivity().getPackageManager().checkPermission(Manifest.permission.BLUETOOTH,
-																 getActivity().getPackageName())
-			== PackageManager.PERMISSION_GRANTED
-			&& getActivity().getPackageManager().checkPermission(Manifest.permission.BLUETOOTH_ADMIN,
-																 getActivity().getPackageName())
-				   == PackageManager.PERMISSION_GRANTED;
+		// Create the permission list.
+		ArrayList<String> permissionList = new ArrayList<>(3);
+		if (Build.VERSION.SDK_INT >= 31) {
+			permissionList.add(Manifest.permission.BLUETOOTH_ADVERTISE);
+			permissionList.add(Manifest.permission.BLUETOOTH_CONNECT);
+			permissionList.add(Manifest.permission.BLUETOOTH_SCAN);
+		} else {
+			permissionList.add(Manifest.permission.BLUETOOTH);
+			permissionList.add(Manifest.permission.BLUETOOTH_ADMIN);
+		}
+
+		// Determine if permissions are granted.
+		// Note: On OS versions older than Android 6.0, check if permission is defined in manifest.
+		TiApplication context = TiApplication.getInstance();
+		PackageManager packageManager = context.getPackageManager();
+		String packageName = context.getPackageName();
+		for (String permissionName : permissionList) {
+			if (Build.VERSION.SDK_INT >= 23) {
+				if (context.checkSelfPermission(permissionName) != PackageManager.PERMISSION_GRANTED) {
+					return false;
+				}
+			} else if (packageManager.checkPermission(permissionName, packageName)
+					   != PackageManager.PERMISSION_GRANTED) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Kroll.method
+	public KrollPromise<KrollDict>
+	requestBluetoothPermissions(@Kroll.argument(optional = true) KrollFunction permissionCallback)
+	{
+		final KrollObject krollObject = getKrollObject();
+		return KrollPromise.create((promise) -> {
+			// Do not continue if we already have permission.
+			if (isBluetoothAndBluetoothAdminPermissionsGranted()) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(0, null);
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.resolve(responseData);
+				return;
+			} else if (Build.VERSION.SDK_INT < 31) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(-1, "Bluetooth permissions not defined in manifest.");
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.reject(new Throwable(responseData.getString(TiC.EVENT_PROPERTY_ERROR)));
+				return;
+			}
+
+			// Do not continue if there is no activity to host the request dialog.
+			Activity activity = TiApplication.getInstance().getCurrentActivity();
+			if (activity == null) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(-1, "There are no activities to host the permission request dialog.");
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.reject(new Throwable(responseData.getString(TiC.EVENT_PROPERTY_ERROR)));
+				return;
+			}
+
+			// Show dialog requesting permission.
+			String[] permissionsArray = { Manifest.permission.BLUETOOTH_ADVERTISE,
+										  Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN };
+			TiBaseActivity.registerPermissionRequestCallback(TiC.PERMISSION_CODE_LOCATION, permissionCallback,
+															 krollObject, promise);
+			activity.requestPermissions(permissionsArray, TiC.PERMISSION_CODE_LOCATION);
+		});
 	}
 
 	@Kroll.method
 	public boolean isSupported()
 	{
-		return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+		return TiApplication.getInstance().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
 	}
 
 	@Kroll.method
 	public boolean isEnabled()
 	{
+		if (btAdapter == null) {
+			return false;
+		}
 		return btAdapter.isEnabled();
 	}
 
 	@Kroll.method
 	public boolean enable()
 	{
+		if (btAdapter == null) {
+			return false;
+		}
 		return btAdapter.enable();
 	}
 
 	@Kroll.method
 	public boolean disable()
 	{
+		if (btAdapter == null) {
+			return false;
+		}
 		return btAdapter.disable();
 	}
 
 	@Kroll.method
 	public boolean isAdvertisingSupported()
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			return btAdapter.getBluetoothLeAdvertiser() != null;
+		if (btAdapter == null) {
+			return false;
 		}
-		return false;
+		return btAdapter.getBluetoothLeAdvertiser() != null;
 	}
 
 	@Kroll.method
@@ -215,18 +322,6 @@ public class AppceleratorBleModule extends KrollModule
 	public TiBLEPeripheralManagerProxy initPeripheralManager(@Kroll.argument(optional = true) KrollDict dict)
 	{
 		return peripheralManagerProxy = new TiBLEPeripheralManagerProxy();
-	}
-
-	@Override
-	public void onDestroy(Activity activity)
-	{
-		super.onDestroy(activity);
-		if (centralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
-			centralManagerProxy.cleanup();
-		}
-		if (peripheralManagerProxy != null && activity == TiApplication.getInstance().getRootActivity()) {
-			peripheralManagerProxy.cleanup();
-		}
 	}
 
 	@Kroll.method

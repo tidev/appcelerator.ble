@@ -5,14 +5,15 @@
  */
 package appcelerator.ble;
 
-import static android.content.Context.BIND_AUTO_CREATE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -20,25 +21,28 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import appcelerator.ble.receivers.StateBroadcastReceiver;
 import appcelerator.ble.scan.ScanManager;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
+import org.appcelerator.kroll.KrollObject;
+import org.appcelerator.kroll.KrollPromise;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
+import org.appcelerator.titanium.TiC;
 import ti.modules.titanium.BufferProxy;
 
 @Kroll.proxy
 public class TiBLECentralManagerProxy extends KrollProxy
 {
-
-	private final BluetoothAdapter btAdapter;
-	private final ScanManager scanManager;
+	private BluetoothAdapter btAdapter;
+	private ScanManager scanManager;
 	private final StateBroadcastReceiver stateReceiver;
 	private TiBLEPeripheralProvider peripheralProvider;
 	private TiBLEManageCentralService bleService;
@@ -48,14 +52,20 @@ public class TiBLECentralManagerProxy extends KrollProxy
 
 	public TiBLECentralManagerProxy()
 	{
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		final Context context = TiApplication.getInstance();
+		BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+		if (bluetoothManager != null) {
+			btAdapter = bluetoothManager.getAdapter();
+		}
 		peripheralProvider = new TiBLEPeripheralProvider();
-		scanManager = ScanManager.build(btAdapter, scanListener);
+		if (btAdapter != null) {
+			scanManager = ScanManager.build(btAdapter, scanListener);
+		}
 
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 		stateReceiver = new StateBroadcastReceiver(this);
-		getActivity().registerReceiver(stateReceiver, intentFilter);
+		context.registerReceiver(stateReceiver, intentFilter);
 	}
 
 	private static final String LCAT = "TiBLECentralManager";
@@ -82,22 +92,64 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.method
 	public boolean isAccessFineLocationPermissionGranted()
 	{
-		return getActivity().getPackageManager().checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-																 getActivity().getPackageName())
-			== PackageManager.PERMISSION_GRANTED;
+		int result;
+		TiApplication context = TiApplication.getInstance();
+		if (Build.VERSION.SDK_INT >= 23) {
+			result = context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+		} else {
+			result = context.getPackageManager().checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
+																 context.getPackageName());
+		}
+		return (result == PackageManager.PERMISSION_GRANTED);
 	}
 
 	@Kroll.method
-	public void requestAccessFineLocationPermission()
+	public KrollPromise<KrollDict>
+	requestAccessFineLocationPermission(@Kroll.argument(optional = true) KrollFunction permissionCallback)
 	{
-		if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-			!= PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-											  1);
-		} else {
-			String ACCESS_FINE_LOCATION_ALREADY_GRANTED = "Access fine location permission already been granted";
-			Log.d(LCAT, "requestAccessFineLocationPermission(): " + ACCESS_FINE_LOCATION_ALREADY_GRANTED);
-		}
+		final KrollObject krollObject = getKrollObject();
+		return KrollPromise.create((promise) -> {
+			// Do not continue if we already have permission.
+			if (isAccessFineLocationPermissionGranted()) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(0, null);
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.resolve(responseData);
+				return;
+			} else if (Build.VERSION.SDK_INT < 23) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(-1, "Location permission not defined in manifest.");
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.reject(new Throwable(responseData.getString(TiC.EVENT_PROPERTY_ERROR)));
+				return;
+			}
+
+			// Do not continue if there is no activity to host the request dialog.
+			Activity activity = TiApplication.getInstance().getCurrentActivity();
+			if (activity == null) {
+				KrollDict responseData = new KrollDict();
+				responseData.putCodeAndMessage(-1, "There are no activities to host the permission request dialog.");
+				if (permissionCallback != null) {
+					permissionCallback.callAsync(krollObject, responseData);
+				}
+				promise.reject(new Throwable(responseData.getString(TiC.EVENT_PROPERTY_ERROR)));
+				return;
+			}
+
+			// Show dialog requesting permission.
+			ArrayList<String> permissionList = new ArrayList<>(2);
+			permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+			if (Build.VERSION.SDK_INT >= 31) {
+				permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+			}
+			TiBaseActivity.registerPermissionRequestCallback(TiC.PERMISSION_CODE_LOCATION, permissionCallback,
+															 krollObject, promise);
+			activity.requestPermissions(permissionList.toArray(new String[0]), TiC.PERMISSION_CODE_LOCATION);
+		});
 	}
 
 	@SuppressLint("MissingPermission")
@@ -110,6 +162,9 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.getProperty(name = "isScanning")
 	public boolean isScanning()
 	{
+		if (scanManager == null) {
+			return false;
+		}
 		return scanManager.isScanningInProgress;
 	}
 
@@ -122,13 +177,17 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		if (dict != null && dict.containsKey(KeysConstants.services.name())) {
 			servicesUUIDs = dict.getStringArray(KeysConstants.services.name());
 		}
-		scanManager.startScan(servicesUUIDs);
+		if (scanManager != null) {
+			scanManager.startScan(servicesUUIDs);
+		}
 	}
 
 	@Kroll.method
 	public void stopScan()
 	{
-		scanManager.stopScan();
+		if (scanManager != null) {
+			scanManager.stopScan();
+		}
 		peripheralProvider.removeAllPeripheral();
 	}
 
@@ -178,7 +237,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	public void cleanup()
 	{
 		try {
-			getActivity().unregisterReceiver(stateReceiver);
+			TiApplication.getInstance().unregisterReceiver(stateReceiver);
 		} catch (IllegalArgumentException e) {
 			Log.e(LCAT, "cleanup(): " + e.getMessage());
 		}
@@ -189,7 +248,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	{
 		TiApplication.getInstance().startService(serviceIntent);
 		Log.d(LCAT, "startAndBindService(): starting the service");
-		TiApplication.getInstance().bindService(serviceIntent, bleServiceConnection, BIND_AUTO_CREATE);
+		TiApplication.getInstance().bindService(serviceIntent, bleServiceConnection, Context.BIND_AUTO_CREATE);
 		Log.d(LCAT, "startAndBindService(): binding the service ");
 	}
 

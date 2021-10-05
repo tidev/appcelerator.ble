@@ -18,7 +18,6 @@ var navCentralWindow = Ti.UI.createNavigationWindow({
 	window: mainWindow
 });
 var buttonCentral = Ti.UI.createButton({
-	font: { fontSize: 20 },
 	title: 'Central',
 	top: 50
 });
@@ -32,7 +31,6 @@ buttonCentral.addEventListener('click', function () {
 mainWindow.add(buttonCentral);
 
 var centralWithChannel = Ti.UI.createButton({
-	font: { fontSize: 20 },
 	title: 'Central With Channel',
 	top: 140,
 });
@@ -45,7 +43,6 @@ centralWithChannel.addEventListener('click', function () {
 mainWindow.add(centralWithChannel);
 
 var buttonPeripheral = Ti.UI.createButton({
-	font: { fontSize: 20 },
 	title: 'Peripheral',
 	top: 240
 });
@@ -69,7 +66,6 @@ buttonPeripheral.addEventListener('click', function () {
 mainWindow.add(buttonPeripheral);
 
 var buttonPeripheralChannel = Ti.UI.createButton({
-	font: { fontSize: 20 },
 	title: 'Peripheral With Channel',
 	top: 300
 });

@@ -6,8 +6,10 @@
 package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
@@ -15,11 +17,11 @@ import appcelerator.ble.KeysConstants;
 import appcelerator.ble.TiBLEL2CAPChannelProxy;
 import java.io.IOException;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.titanium.TiApplication;
 
 public class TiBLEPeripheralL2capOperationManager
 {
-
-	private static final String TAG = TiBLEPeripheralL2capOperationManager.class.getSimpleName();
+	private static final String TAG = "TiBLEPeripheralL2capOperationManager";
 	private volatile boolean isPublished = false;
 	private BluetoothServerSocket serverSocket;
 
@@ -37,10 +39,17 @@ public class TiBLEPeripheralL2capOperationManager
 
 		isPublished = true;
 
+		final Context context = TiApplication.getInstance();
+		BluetoothManager btManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+		BluetoothAdapter btAdapter = (btManager != null) ? btManager.getAdapter() : null;
+		if (btAdapter == null) {
+			Log.e(TAG, "publishL2CAPChannel(): Device does not support bluetooth.");
+			return;
+		}
+
 		int psm;
 		KrollDict publishEventDict = new KrollDict();
 		try {
-			BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 			serverSocket =
 				encryptionRequired ? btAdapter.listenUsingL2capChannel() : btAdapter.listenUsingInsecureL2capChannel();
 			psm = serverSocket.getPsm();

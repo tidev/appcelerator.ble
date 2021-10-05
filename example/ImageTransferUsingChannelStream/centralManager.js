@@ -58,18 +58,16 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 		titleAttributes: { color: 'blue' }
 	});
 
-	// req. location permission button.
-	var reqLocPermissionBtn = Ti.UI.createButton({
-		font: { fontSize: 20 },
-		title: 'Req Location Perm.',
+	// Permission request button.
+	var requestPermissionsButton = Ti.UI.createButton({
+		title: 'Request Permissions',
 		visible: isAndroid,
 		bottom: 150
 	});
-	centralDataWin.add(reqLocPermissionBtn);
+	centralDataWin.add(requestPermissionsButton);
 
 	// Scan button added to scan peripherals
 	var scanButton = Ti.UI.createButton({
-		font: { fontSize: 20 },
 		title: 'Scan',
 		bottom: 90
 	});
@@ -77,7 +75,6 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 
 	// Stop Scan button added to stop scaning peripherals
 	var stopScanButton = Ti.UI.createButton({
-		font: { fontSize: 20 },
 		title: 'Stop Scan',
 		left: 5,
 		bottom: 30
@@ -86,7 +83,6 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 
 	// to check Bluetooth connection
 	var checkConnection = Ti.UI.createButton({
-		font: { fontSize: 20 },
 		title: 'Check Connection',
 		right: 5,
 		bottom: 30
@@ -113,13 +109,25 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 	});
 	centralDataWin.add(tableView);
 
-	// request access fine location permission.
-	reqLocPermissionBtn.addEventListener('click', function () {
-		if (centralManager.isAccessFineLocationPermissionGranted()) {
-			alert('Access fine location permission already been granted.');
-		} else {
-			centralManager.requestAccessFineLocationPermission();
+	// Request permissions from user if not already granted.
+	requestPermissionsButton.addEventListener('click', function () {
+		if (BLE.isBluetoothAndBluetoothAdminPermissionsGranted() && centralManager.isAccessFineLocationPermissionGranted()) {
+			alert('Permissions have already been granted.');
+			return;
 		}
+
+		BLE.requestBluetoothPermissions((e) => {
+			if (!e.success) {
+				alert('Bluetooth permissions not granted.');
+				return;
+			}
+			centralManager.requestAccessFineLocationPermission((e) => {
+				if (!e.success) {
+					alert('Access fine location permission not granted.');
+					return;
+				}
+			});
+		});
 	});
 
 	// scan button functionality
@@ -127,7 +135,7 @@ function centralManagerWin(BLE, title, peripheralPage, serviceUUID, characterist
 		// android permission checks.
 		if (isAndroid) {
 			if (!BLE.isBluetoothAndBluetoothAdminPermissionsGranted()) {
-				alert('Bluetooth admin permission not granted.');
+				alert('Bluetooth permissions not granted.');
 				return;
 			} else if (!centralManager.isAccessFineLocationPermissionGranted()) {
 				alert('Access fine location permission not granted.');

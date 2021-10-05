@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/appcelerator.ble",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Provides bluetooth low energy (BLE) elements for Titanium applications",
   "scripts": {
@@ -11,7 +11,7 @@
     "format:js": "npm run lint:js -- --fix",
     "lint": "npm run lint:android && npm run lint:ios && npm run lint:js && npm run lint:docs",
     "lint:android": "clang-format-lint android/src/**/*.java",
-    "lint:docs": "tdoc-validate -w Titanium.Blob,Titanium.UI.View,Titanium.Proxy,Titanium.Module,Point,Titanium.UI.iOS.PreviewContext,Titanium.Buffer apidoc",
+    "lint:docs": "tdoc-validate -w Titanium.Blob,Titanium.UI.View,Titanium.Proxy,Titanium.Module,Point,Titanium.Android.RequestPermissionAccessResult,Titanium.UI.iOS.PreviewContext,Titanium.Buffer apidoc",
     "lint:ios": "swiftlint --strict --quiet",
     "lint:js": "eslint .",
     "test": "npm run lint && npm run test:unit",
@@ -52,7 +52,6 @@
     "socket.io": "^4.0.1",
     "titanium-docgen": "^4.10.3"
   },
-  "dependencies": {},
   "lint-staged": {
     "ios/**/*.{m,h}": [
       "npx clang-format -style=file -i"

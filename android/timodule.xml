@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ti:module xmlns:ti="http://ti.appcelerator.org" xmlns:android="http://schemas.android.com/apk/res/android">
-	<!--
-		Similar to tiapp.xml, but contains module/platform specific
-		configuration in <iphone> and <android> sections
-	-->
-	<iphone>
-	</iphone>
-	<android xmlns:android="http://schemas.android.com/apk/res/android">
-		<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1">
+<ti:module xmlns:ti="http://ti.appcelerator.org">
+	<android>
+		<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+			<!-- Fine location permission needed for bluetooth device discovery. -->
+			<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+			<uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION"/>
+
+			<!-- Bluetooth permission needed by Android 12 and higher. -->
+			<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+			<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+			<uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+
+			<!-- Legacy bluetooth permissions needed by Android 11 and older OS versions. -->
+			<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+			<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+
+			<!-- Needed by the 2 services defined below. -->
+			<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 			<application>
 				<service android:name=".TiBLEManageCentralService"/>
 				<service android:name="appcelerator.ble.peripheral.TiBLEManagePeripheralService"/>

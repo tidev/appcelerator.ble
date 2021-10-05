@@ -17,7 +17,7 @@ jobs:
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       USE_CCACHE: 1
-      SDK_VERSION: 9.3.2.GA
+      SDK_VERSION: 10.1.0.v20210820083427
       MODULE_ID: appcelerator.ble
     steps:
     - uses: actions/checkout@v2
@@ -26,6 +26,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+
+    - name: Use JDK 11
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
 
     - name: Cache Node.js modules
       id: node-cache

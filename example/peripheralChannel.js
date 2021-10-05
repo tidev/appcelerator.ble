@@ -1,7 +1,6 @@
 /* eslint-disable no-alert */
 
 function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicUUID) {
-	var channelPSMID = null;
 	var channel = null;
 	var logs = [];
 	// Central event for peripheral connection
@@ -192,8 +191,7 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 			alert('Error while discovering characteristic' + e.errorCode + '/' + e.errorDomain + '/' + e.errorDescription);
 			return;
 		}
-		let discoverCharacteristicPeripheral = e.sourcePeripheral;
-		discoverChannelCharacteristic(discoverCharacteristicPeripheral);// Subscribe To Characteristic
+		discoverChannelCharacteristic();
 	};
 
 	var subscribeCharListener = (e) => {
@@ -369,9 +367,8 @@ function deviceWin(peripheral, centralManager, BLE, serviceUUID, characteristicU
 		});
 	}
 
-	function discoverChannelCharacteristic (sourcePeripheral) {
-		var characteristics;
-		characteristics = global.serviceObject.characteristics;
+	function discoverChannelCharacteristic() {
+		const characteristics = global.serviceObject.characteristics;
 		Ti.API.info('characteristics ' + characteristics);
 		characteristics.forEach(function (characteristic) {
 			Ti.API.info('Discovered characteristic ' + characteristic.uuid);

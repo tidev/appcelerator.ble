@@ -6,10 +6,12 @@
 package appcelerator.ble.peripheral;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.content.Context;
 import android.os.Build;
 import android.os.ParcelUuid;
 import androidx.annotation.RequiresApi;
@@ -18,6 +20,7 @@ import java.lang.ref.WeakReference;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class TiBLEPeripheralAdvertiseManager
@@ -85,8 +88,10 @@ public class TiBLEPeripheralAdvertiseManager
 
 	public void startAdvertising(String[] serviceUUIDs, boolean localName)
 	{
-		BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-		bluetoothLeAdvertiser = btAdapter.getBluetoothLeAdvertiser();
+		final Context context = TiApplication.getInstance();
+		BluetoothManager btManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+		BluetoothAdapter btAdapter = (btManager != null) ? btManager.getAdapter() : null;
+		bluetoothLeAdvertiser = (btAdapter != null) ? btAdapter.getBluetoothLeAdvertiser() : null;
 		if (bluetoothLeAdvertiser == null) {
 			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, Bluetooth LE Advertising is not supported");
 			return;
