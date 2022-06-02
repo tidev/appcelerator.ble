@@ -17,14 +17,12 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.annotation.RequiresApi;
-
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import ti.modules.titanium.BufferProxy;
 
-@SuppressLint({"LongLogTag", "MissingPermission"})
+@SuppressLint({ "LongLogTag", "MissingPermission" })
 public class TiBleCentralOperationManager
 {
 
@@ -107,7 +105,8 @@ public class TiBleCentralOperationManager
 			}
 
 			@Override
-			public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+			public void onMtuChanged(BluetoothGatt gatt, int mtu, int status)
+			{
 				super.onMtuChanged(gatt, mtu, status);
 				handleOnMtuChanged(mtu, status);
 			}
@@ -288,8 +287,6 @@ public class TiBleCentralOperationManager
 	{
 		bluetoothGatt.requestMtu(value);
 	}
-
-
 
 	public void discoverServices()
 	{
