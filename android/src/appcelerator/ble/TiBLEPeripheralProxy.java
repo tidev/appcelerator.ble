@@ -54,6 +54,9 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.getProperty
 	public TiBLEServiceProxy[] services()
 	{
+		if (services == null) {
+			return null;
+		}
 		TiBLEServiceProxy[] serviceProxies = new TiBLEServiceProxy[services.size()];
 		for (int i = 0; i < services.size(); i++) {
 			serviceProxies[i] = new TiBLEServiceProxy(services.get(i));
