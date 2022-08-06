@@ -10,6 +10,7 @@ function projectManagerHook(projectManager) {
 		contents = contents.replace('</android>', `<manifest>
                                                    			<uses-permission android:name="android.permission.BLUETOOTH"/>
 															   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+															   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 															   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
                                                    		</manifest>
 		</android>`);
@@ -34,7 +35,7 @@ module.exports = config => {
 			}
 		],
 		titanium: {
-			sdkVersion: config.sdkVersion || '10.1.0.v20210820083427'
+			sdkVersion: config.sdkVersion || '11.0.0.GA'
 		},
 		customLaunchers: {
 			android: {
