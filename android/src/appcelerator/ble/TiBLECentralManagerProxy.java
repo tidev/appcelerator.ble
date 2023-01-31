@@ -234,6 +234,14 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		bleService.cancelPeripheralConnection(peripheralProxy);
 	}
 
+	@Kroll.method
+	public void requestMtu(KrollDict dict)
+	{
+		if (dict != null && dict.containsKey("mtu")) {
+			bleService.requestMtu(dict.getInt("mtu"));
+		}
+	}
+
 	public void cleanup()
 	{
 		try {

@@ -138,6 +138,11 @@ public class TiBLEManageCentralService extends Service
 		centralOperationManager.handleDisconnection(BluetoothGatt.GATT_FAILURE);
 	}
 
+	public void requestMtu(int value)
+	{
+		centralOperationManager.requestMtu(value);
+	}
+
 	public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 	{
 		centralOperationManager.readValueForCharacteristic(characteristicProxy);
