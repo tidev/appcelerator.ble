@@ -854,7 +854,7 @@ methods:
         summary: A string containing a unique identifier (UID) for the central manager to instantiate.
       - name: scanMode
         type: Number
-        summary: Android only: defines the scan mode. Use one of the `SCAN_MODE_*` constants.
+        summary: Android only. defines the scan mode. Use one of the `SCAN_MODE_*` constants.
     returns:
       type: Modules.BLE.CentralManager
 
