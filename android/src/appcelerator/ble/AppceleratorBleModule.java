@@ -14,6 +14,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -138,6 +139,14 @@ public class AppceleratorBleModule extends KrollModule
 	public static final int ATT_REQUEST_NOT_SUPPORTED_ERROR = BluetoothGatt.GATT_REQUEST_NOT_SUPPORTED;
 	@Kroll.constant
 	public static final int ATT_INSUFFICIENT_ENCRYPTION_ERROR = BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION;
+
+	@Kroll.constant
+	public static final int SCAN_MODE_LOW_POWER = ScanSettings.SCAN_MODE_LOW_POWER;
+	public static final int SCAN_MODE_LOW_LATENCY = ScanSettings.SCAN_MODE_LOW_LATENCY;
+	public static final int SCAN_MODE_BALANCED = ScanSettings.SCAN_MODE_BALANCED;
+	public static final int SCAN_MODE_OPPORTUNISTIC = ScanSettings.SCAN_MODE_OPPORTUNISTIC;
+
+
 
 	public AppceleratorBleModule()
 	{
@@ -315,7 +324,7 @@ public class AppceleratorBleModule extends KrollModule
 	@Kroll.method
 	public TiBLECentralManagerProxy initCentralManager(@Kroll.argument(optional = true) KrollDict dict)
 	{
-		return centralManagerProxy = new TiBLECentralManagerProxy();
+		return centralManagerProxy = new TiBLECentralManagerProxy(dict);
 	}
 
 	@Kroll.method

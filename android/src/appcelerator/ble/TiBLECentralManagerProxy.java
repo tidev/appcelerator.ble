@@ -50,7 +50,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	private TiBLEPeripheralProxy peripheralProxy;
 	private boolean autoConnect;
 
-	public TiBLECentralManagerProxy()
+	public TiBLECentralManagerProxy(KrollDict data)
 	{
 		final Context context = TiApplication.getInstance();
 		BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -59,7 +59,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		}
 		peripheralProvider = new TiBLEPeripheralProvider();
 		if (btAdapter != null) {
-			scanManager = ScanManager.build(btAdapter, scanListener);
+			scanManager = ScanManager.build(btAdapter, scanListener, data);
 		}
 
 		IntentFilter intentFilter = new IntentFilter();

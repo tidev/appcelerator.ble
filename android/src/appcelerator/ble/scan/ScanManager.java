@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 import android.util.Log;
 
+import org.appcelerator.kroll.KrollDict;
+
 public abstract class ScanManager
 {
 
@@ -53,12 +55,12 @@ public abstract class ScanManager
 		listener.onScanDeviceFound(bluetoothDevice, i, bytes);
 	}
 
-	public static ScanManager build(BluetoothAdapter btAdapter, IScanDeviceFoundListener listener)
+	public static ScanManager build(BluetoothAdapter btAdapter, IScanDeviceFoundListener listener, KrollDict data)
 	{
 		ScanManager scanManager;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			scanManager = new ScanManagerAPI21Onwards(btAdapter, listener);
+			scanManager = new ScanManagerAPI21Onwards(btAdapter, listener, data);
 		} else {
 			scanManager = new ScanManager19Onwards(btAdapter, listener);
 		}

@@ -15,6 +15,9 @@ import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
+
+import org.appcelerator.kroll.KrollDict;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +28,16 @@ public class ScanManagerAPI21Onwards extends ScanManager
 
 	public static final String LCAT = "ScanManagerAPI21Onwards";
 	private final ScanSettings scanSetting;
-
-	protected ScanManagerAPI21Onwards(BluetoothAdapter adapter, IScanDeviceFoundListener listener)
+	private int scanMode = ScanSettings.SCAN_MODE_LOW_POWER;
+	protected ScanManagerAPI21Onwards(BluetoothAdapter adapter, IScanDeviceFoundListener listener, KrollDict data)
 	{
 		super(adapter, listener);
 
+		if (data != null && data.containsKeyAndNotNull("scanMode")){
+			scanMode = data.getInt("scanMode");
+		}
 		ScanSettings.Builder scanBuilder = new ScanSettings.Builder();
-		scanBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
+		scanBuilder.setScanMode(scanMode);
 		this.scanSetting = scanBuilder.build();
 	}
 
