@@ -25,7 +25,7 @@ properties:
     type: Array<Modules.BLE.Peripheral>
     platforms: [android, iphone, ipad]
     since: "1.0.0"
-    
+
 methods:
   - name: isAccessFineLocationPermissionGranted
     summary: Determines whether the ACCESS_FINE_LOCATION permission is granted or not.
@@ -43,6 +43,11 @@ methods:
     description: |
       This permission is necessary for the Bluetooth device to scan the nearby BLE devices or other Bluetooth operations.
     since: "1.0.0"
+    platforms: [android]
+
+  - name: requestMtu
+    summary: Request MTU change
+    since: "2.0.1"
     platforms: [android]
 
   - name: createPeripheral
@@ -118,7 +123,7 @@ methods:
         summary: A list of services UUIDs.
         optional: true
     returns:
-      type: void  
+      type: void
 
   - name: cancelPeripheralConnection
     summary: Cancels an active or pending connection to peripheral. Note that this is non-blocking, and any Peripheral
@@ -131,7 +136,7 @@ methods:
         summary: peripheral object which connnection will be canceled
         optional: false
     returns:
-      type: void 
+      type: void
 
   - name: connectPeripheral
     summary: Initiates a connection to peripheral. Connection attempts never time out and, depending on the outcome, will result
@@ -150,7 +155,7 @@ methods:
          all available dictionary keys are defined as Modules.BLE.CONNECT_PERIPHERAL_OPTIONS_KEY_*
         optional: true
     returns:
-      type: void 
+      type: void
 
 events:
   - name: didUpdateState
@@ -167,12 +172,21 @@ events:
       - name: state
         type: Number
         summary: state of central manager
-    
+
+  - name: mtu
+    summary: Fired after an MTU request
+    platforms: [android]
+    since: "2.0.1"
+    properties:
+      - name: mtu
+        type: Number
+        summary: MTU value
+
 
   - name: willRestoreState
     summary: A event called when centrel manager will restore state
     description: |
-         For apps that opt-in to state preservation and restoration, this is the first event invoked when your app is relaunched into 
+         For apps that opt-in to state preservation and restoration, this is the first event invoked when your app is relaunched into
          the background to complete some Bluetooth-related task. Use this method to synchronize your app's state with the state of the
          Bluetooth system.
     platforms: [iphone, ipad]
@@ -232,7 +246,7 @@ events:
         summary: The error domain; only present if an error occurred..
       - name: errorDescription
         type: String
-        summary: The error description; only peresent if an  
+        summary: The error description; only peresent if an
 
   - name: didDisconnectPeripheral
     summary: This event is called when a peripheral disconnected.
