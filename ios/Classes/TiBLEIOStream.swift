@@ -6,7 +6,7 @@
 
 import UIKit
 
-protocol IOStreamListener: class {
+protocol IOStreamListener: AnyObject {
     func onDataReceived(data: Data)
     func onStreamError(error: Error)
     func onStreamEndEncountered()
