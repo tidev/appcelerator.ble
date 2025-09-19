@@ -290,5 +290,3 @@ class AppceleratorBleModule: TiModule {
     }
 
 }
-
-// swiftlint:enable type_body_length
