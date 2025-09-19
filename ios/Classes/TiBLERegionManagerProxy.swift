@@ -214,7 +214,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
         self.fireEvent("didFailRanging",
                        with: [
                         "beaconConstraint": TiBeaconIdentityConstraintProxy(pageContext: self.pageContext, beaconIdentityConstraint: beaconConstraint),
-                        "errorCode": (error as NSError).code ,
+                        "errorCode": (error as NSError).code,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
                        ])
@@ -226,7 +226,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
         }
         self.fireEvent("didFail",
                        with: [
-                        "errorCode": (error as NSError).code ,
+                        "errorCode": (error as NSError).code,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
                        ])
@@ -239,7 +239,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
         self.fireEvent("rangingBeaconsDidFail",
                        with: [
                         "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region),
-                        "errorCode": (error as NSError).code ,
+                        "errorCode": (error as NSError).code,
                         "errorDomain": (error as NSError).domain,
                         "errorDescription": error.localizedDescription
                        ])
@@ -278,7 +278,7 @@ extension TiBLERegionManagerProxy: CLLocationManagerDelegate {
             self.fireEvent("monitoringDidFail",
                            with: [
                             "region": TiBLEBeaconRegionProxy(pageContext: self.pageContext, beaconRegion: region),
-                            "errorCode": (error as NSError).code ,
+                            "errorCode": (error as NSError).code,
                             "errorDomain": (error as NSError).domain,
                             "errorDescription": error.localizedDescription
                            ])

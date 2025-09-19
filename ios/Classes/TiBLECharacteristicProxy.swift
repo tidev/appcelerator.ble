@@ -26,8 +26,12 @@ class TiBLECharacteristicProxy: TiProxy {
     }
 
     @objc
-    func service() -> TiBLEServiceProxy {
-        return TiBLEServiceProxy(pageContext: self.pageContext, service: _characteristic.service!)
+    func service() -> TiBLEServiceProxy? {
+        guard let service = _characteristic.service else {
+            return nil
+        }
+
+        return TiBLEServiceProxy(pageContext: self.pageContext, service: service)
     }
     @objc
     func properties() -> NSNumber {

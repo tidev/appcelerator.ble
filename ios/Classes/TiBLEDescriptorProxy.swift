@@ -22,8 +22,11 @@ class TiBLEDescriptorProxy: TiProxy {
         _descriptor = descriptor
     }
     @objc
-    func characteristic() -> TiBLECharacteristicProxy {
-        let characteristic = _descriptor.characteristic!
+    func characteristic() -> TiBLECharacteristicProxy? {
+        guard let characteristic = _descriptor.characteristic else {
+            return nil
+        }
+
         return TiBLECharacteristicProxy(pageContext: self.pageContext, characteristic: characteristic)
     }
     @objc

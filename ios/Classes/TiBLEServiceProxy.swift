@@ -47,8 +47,12 @@ class TiBLEServiceProxy: TiProxy {
     }
 
     @objc
-    func peripheral() -> TiBLEPeripheralProxy {
-        return TiBLEPeripheralProviderProxy.sharedPeripheralProvider.checkAddAndGetPeripheralProxy(from: _service.peripheral!, and: self.pageContext)!
+    func peripheral() -> TiBLEPeripheralProxy? {
+        guard let peripheral = _service.peripheral else {
+            return nil
+        }
+
+        return TiBLEPeripheralProviderProxy.sharedPeripheralProvider.checkAddAndGetPeripheralProxy(from: peripheral, and: self.pageContext)!
     }
 
     @objc
