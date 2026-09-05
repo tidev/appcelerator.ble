@@ -20,8 +20,7 @@ public class TiBLESubscribedCentrals
 	public static TiBLESubscribedCentrals getInstance()
 	{
 		if (subscribedCentrals == null) {
-			synchronized (TiBLESubscribedCentrals.class)
-			{
+			synchronized (TiBLESubscribedCentrals.class) {
 				if (subscribedCentrals == null) {
 					subscribedCentrals = new TiBLESubscribedCentrals();
 				}

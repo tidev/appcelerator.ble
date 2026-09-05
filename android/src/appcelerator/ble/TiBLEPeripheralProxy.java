@@ -266,7 +266,8 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		return device;
 	}
 
-	public interface IOperationHandler {
+	public interface IOperationHandler
+	{
 		boolean isConnected(TiBLEPeripheralProxy peripheralProxy);
 		void readRSSI();
 		void requestConnectionPriority(int priority);
