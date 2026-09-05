@@ -17,11 +17,12 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import androidx.annotation.RequiresApi;
 import java.util.UUID;
 import org.appcelerator.kroll.KrollDict;
 import ti.modules.titanium.BufferProxy;
 
-@SuppressLint("LongLogTag")
+@SuppressLint({ "LongLogTag", "MissingPermission" })
 public class TiBleCentralOperationManager
 {
 
@@ -101,6 +102,13 @@ public class TiBleCentralOperationManager
 			{
 				super.onDescriptorWrite(gatt, descriptor, status);
 				handleOnDescriptorWrite(descriptor, status);
+			}
+
+			@Override
+			public void onMtuChanged(BluetoothGatt gatt, int mtu, int status)
+			{
+				super.onMtuChanged(gatt, mtu, status);
+				handleOnMtuChanged(mtu, status);
 			}
 		});
 		connectionState = ConnectionState.Connecting;
@@ -240,6 +248,13 @@ public class TiBleCentralOperationManager
 		peripheralProxy.fireEvent(KeysConstants.didWriteValueForDescriptor.name(), dict);
 	}
 
+	private void handleOnMtuChanged(int mtu, int status)
+	{
+		KrollDict dict = new KrollDict();
+		dict.put("mtu", mtu);
+		peripheralProxy.fireEvent("mtuChanged", dict);
+	}
+
 	public void cancelPeripheralConnection()
 	{
 		connectionState = ConnectionState.Disconnecting;
@@ -265,6 +280,12 @@ public class TiBleCentralOperationManager
 				LCAT,
 				"requestConnectionPriority(): This functionality is supported on Android os version LOLLIPOP and onwards.");
 		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public void requestMtu(int value)
+	{
+		bluetoothGatt.requestMtu(value);
 	}
 
 	public void discoverServices()
