@@ -146,8 +146,6 @@ public class AppceleratorBleModule extends KrollModule
 	public static final int SCAN_MODE_BALANCED = ScanSettings.SCAN_MODE_BALANCED;
 	public static final int SCAN_MODE_OPPORTUNISTIC = ScanSettings.SCAN_MODE_OPPORTUNISTIC;
 
-
-
 	public AppceleratorBleModule()
 	{
 		super();

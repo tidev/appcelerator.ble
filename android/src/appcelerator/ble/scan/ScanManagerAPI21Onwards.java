@@ -17,11 +17,9 @@ import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
-
-import org.appcelerator.kroll.KrollDict;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.appcelerator.kroll.KrollDict;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @SuppressLint("MissingPermission")
@@ -35,7 +33,7 @@ public class ScanManagerAPI21Onwards extends ScanManager
 	{
 		super(adapter, listener);
 
-		if (data != null && data.containsKeyAndNotNull("scanMode")){
+		if (data != null && data.containsKeyAndNotNull("scanMode")) {
 			scanMode = data.getInt("scanMode");
 		}
 		ScanSettings.Builder scanBuilder = new ScanSettings.Builder();

@@ -361,8 +361,8 @@ public class TiBleCentralOperationManager
 
 	public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 	{
-		boolean isReadInitiated =
-			hasGatt("readValueForCharacteristic") && bluetoothGatt.readCharacteristic(characteristicProxy.getCharacteristic());
+		boolean isReadInitiated = hasGatt("readValueForCharacteristic")
+								  && bluetoothGatt.readCharacteristic(characteristicProxy.getCharacteristic());
 		Log.d(LCAT, "readValueForCharacteristic(): characteristic- " + characteristicProxy.uuid()
 						+ " read initiation status- ." + isReadInitiated);
 		if (!isReadInitiated) {
