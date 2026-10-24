@@ -66,7 +66,7 @@ public class TiBLECharacteristicRequestProxy extends KrollProxy
 	@Kroll.method
 	public void updateValue(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.value.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.value.name())) {
 			Log.e(LCAT, "updateValue(): Cannot update value, required parameter not provided");
 			return;
 		}
@@ -90,5 +90,10 @@ public class TiBLECharacteristicRequestProxy extends KrollProxy
 	public BluetoothDevice getBluetoothDevice()
 	{
 		return bluetoothDevice;
+	}
+
+	public BluetoothGattCharacteristic getCharacteristic()
+	{
+		return characteristic;
 	}
 }

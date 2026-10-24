@@ -73,8 +73,10 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			Log.d(LCAT, "onServiceConnected(): Service is Binded");
 			bleService = ((TiBLEManagePeripheralService.LocalBinder) service).getService();
 			bleService.initialisePeripheralAndOpenGattServer(TiBLEPeripheralManagerProxy.this);
-			bleService.addService(gattServiceToAddInServer);
-			gattServiceToAddInServer = null;
+			if (gattServiceToAddInServer != null) {
+				bleService.addService(gattServiceToAddInServer);
+				gattServiceToAddInServer = null;
+			}
 		}
 
 		@Override
@@ -150,8 +152,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void startAdvertising(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.serviceUUIDs.name())
-			|| !dict.containsKey(KeysConstants.localName.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.serviceUUIDs.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.localName.name())) {
 			Log.e(LCAT, "startAdvertising(): Cannot start Advertising, required parameters not provided");
 			return;
 		}
@@ -195,8 +197,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method(name = "updateValue")
 	public boolean updateCharacteristicAndNotifySubscribers(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())
-			|| !dict.containsKey(KeysConstants.data.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.data.name())) {
 			Log.e(LCAT,
 				  "updateCharacteristicAndNotifySubscribers(): Cannot update value, required parameters not provided");
 			return false;
@@ -209,7 +211,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 			(TiBLECharacteristicProxy) dict.get(KeysConstants.characteristic.name());
 		BluetoothGattCharacteristic characteristic = characteristicProxy.getCharacteristic();
 		BufferProxy value = (BufferProxy) dict.get(KeysConstants.data.name());
-		if (dict.containsKey(KeysConstants.centrals.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.centrals.name())) {
 			Object[] centralsObjects = (Object[]) dict.get(KeysConstants.centrals.name());
 			if (centralsObjects != null) {
 				TiBLECentralProxy[] centralProxies = new TiBLECentralProxy[centralsObjects.length];
@@ -228,8 +230,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method(name = "respondToRequest")
 	public void respondToCharacteristicRequest(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.request.name())
-			|| !dict.containsKey(KeysConstants.result.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.request.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.result.name())) {
 			Log.e(
 				LCAT,
 				"respondToCharacteristicRequest(): Cannot respond to characteristic request, required parameters not provided");
@@ -249,8 +251,8 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 	@Kroll.method
 	public void respondToDescriptorRequest(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.descriptorRequest.name())
-			|| !dict.containsKey(KeysConstants.result.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.descriptorRequest.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.result.name())) {
 			Log.e(
 				LCAT,
 				"respondToDescriptorRequest(): Cannot respond to descriptor request, required parameters not provided");
@@ -275,7 +277,7 @@ public class TiBLEPeripheralManagerProxy extends KrollProxy
 				"publishL2CAPChannel(): unable to publish. This feature is supported on Android OS Version 'Q' and above.");
 			return;
 		}
-		if (dict == null || !dict.containsKey(KeysConstants.encryptionRequired.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.encryptionRequired.name())) {
 			Log.e(LCAT, "publishL2CAPChannel(): cannot publish l2cap channel as required params not provided.");
 			return;
 		}

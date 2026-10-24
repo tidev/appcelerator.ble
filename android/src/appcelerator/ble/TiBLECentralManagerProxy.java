@@ -50,7 +50,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	private TiBLEPeripheralProxy peripheralProxy;
 	private boolean autoConnect;
 
-	public TiBLECentralManagerProxy()
+	public TiBLECentralManagerProxy(KrollDict data)
 	{
 		final Context context = TiApplication.getInstance();
 		BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -59,7 +59,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		}
 		peripheralProvider = new TiBLEPeripheralProvider();
 		if (btAdapter != null) {
-			scanManager = ScanManager.build(btAdapter, scanListener);
+			scanManager = ScanManager.build(btAdapter, scanListener, data);
 		}
 
 		IntentFilter intentFilter = new IntentFilter();
@@ -156,6 +156,9 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.getProperty
 	public int getState()
 	{
+		if (btAdapter == null) {
+			return BluetoothAdapter.STATE_OFF;
+		}
 		return btAdapter.getState();
 	}
 
@@ -174,7 +177,7 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		peripheralProvider.removeAllPeripheral();
 
 		String[] servicesUUIDs = null;
-		if (dict != null && dict.containsKey(KeysConstants.services.name())) {
+		if (dict != null && dict.containsKeyAndNotNull(KeysConstants.services.name())) {
 			servicesUUIDs = dict.getStringArray(KeysConstants.services.name());
 		}
 		if (scanManager != null) {
@@ -200,21 +203,31 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.method
 	public TiBLEPeripheralProxy createPeripheral(String address)
 	{
-		BluetoothDevice bluetoothDevice = btAdapter.getRemoteDevice(address);
-		return peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice, null);
+		if (btAdapter == null) {
+			Log.e(LCAT, "createPeripheral(): Bluetooth is not available on this device.");
+			return null;
+		}
+		BluetoothDevice bluetoothDevice;
+		try {
+			bluetoothDevice = btAdapter.getRemoteDevice(address);
+		} catch (IllegalArgumentException e) {
+			Log.e(LCAT, "createPeripheral(): invalid bluetooth address- " + address);
+			return null;
+		}
+		return peripheralProvider.checkAddAndGetPeripheralProxy(bluetoothDevice, peripheralOperationListener);
 	}
 
 	@Kroll.method
 	public void connectPeripheral(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.peripheral.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.peripheral.name())) {
 			Log.e(LCAT, "connectPeripheral(): peripheral object not provided.");
 			return;
 		}
 
 		TiBLEPeripheralProxy peripheralProxy = (TiBLEPeripheralProxy) dict.get(KeysConstants.peripheral.name());
 		boolean autoConnect = false;
-		if (dict.containsKey(KeysConstants.autoConnect.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.autoConnect.name())) {
 			autoConnect = dict.getBoolean(KeysConstants.autoConnect.name());
 		}
 		this.peripheralProxy = peripheralProxy;
@@ -225,8 +238,12 @@ public class TiBLECentralManagerProxy extends KrollProxy
 	@Kroll.method
 	public void cancelPeripheralConnection(KrollDict dict)
 	{
-		if ((dict == null || !dict.containsKey(KeysConstants.peripheral.name()))) {
+		if ((dict == null || !dict.containsKeyAndNotNull(KeysConstants.peripheral.name()))) {
 			Log.e(LCAT, "cancelPeripheralConnection(): peripheral object not provided.");
+			return;
+		}
+		if (bleService == null) {
+			Log.e(LCAT, "cancelPeripheralConnection(): no peripheral connection exists.");
 			return;
 		}
 
@@ -276,6 +293,15 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		}
 	}
 
+	private boolean isServiceConnected(String methodName)
+	{
+		if (bleService == null) {
+			Log.e(LCAT, methodName + "(): no peripheral connection exists. Call connectPeripheral() first.");
+			return false;
+		}
+		return true;
+	}
+
 	private final TiBLEPeripheralProxy.IOperationHandler peripheralOperationListener =
 		new TiBLEPeripheralProxy.IOperationHandler() {
 			@Override
@@ -287,75 +313,99 @@ public class TiBLECentralManagerProxy extends KrollProxy
 			@Override
 			public void readRSSI()
 			{
-				bleService.readRSSI();
+				if (isServiceConnected("readRSSI")) {
+					bleService.readRSSI();
+				}
 			}
 
 			@Override
 			public void requestConnectionPriority(int priority)
 			{
-				bleService.requestConnectionPriority(priority);
+				if (isServiceConnected("requestConnectionPriority")) {
+					bleService.requestConnectionPriority(priority);
+				}
 			}
 
 			@Override
 			public void discoverServices(String[] serviceUUIDs)
 			{
-				bleService.discoverServices();
+				if (isServiceConnected("discoverServices")) {
+					bleService.discoverServices();
+				}
 			}
 
 			@Override
 			public void discoverIncludedServices(TiBLEServiceProxy serviceProxy)
 			{
-				bleService.discoverIncludedServices(serviceProxy);
+				if (isServiceConnected("discoverIncludedServices")) {
+					bleService.discoverIncludedServices(serviceProxy);
+				}
 			}
 
 			@Override
 			public void discoverCharacteristics(TiBLEServiceProxy serviceProxy)
 			{
-				bleService.discoverCharacteristics(serviceProxy);
+				if (isServiceConnected("discoverCharacteristics")) {
+					bleService.discoverCharacteristics(serviceProxy);
+				}
 			}
 
 			@Override
 			public void discoverDescriptorsForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 			{
-				bleService.discoverDescriptorsForCharacteristic(characteristicProxy);
+				if (isServiceConnected("discoverDescriptorsForCharacteristic")) {
+					bleService.discoverDescriptorsForCharacteristic(characteristicProxy);
+				}
 			}
 
 			@Override
 			public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 			{
-				bleService.readValueForCharacteristic(characteristicProxy);
+				if (isServiceConnected("readValueForCharacteristic")) {
+					bleService.readValueForCharacteristic(characteristicProxy);
+				}
 			}
 
 			@Override
 			public void writeValueForCharacteristic(TiBLECharacteristicProxy charProxy, byte[] buffer, int writeType)
 			{
-				bleService.writeValueForCharacteristic(charProxy, buffer, writeType);
+				if (isServiceConnected("writeValueForCharacteristic")) {
+					bleService.writeValueForCharacteristic(charProxy, buffer, writeType);
+				}
 			}
 
 			@Override
 			public void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy)
 			{
-				bleService.readValueForDescriptor(descriptorProxy);
+				if (isServiceConnected("readValueForDescriptor")) {
+					bleService.readValueForDescriptor(descriptorProxy);
+				}
 			}
 
 			@Override
 			public void writeValueForDescriptor(TiBLEDescriptorProxy descriptorProxy, byte[] buffer)
 			{
-				bleService.writeValueForDescriptor(descriptorProxy, buffer);
+				if (isServiceConnected("writeValueForDescriptor")) {
+					bleService.writeValueForDescriptor(descriptorProxy, buffer);
+				}
 			}
 
 			@Override
 			public void subscribeToCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
 												  BufferProxy enableValue)
 			{
-				bleService.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+				if (isServiceConnected("subscribeToCharacteristic")) {
+					bleService.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+				}
 			}
 
 			@Override
 			public void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
 													  BufferProxy disableValue)
 			{
-				bleService.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+				if (isServiceConnected("unsubscribeFromCharacteristic")) {
+					bleService.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+				}
 			}
 
 			@RequiresApi(api = Build.VERSION_CODES.Q)
@@ -400,7 +450,9 @@ public class TiBLECentralManagerProxy extends KrollProxy
 		dict.put(KeysConstants.RSSI.name(), i);
 
 		BufferProxy bufferProxy = new BufferProxy();
-		bufferProxy.write(0, bytes, 0, bytes.length);
+		if (bytes != null && bytes.length > 0) {
+			bufferProxy.write(0, bytes, 0, bytes.length);
+		}
 		dict.put(KeysConstants.rawAdvertisementData.name(), bufferProxy);
 
 		fireEvent(KeysConstants.didDiscoverPeripheral.name(), dict);

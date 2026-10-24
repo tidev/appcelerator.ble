@@ -27,8 +27,8 @@ public class TiBLEServiceProxy extends KrollProxy
 
 	public static TiBLEServiceProxy createServiceProxy(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.uuid.name())
-			|| !dict.containsKey(KeysConstants.primary.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.uuid.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.primary.name())) {
 			Log.e(LCAT, "createServiceProxy(): Cannot create service, required parameters not provided");
 			return null;
 		}
@@ -37,7 +37,7 @@ public class TiBLEServiceProxy extends KrollProxy
 		int primary =
 			(isPrimary) ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
 		BluetoothGattService service = new BluetoothGattService(UUID.fromString(uuid), primary);
-		if (dict.containsKey(KeysConstants.characteristics.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.characteristics.name())) {
 			Object[] characteristicObject = (Object[]) dict.get(KeysConstants.characteristics.name());
 			if (characteristicObject != null) {
 				TiBLECharacteristicProxy[] characteristicProxies =

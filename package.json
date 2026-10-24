@@ -18,7 +18,7 @@
     "test:unit": "karma start test/unit/karma.unit.config.js",
     "test:android": "npm run test:unit -- --browsers android",
     "test:ios": "npm run test:unit -- --browsers ios",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -29,28 +29,27 @@
   },
   "homepage": "https://github.com/appcelerator/appcelerator.ble#readme",
   "devDependencies": {
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@seadub/clang-format-lint": "0.0.2",
     "@seadub/danger-plugin-dependencies": "^1.0.0",
-    "@seadub/danger-plugin-junit": "^0.2.0",
+    "@seadub/danger-plugin-junit": "^0.3.0",
     "@seadub/danger-plugin-titanium-module": "1.0.0",
     "clang-format": "^1.5.0",
     "commitizen": "^4.2.3",
-    "danger": "^10.6.4",
+    "danger": "^14.0.7",
     "eslint": "^7.24.0",
     "eslint-config-axway": "^6.0.1",
     "eslint-plugin-jasmine": "^4.1.2",
-    "husky": "^6.0.0",
+    "husky": "^9.1.7",
     "jasmine-core": "^3.7.1",
     "karma": "^4.4.1",
     "karma-jasmine": "^4.0.1",
     "karma-junit-reporter": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-titanium-launcher": "^0.8.1",
-    "lint-staged": "^10.5.4",
-    "socket.io": "^4.0.1",
-    "titanium-docgen": "^4.10.3"
+    "lint-staged": "^17.6.0",
+    "titanium-docgen": "^5.0.0"
   },
   "lint-staged": {
     "ios/**/*.{m,h}": [

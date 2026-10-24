@@ -39,7 +39,10 @@ public class StateBroadcastReceiver extends BroadcastReceiver
 				centralManagerProxy.bluetoothStateChanged(state);
 			}
 			if (peripheralManagerProxyRef != null) {
-				peripheralManagerProxyRef.get().bluetoothStateChanged(state);
+				TiBLEPeripheralManagerProxy peripheralManagerProxy = peripheralManagerProxyRef.get();
+				if (peripheralManagerProxy != null) {
+					peripheralManagerProxy.bluetoothStateChanged(state);
+				}
 			}
 		}
 	}

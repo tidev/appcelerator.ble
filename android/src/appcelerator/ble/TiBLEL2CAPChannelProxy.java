@@ -27,7 +27,7 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
 	private Thread writerThread;
-	private volatile BlockingQueue<byte[]> sendDataQueue = new LinkedBlockingQueue<>();
+	private final BlockingQueue<byte[]> sendDataQueue = new LinkedBlockingQueue<>();
 	private volatile boolean isClosed = false;
 	private volatile int readBufferSize = 1024;
 
@@ -132,7 +132,7 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 			return;
 		}
 
-		if (dict == null || !dict.containsKey(KeysConstants.data.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.data.name())) {
 			Log.d(TAG, "write(): unable to write as the data is not provided.");
 			return;
 		}
@@ -161,10 +161,11 @@ public class TiBLEL2CAPChannelProxy extends KrollProxy
 			Log.e(TAG, "exception while closing outputstream", exc);
 		}
 
-		writerThread.interrupt();
-		writerThread = null;
+		if (writerThread != null) {
+			writerThread.interrupt();
+			writerThread = null;
+		}
 		sendDataQueue.clear();
-		sendDataQueue = null;
 
 		try {
 			socketConnected.close();

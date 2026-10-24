@@ -32,6 +32,10 @@ public class TiBLECharacteristicProxy extends KrollProxy
 	@Kroll.getProperty
 	public TiBLEServiceProxy service()
 	{
+		// A characteristic created with createMutableCharacteristic() has no service until it is added to one.
+		if (characteristic.getService() == null) {
+			return null;
+		}
 		return new TiBLEServiceProxy(characteristic.getService());
 	}
 

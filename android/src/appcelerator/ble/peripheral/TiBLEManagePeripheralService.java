@@ -5,8 +5,6 @@
  */
 package appcelerator.ble.peripheral;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -15,7 +13,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
+import appcelerator.ble.TiBLEForegroundServiceHelper;
 import java.lang.ref.WeakReference;
 import org.appcelerator.kroll.common.Log;
 import ti.modules.titanium.BufferProxy;
@@ -23,7 +21,8 @@ import ti.modules.titanium.BufferProxy;
 public class TiBLEManagePeripheralService extends Service
 {
 	private static final String LCAT = TiBLEManagePeripheralService.class.getSimpleName();
-	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
+	public static final String CHANNEL_ID = TiBLEForegroundServiceHelper.CHANNEL_ID;
+	private static final int NOTIFICATION_ID = 7656;
 	private WeakReference<TiBLEPeripheralManagerProxy> peripheralManagerProxyRef;
 	private TiBLEPeripheralOperationManager peripheralOperationManager;
 	private TiBLEPeripheralAdvertiseManager advertiseManager;
@@ -56,21 +55,7 @@ public class TiBLEManagePeripheralService extends Service
 	{
 		super.onCreate();
 		Log.d(LCAT, "onCreate(): Service is being created");
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
-		createNotificationChannelForOreoOnwards();
-		int notificationId = 7656;
-		startForeground(notificationId, notificationBuilder.build());
-	}
-
-	private void createNotificationChannelForOreoOnwards()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel serviceChannel =
-				new NotificationChannel(CHANNEL_ID, "TiBLEServiceChannel", NotificationManager.IMPORTANCE_DEFAULT);
-
-			NotificationManager manager = getSystemService(NotificationManager.class);
-			manager.createNotificationChannel(serviceChannel);
-		}
+		TiBLEForegroundServiceHelper.startForeground(this, NOTIFICATION_ID, "Acting as a Bluetooth peripheral");
 	}
 
 	public void initialisePeripheralAndOpenGattServer(TiBLEPeripheralManagerProxy peripheralManagerProxy)
@@ -79,51 +64,76 @@ public class TiBLEManagePeripheralService extends Service
 		peripheralOperationManager = new TiBLEPeripheralOperationManager(this, peripheralManagerProxy);
 		peripheralOperationManager.openGattServer();
 		if (advertiseManager == null) {
-			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxyRef.get());
+			advertiseManager = new TiBLEPeripheralAdvertiseManager(peripheralManagerProxy);
 		}
+	}
+
+	private boolean hasOperationManager(String methodName)
+	{
+		if (peripheralOperationManager == null) {
+			Log.e(LCAT, methodName + "(): GATT server is not initialized.");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean hasAdvertiseManager(String methodName)
+	{
+		if (advertiseManager == null) {
+			Log.e(LCAT, methodName + "(): Advertise process is not initialized");
+			return false;
+		}
+		return true;
 	}
 
 	public void addService(BluetoothGattService service)
 	{
-		peripheralOperationManager.addService(service);
+		if (hasOperationManager("addService")) {
+			peripheralOperationManager.addService(service);
+		}
 	}
 
 	public void removeServiceFromServer(BluetoothGattService service)
 	{
-		peripheralOperationManager.removeService(service);
+		if (hasOperationManager("removeServiceFromServer")) {
+			peripheralOperationManager.removeService(service);
+		}
 	}
 
 	public void removeAllServicesFromServer()
 	{
-		peripheralOperationManager.clearServices();
+		if (hasOperationManager("removeAllServicesFromServer")) {
+			peripheralOperationManager.clearServices();
+		}
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void startAdvertising(String[] serviceUUIDs, boolean localName)
 	{
-		if (advertiseManager == null) {
-			Log.e(LCAT, "startAdvertising(): Advertise process is not initialized");
-			return;
+		if (hasAdvertiseManager("startAdvertising")) {
+			advertiseManager.startAdvertising(serviceUUIDs, localName);
 		}
-		advertiseManager.startAdvertising(serviceUUIDs, localName);
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void stopAdvertising()
 	{
-		advertiseManager.stopAdvertising();
+		if (hasAdvertiseManager("stopAdvertising")) {
+			advertiseManager.stopAdvertising();
+		}
 	}
 
 	public void closeGattServer()
 	{
-		peripheralOperationManager.closeGATTServer();
+		if (hasOperationManager("closeGattServer")) {
+			peripheralOperationManager.closeGATTServer();
+		}
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public boolean isLEAdvertising()
 	{
-		if (advertiseManager == null) {
-			Log.e(LCAT, "isLEAdvertising(): Advertise process is not initialized");
+		if (!hasAdvertiseManager("isLEAdvertising")) {
 			return false;
 		}
 		return advertiseManager.isAdvertising();
@@ -132,18 +142,25 @@ public class TiBLEManagePeripheralService extends Service
 	public boolean updateCharacteristicAndNotifySubscribers(BluetoothGattCharacteristic characteristic,
 															BufferProxy value, TiBLECentralProxy[] centralProxies)
 	{
+		if (!hasOperationManager("updateCharacteristicAndNotifySubscribers")) {
+			return false;
+		}
 		return peripheralOperationManager.updateCharacteristicAndNotifySubscribers(characteristic, value,
 																				   centralProxies);
 	}
 
 	public void sendResponseToCharacteristic(TiBLECharacteristicRequestProxy requestProxy, int result)
 	{
-		peripheralOperationManager.sendResponseToCharacteristic(requestProxy, result);
+		if (hasOperationManager("sendResponseToCharacteristic")) {
+			peripheralOperationManager.sendResponseToCharacteristic(requestProxy, result);
+		}
 	}
 
 	public void sendResponseToDescriptor(TiBLEDescriptorRequestProxy descriptorRequestProxy, int result)
 	{
-		peripheralOperationManager.sendResponseToDescriptor(descriptorRequestProxy, result);
+		if (hasOperationManager("sendResponseToDescriptor")) {
+			peripheralOperationManager.sendResponseToDescriptor(descriptorRequestProxy, result);
+		}
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.Q)

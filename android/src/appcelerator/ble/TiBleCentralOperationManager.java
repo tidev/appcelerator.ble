@@ -45,6 +45,7 @@ public class TiBleCentralOperationManager
 
 	public void initiateConnectionWithPeripheral()
 	{
+		connectionState = ConnectionState.Connecting;
 		bluetoothGatt = peripheralProxy.getDevice().connectGatt(context, autoConnect, new BluetoothGattCallback() {
 			@Override
 			public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
@@ -103,7 +104,21 @@ public class TiBleCentralOperationManager
 				handleOnDescriptorWrite(descriptor, status);
 			}
 		});
-		connectionState = ConnectionState.Connecting;
+		if (bluetoothGatt == null) {
+			// connectGatt() returns null when bluetooth is unavailable or turned off.
+			Log.e(LCAT, "initiateConnectionWithPeripheral(): unable to create GATT connection for address- "
+							+ peripheralProxy.address());
+			handleDisconnection(BluetoothGatt.GATT_FAILURE);
+		}
+	}
+
+	private boolean hasGatt(String methodName)
+	{
+		if (bluetoothGatt == null) {
+			Log.e(LCAT, methodName + "(): no GATT connection exists.");
+			return false;
+		}
+		return true;
 	}
 
 	private void handleOnConnectionStateChanged(int status, int newState)
@@ -242,6 +257,9 @@ public class TiBleCentralOperationManager
 
 	public void cancelPeripheralConnection()
 	{
+		if (!hasGatt("cancelPeripheralConnection")) {
+			return;
+		}
 		connectionState = ConnectionState.Disconnecting;
 		bluetoothGatt.disconnect();
 	}
@@ -253,11 +271,16 @@ public class TiBleCentralOperationManager
 
 	public void readRSSI()
 	{
-		bluetoothGatt.readRemoteRssi();
+		if (hasGatt("readRSSI")) {
+			bluetoothGatt.readRemoteRssi();
+		}
 	}
 
 	public void requestConnectionPriority(int priority)
 	{
+		if (!hasGatt("requestConnectionPriority")) {
+			return;
+		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			bluetoothGatt.requestConnectionPriority(priority);
 		} else {
@@ -269,7 +292,9 @@ public class TiBleCentralOperationManager
 
 	public void discoverServices()
 	{
-		bluetoothGatt.discoverServices();
+		if (hasGatt("discoverServices")) {
+			bluetoothGatt.discoverServices();
+		}
 	}
 
 	public void discoverIncludedServices(TiBLEServiceProxy serviceProxy)
@@ -327,13 +352,17 @@ public class TiBleCentralOperationManager
 			centralManagerProxy.fireEvent(KeysConstants.didFailToConnectPeripheral.name(), dict);
 		}
 
-		bluetoothGatt.close();
+		if (bluetoothGatt != null) {
+			bluetoothGatt.close();
+			bluetoothGatt = null;
+		}
 		centralManagerProxy.stopAndUnbindService();
 	}
 
 	public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 	{
-		boolean isReadInitiated = bluetoothGatt.readCharacteristic(characteristicProxy.getCharacteristic());
+		boolean isReadInitiated = hasGatt("readValueForCharacteristic")
+								  && bluetoothGatt.readCharacteristic(characteristicProxy.getCharacteristic());
 		Log.d(LCAT, "readValueForCharacteristic(): characteristic- " + characteristicProxy.uuid()
 						+ " read initiation status- ." + isReadInitiated);
 		if (!isReadInitiated) {
@@ -353,7 +382,8 @@ public class TiBleCentralOperationManager
 	{
 		charProxy.getCharacteristic().setWriteType(writeType);
 		charProxy.getCharacteristic().setValue(buffer);
-		boolean isWritingInitiated = bluetoothGatt.writeCharacteristic(charProxy.getCharacteristic());
+		boolean isWritingInitiated =
+			hasGatt("writeValueForCharacteristic") && bluetoothGatt.writeCharacteristic(charProxy.getCharacteristic());
 		Log.d(LCAT, "writeValueForCharacteristic(): characteristic- " + charProxy.uuid() + " write initiation status- ."
 						+ isWritingInitiated);
 		if (!isWritingInitiated) {
@@ -371,7 +401,8 @@ public class TiBleCentralOperationManager
 
 	public void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy)
 	{
-		boolean isReadInitiated = bluetoothGatt.readDescriptor(descriptorProxy.getDescriptor());
+		boolean isReadInitiated =
+			hasGatt("readValueForDescriptor") && bluetoothGatt.readDescriptor(descriptorProxy.getDescriptor());
 		Log.d(LCAT, "readValueForDescriptor(): descriptor- " + descriptorProxy.uuid() + " read initiation status- ."
 						+ isReadInitiated);
 		if (!isReadInitiated) {
@@ -391,7 +422,7 @@ public class TiBleCentralOperationManager
 	{
 		BluetoothGattDescriptor descriptor = descriptorProxy.getDescriptor();
 		descriptor.setValue(buffer);
-		boolean isWritingInitiated = bluetoothGatt.writeDescriptor(descriptor);
+		boolean isWritingInitiated = hasGatt("writeValueForDescriptor") && bluetoothGatt.writeDescriptor(descriptor);
 		Log.d(LCAT, "writeValueForDescriptor(): descriptor- " + descriptorProxy.uuid() + " write initiation status- ."
 						+ isWritingInitiated);
 		if (!isWritingInitiated) {
@@ -430,7 +461,8 @@ public class TiBleCentralOperationManager
 		}
 
 		boolean setCharNotificationSuccessful =
-			bluetoothGatt.setCharacteristicNotification(charProxy.getCharacteristic(), true);
+			hasGatt("subscribeToCharacteristic")
+			&& bluetoothGatt.setCharacteristicNotification(charProxy.getCharacteristic(), true);
 		if (!setCharNotificationSuccessful) {
 			String errorDescription = String.format(
 				"cannot subscribe as setCharacteristicNotification for characteristic- %s failed.", charProxy.uuid());
@@ -484,7 +516,8 @@ public class TiBleCentralOperationManager
 		}
 
 		boolean setCharNotificationSuccessful =
-			bluetoothGatt.setCharacteristicNotification(charProxy.getCharacteristic(), false);
+			hasGatt("unsubscribeFromCharacteristic")
+			&& bluetoothGatt.setCharacteristicNotification(charProxy.getCharacteristic(), false);
 		if (!setCharNotificationSuccessful) {
 			String errorDescription = String.format(
 				"cannot unsubscribe as setCharacteristicNotification for characteristic- %s failed.", charProxy.uuid());

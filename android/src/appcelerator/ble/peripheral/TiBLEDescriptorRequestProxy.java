@@ -73,7 +73,7 @@ public class TiBLEDescriptorRequestProxy extends KrollProxy
 	@Kroll.method
 	public void updateDescriptorValue(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.value.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.value.name())) {
 			Log.e(LCAT, "updateDescriptorValue(): Cannot update value, required parameter not provided");
 			return;
 		}
@@ -91,5 +91,10 @@ public class TiBLEDescriptorRequestProxy extends KrollProxy
 	public BluetoothDevice getBluetoothDevice()
 	{
 		return bluetoothDevice;
+	}
+
+	public BluetoothGattDescriptor getDescriptor()
+	{
+		return descriptor;
 	}
 }

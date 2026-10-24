@@ -4,7 +4,7 @@
 		<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 			<!-- Fine location permission needed for bluetooth device discovery. -->
 			<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-			<uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION"/>
+			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 			<!-- Bluetooth permission needed by Android 12 and higher. -->
 			<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
@@ -15,12 +15,13 @@
 			<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
 			<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
 
-			<!-- Needed by the 2 services defined below. -->
+			<!-- Needed by the 2 services defined below. Android 14 and higher also require the service type permission. -->
 			<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+			<uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
 
 			<application>
-				<service android:name=".TiBLEManageCentralService"/>
-				<service android:name="appcelerator.ble.peripheral.TiBLEManagePeripheralService"/>
+				<service android:name=".TiBLEManageCentralService" android:foregroundServiceType="connectedDevice"/>
+				<service android:name="appcelerator.ble.peripheral.TiBLEManagePeripheralService" android:foregroundServiceType="connectedDevice"/>
 			</application>
 		</manifest>
 	</android>
