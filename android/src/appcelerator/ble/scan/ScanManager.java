@@ -69,7 +69,8 @@ public abstract class ScanManager
 	abstract protected void doScan(String[] servicesUUIDs);
 	abstract protected void killScan();
 
-	public interface IScanDeviceFoundListener {
+	public interface IScanDeviceFoundListener
+	{
 		void onScanDeviceFound(BluetoothDevice bluetoothDevice, int i, byte[] bytes);
 	}
 }
