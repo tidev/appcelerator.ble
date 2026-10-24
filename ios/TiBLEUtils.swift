@@ -9,13 +9,13 @@ import TitaniumKit
 import CoreBluetooth
 
 class TiBLEUtils {
-    static func toTiBuffer(from data:Data) -> TiBuffer {
+    static func toTiBuffer(from data: Data) -> TiBuffer {
         let buffer = TiBuffer()
         buffer.data = NSMutableData(data: data)
-        return buffer;
+        return buffer
     }
-    
-    static func toStringUUIDs(from uuids:[CBUUID]?) ->[String] {
+
+    static func toStringUUIDs(from uuids: [CBUUID]?) -> [String] {
         guard let uuids = uuids else {
             return []
         }
@@ -23,20 +23,20 @@ class TiBLEUtils {
         uuids.forEach { (value) in
             serviceUUIDs.append(value.uuidString)
         }
-        return serviceUUIDs;
+        return serviceUUIDs
     }
-    
-    static func toUUIDs(from uuids:[String]) ->[UUID] {
+
+    static func toUUIDs(from uuids: [String]) -> [UUID] {
         var ids = [UUID]()
         uuids.forEach { (value) in
             if let id = UUID(uuidString: value) {
                 ids.append(id)
             }
         }
-        return ids;
+        return ids
     }
-    
-    static func toCBUUIDs(from uuids:[String]?) ->[CBUUID] {
+
+    static func toCBUUIDs(from uuids: [String]?) -> [CBUUID] {
         guard let uuids = uuids else {
             return []
         }
@@ -44,6 +44,6 @@ class TiBLEUtils {
         uuids.forEach { (value) in
             ids.append(CBUUID(string: value))
         }
-        return ids;
+        return ids
     }
 }

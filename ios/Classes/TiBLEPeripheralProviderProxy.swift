@@ -49,7 +49,7 @@ public class TiBLEPeripheralProviderProxy: NSObject {
         }
     }
 
-    func removeAllPeripheral () {
+    func removeAllPeripheral() {
         _peripherals.removeAll()
     }
 
