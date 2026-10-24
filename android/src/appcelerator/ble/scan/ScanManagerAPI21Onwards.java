@@ -7,8 +7,10 @@ package appcelerator.ble.scan;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
@@ -54,14 +56,26 @@ public class ScanManagerAPI21Onwards extends ScanManager
 			}
 		}
 
-		adapter.getBluetoothLeScanner().startScan(filterList, scanSetting, scanCallback);
+		// getBluetoothLeScanner() returns null while bluetooth is turned off.
+		BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
+		if (scanner == null) {
+			Log.e(LCAT, "doScan(): unable to start the scan, bluetooth is turned off.");
+			isScanningInProgress = false;
+			return;
+		}
+		scanner.startScan(filterList, scanSetting, scanCallback);
 		isScanningInProgress = true;
 	}
 
 	@Override
 	protected void killScan()
 	{
-		adapter.getBluetoothLeScanner().stopScan(scanCallback);
+		BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
+		if (scanner == null) {
+			Log.d(LCAT, "killScan(): bluetooth is turned off, scan already stopped by the system.");
+			return;
+		}
+		scanner.stopScan(scanCallback);
 	}
 
 	private ScanCallback scanCallback = new ScanCallback() {
@@ -98,7 +112,9 @@ public class ScanManagerAPI21Onwards extends ScanManager
 		public void onScanResult(int callbackType, ScanResult result)
 		{
 			super.onScanResult(callbackType, result);
-			onPeripheralFound(result.getDevice(), result.getRssi(), result.getScanRecord().getBytes());
+			ScanRecord scanRecord = result.getScanRecord();
+			byte[] bytes = (scanRecord != null) ? scanRecord.getBytes() : new byte[0];
+			onPeripheralFound(result.getDevice(), result.getRssi(), bytes);
 		}
 	};
 }

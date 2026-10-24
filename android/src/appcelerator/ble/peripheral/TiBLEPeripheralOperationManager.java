@@ -44,6 +44,25 @@ public class TiBLEPeripheralOperationManager
 		this.peripheralManagerProxyRef = new WeakReference<>(peripheralManagerProxy);
 	}
 
+	private void fireProxyEvent(String eventName, KrollDict dict)
+	{
+		TiBLEPeripheralManagerProxy proxy = peripheralManagerProxyRef.get();
+		if (proxy == null) {
+			Log.w(LCAT, "fireProxyEvent(): peripheral manager proxy no longer exists, dropping event- " + eventName);
+			return;
+		}
+		proxy.fireEvent(eventName, dict);
+	}
+
+	private boolean hasGattServer(String methodName)
+	{
+		if (bluetoothGattServer == null) {
+			Log.e(LCAT, methodName + "(): GATT server is not open.");
+			return false;
+		}
+		return true;
+	}
+
 	private final BluetoothGattServerCallback serverCallback = new BluetoothGattServerCallback() {
 		@Override
 		public void onConnectionStateChange(BluetoothDevice device, int status, int newState)
@@ -75,7 +94,7 @@ public class TiBLEPeripheralOperationManager
 			} else {
 				dict.put(KeysConstants.service.name(), new TiBLEServiceProxy(service));
 			}
-			peripheralManagerProxyRef.get().fireEvent(DID_ADD_SERVICE_KEY, dict);
+			fireProxyEvent(DID_ADD_SERVICE_KEY, dict);
 		}
 
 		@Override
@@ -88,7 +107,7 @@ public class TiBLEPeripheralOperationManager
 				new TiBLECharacteristicRequestProxy(characteristic, device, requestId, true, offset, null);
 			KrollDict dict = new KrollDict();
 			dict.put(KeysConstants.request.name(), characteristicRequestProxy);
-			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveReadRequest.name(), dict);
+			fireProxyEvent(KeysConstants.didReceiveReadRequest.name(), dict);
 		}
 
 		@Override
@@ -105,7 +124,7 @@ public class TiBLEPeripheralOperationManager
 			KrollDict dict = new KrollDict();
 			dict.put(KeysConstants.requests.name(),
 					 new TiBLECharacteristicRequestProxy[] { characteristicRequestProxy });
-			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveWriteRequests.name(), dict);
+			fireProxyEvent(KeysConstants.didReceiveWriteRequests.name(), dict);
 		}
 
 		@Override
@@ -118,7 +137,7 @@ public class TiBLEPeripheralOperationManager
 				new TiBLEDescriptorRequestProxy(descriptor, device, requestId, offset, true, null);
 			KrollDict dict = new KrollDict();
 			dict.put(KeysConstants.descriptorRequest.name(), descriptorRequestProxy);
-			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveDescriptorReadRequest.name(), dict);
+			fireProxyEvent(KeysConstants.didReceiveDescriptorReadRequest.name(), dict);
 		}
 
 		@Override
@@ -137,7 +156,7 @@ public class TiBLEPeripheralOperationManager
 			descriptor.setValue(value);
 			dict.put(KeysConstants.descriptorRequests.name(),
 					 new TiBLEDescriptorRequestProxy[] { descriptorRequestProxy });
-			peripheralManagerProxyRef.get().fireEvent(KeysConstants.didReceiveDescriptorWriteRequests.name(), dict);
+			fireProxyEvent(KeysConstants.didReceiveDescriptorWriteRequests.name(), dict);
 		}
 	};
 
@@ -148,23 +167,27 @@ public class TiBLEPeripheralOperationManager
 			Log.e(LCAT, "openGattServer(): Cannot open the GATT server, Bluetooth not available");
 			return;
 		}
+		// openGattServer() returns null when bluetooth is turned off.
 		bluetoothGattServer = bluetoothManager.openGattServer(context, serverCallback);
+		if (bluetoothGattServer == null) {
+			Log.e(LCAT, "openGattServer(): Cannot open the GATT server, bluetooth is turned off");
+		}
 	}
 
 	public void addService(BluetoothGattService service)
 	{
-		boolean isAddServiceInitiated = bluetoothGattServer.addService(service);
+		boolean isAddServiceInitiated = hasGattServer("addService") && bluetoothGattServer.addService(service);
 		if (!isAddServiceInitiated) {
 			KrollDict dict = new KrollDict();
 			dict.put(ERROR_CODE_KEY, BluetoothGatt.GATT_FAILURE);
 			dict.put(ERROR_DESCRIPTION_KEY, "Failed to initiate the request to add service");
-			peripheralManagerProxyRef.get().fireEvent(DID_ADD_SERVICE_KEY, dict);
+			fireProxyEvent(DID_ADD_SERVICE_KEY, dict);
 		}
 	}
 
 	public void removeService(BluetoothGattService service)
 	{
-		boolean isServiceRemoved = bluetoothGattServer.removeService(service);
+		boolean isServiceRemoved = hasGattServer("removeService") && bluetoothGattServer.removeService(service);
 		if (isServiceRemoved) {
 			Log.d(LCAT, "removeService(): Service removed successfully: " + service.getUuid().toString());
 		} else {
@@ -198,7 +221,7 @@ public class TiBLEPeripheralOperationManager
 		} else {
 			status = BluetoothGatt.GATT_REQUEST_NOT_SUPPORTED;
 		}
-		if (responseNeeded) {
+		if (responseNeeded && hasGattServer("handleSubscribeAndUnsubscribeEvents")) {
 			bluetoothGattServer.sendResponse(device, requestId, status, 0, null);
 		}
 	}
@@ -212,12 +235,15 @@ public class TiBLEPeripheralOperationManager
 		dict.put(KeysConstants.central.name(), centralProxy);
 		dict.put(KeysConstants.characteristic.name(), characteristicProxy);
 		String subscribeEventKey = (isSubscribe) ? "didSubscribeToCharacteristic" : "didUnsubscribeFromCharacteristic";
-		peripheralManagerProxyRef.get().fireEvent(subscribeEventKey, dict);
+		fireProxyEvent(subscribeEventKey, dict);
 	}
 
 	public boolean updateCharacteristicAndNotifySubscribers(BluetoothGattCharacteristic characteristic,
 															BufferProxy value, TiBLECentralProxy[] centralProxies)
 	{
+		if (!hasGattServer("updateCharacteristicAndNotifySubscribers")) {
+			return false;
+		}
 		if (value != null) {
 			characteristic.setValue(value.getBuffer());
 		} else {
@@ -258,10 +284,15 @@ public class TiBLEPeripheralOperationManager
 
 	public void sendResponseToCharacteristic(TiBLECharacteristicRequestProxy requestProxy, int result)
 	{
+		if (!hasGattServer("sendResponseToCharacteristic")) {
+			return;
+		}
 		BluetoothDevice device = requestProxy.getBluetoothDevice();
 		int requestId = requestProxy.getRequestId();
 		int offset = requestProxy.offset();
-		byte[] value = requestProxy.value().getBuffer();
+		// A read request carries no value until updateValue() is called. Fall back to the stored value.
+		byte[] value = (requestProxy.value() != null) ? requestProxy.value().getBuffer()
+													  : requestProxy.getCharacteristic().getValue();
 		boolean isSendResponseInitiated = bluetoothGattServer.sendResponse(device, requestId, result, offset, value);
 		if (!isSendResponseInitiated) {
 			Log.e(LCAT, "sendResponseToCharacteristic(): Failed to send response to the characteristic request");
@@ -270,10 +301,15 @@ public class TiBLEPeripheralOperationManager
 
 	public void sendResponseToDescriptor(TiBLEDescriptorRequestProxy descriptorRequestProxy, int result)
 	{
+		if (!hasGattServer("sendResponseToDescriptor")) {
+			return;
+		}
 		BluetoothDevice device = descriptorRequestProxy.getBluetoothDevice();
 		int requestId = descriptorRequestProxy.getRequestId();
 		int offset = descriptorRequestProxy.offset();
-		byte[] value = descriptorRequestProxy.value().getBuffer();
+		// A read request carries no value until updateDescriptorValue() is called. Fall back to the stored value.
+		byte[] value = (descriptorRequestProxy.value() != null) ? descriptorRequestProxy.value().getBuffer()
+																: descriptorRequestProxy.getDescriptor().getValue();
 		boolean isSendResponseInitiated = bluetoothGattServer.sendResponse(device, requestId, result, offset, value);
 		if (!isSendResponseInitiated) {
 			Log.e(LCAT, "sendResponseToDescriptor(): Failed to send response to the descriptor request");
@@ -282,12 +318,17 @@ public class TiBLEPeripheralOperationManager
 
 	public void clearServices()
 	{
-		bluetoothGattServer.clearServices();
+		if (hasGattServer("clearServices")) {
+			bluetoothGattServer.clearServices();
+		}
 	}
 
 	public void closeGATTServer()
 	{
 		TiBLESubscribedCentrals.getInstance().releaseSubscribedCentrals();
-		bluetoothGattServer.close();
+		if (bluetoothGattServer != null) {
+			bluetoothGattServer.close();
+			bluetoothGattServer = null;
+		}
 	}
 }

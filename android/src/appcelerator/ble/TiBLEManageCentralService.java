@@ -5,22 +5,19 @@
  */
 package appcelerator.ble;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
-import androidx.core.app.NotificationCompat;
 import org.appcelerator.kroll.common.Log;
 import ti.modules.titanium.BufferProxy;
 
 public class TiBLEManageCentralService extends Service
 {
 	private static final String LCAT = TiBLEManageCentralService.class.getSimpleName();
-	public static final String CHANNEL_ID = "TiBLEForegroundServiceChannel";
+	public static final String CHANNEL_ID = TiBLEForegroundServiceHelper.CHANNEL_ID;
+	private static final int NOTIFICATION_ID = 7654;
 	private final IBinder binder = new LocalBinder();
 
 	private TiBleCentralOperationManager centralOperationManager;
@@ -55,21 +52,7 @@ public class TiBLEManageCentralService extends Service
 	{
 		super.onCreate();
 		Log.d(LCAT, "onCreate(): Service is being created");
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
-		createNotificationChannelForOreoOnwards();
-		int notificationId = 7654;
-		startForeground(notificationId, notificationBuilder.build());
-	}
-
-	private void createNotificationChannelForOreoOnwards()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel serviceChannel =
-				new NotificationChannel(CHANNEL_ID, "TiBLEServiceChannel", NotificationManager.IMPORTANCE_DEFAULT);
-
-			NotificationManager manager = getSystemService(NotificationManager.class);
-			manager.createNotificationChannel(serviceChannel);
-		}
+		TiBLEForegroundServiceHelper.startForeground(this, NOTIFICATION_ID, "Connected to a Bluetooth device");
 	}
 
 	public void initiateConnectionWithPeripheral(TiBLECentralManagerProxy centralManagerProxy,
@@ -81,8 +64,20 @@ public class TiBLEManageCentralService extends Service
 		centralOperationManager.initiateConnectionWithPeripheral();
 	}
 
+	private boolean hasConnection(String methodName)
+	{
+		if (centralOperationManager == null || this.peripheralProxy == null) {
+			Log.e(LCAT, methodName + "(): no peripheral connection has been initiated.");
+			return false;
+		}
+		return true;
+	}
+
 	public void cancelPeripheralConnection(TiBLEPeripheralProxy peripheralProxy)
 	{
+		if (!hasConnection("cancelPeripheralConnection")) {
+			return;
+		}
 		if (!peripheralProxy.address().equals(this.peripheralProxy.address())) {
 			Log.e(LCAT,
 				  "cancelPeripheralConnection(): unable to cancel the connection. Peripheral provided name/address- "
@@ -97,6 +92,9 @@ public class TiBLEManageCentralService extends Service
 
 	public boolean isConnectedWithPeripheral(TiBLEPeripheralProxy peripheralProxy)
 	{
+		if (centralOperationManager == null || this.peripheralProxy == null) {
+			return false;
+		}
 		if (!peripheralProxy.address().equals(this.peripheralProxy.address())) {
 			return false;
 		}
@@ -105,69 +103,95 @@ public class TiBLEManageCentralService extends Service
 
 	public void readRSSI()
 	{
-		centralOperationManager.readRSSI();
+		if (hasConnection("readRSSI")) {
+			centralOperationManager.readRSSI();
+		}
 	}
 
 	public void requestConnectionPriority(int priority)
 	{
-		centralOperationManager.requestConnectionPriority(priority);
+		if (hasConnection("requestConnectionPriority")) {
+			centralOperationManager.requestConnectionPriority(priority);
+		}
 	}
 
 	public void discoverServices()
 	{
-		centralOperationManager.discoverServices();
+		if (hasConnection("discoverServices")) {
+			centralOperationManager.discoverServices();
+		}
 	}
 
 	public void discoverIncludedServices(TiBLEServiceProxy serviceProxy)
 	{
-		centralOperationManager.discoverIncludedServices(serviceProxy);
+		if (hasConnection("discoverIncludedServices")) {
+			centralOperationManager.discoverIncludedServices(serviceProxy);
+		}
 	}
 
 	public void discoverCharacteristics(TiBLEServiceProxy serviceProxy)
 	{
-		centralOperationManager.discoverCharacteristics(serviceProxy);
+		if (hasConnection("discoverCharacteristics")) {
+			centralOperationManager.discoverCharacteristics(serviceProxy);
+		}
 	}
 
 	public void discoverDescriptorsForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 	{
-		centralOperationManager.discoverDescriptorsForCharacteristic(characteristicProxy);
+		if (hasConnection("discoverDescriptorsForCharacteristic")) {
+			centralOperationManager.discoverDescriptorsForCharacteristic(characteristicProxy);
+		}
 	}
 
 	public void handleBluetoothTurnedOff()
 	{
-		centralOperationManager.handleDisconnection(BluetoothGatt.GATT_FAILURE);
+		if (hasConnection("handleBluetoothTurnedOff")) {
+			centralOperationManager.handleDisconnection(BluetoothGatt.GATT_FAILURE);
+		}
 	}
 
 	public void readValueForCharacteristic(TiBLECharacteristicProxy characteristicProxy)
 	{
-		centralOperationManager.readValueForCharacteristic(characteristicProxy);
+		if (hasConnection("readValueForCharacteristic")) {
+			centralOperationManager.readValueForCharacteristic(characteristicProxy);
+		}
 	}
 
 	public void writeValueForCharacteristic(TiBLECharacteristicProxy charProxy, byte[] buffer, int writeType)
 	{
-		centralOperationManager.writeValueForCharacteristic(charProxy, buffer, writeType);
+		if (hasConnection("writeValueForCharacteristic")) {
+			centralOperationManager.writeValueForCharacteristic(charProxy, buffer, writeType);
+		}
 	}
 
 	public void readValueForDescriptor(TiBLEDescriptorProxy descriptorProxy)
 	{
-		centralOperationManager.readValueForDescriptor(descriptorProxy);
+		if (hasConnection("readValueForDescriptor")) {
+			centralOperationManager.readValueForDescriptor(descriptorProxy);
+		}
 	}
 
 	public void writeValueForDescriptor(TiBLEDescriptorProxy descriptorProxy, byte[] buffer)
 	{
-		centralOperationManager.writeValueForDescriptor(descriptorProxy, buffer);
+		if (hasConnection("writeValueForDescriptor")) {
+			centralOperationManager.writeValueForDescriptor(descriptorProxy, buffer);
+		}
 	}
 
 	public void subscribeToCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
 										  BufferProxy enableValue)
 	{
-		centralOperationManager.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+		if (hasConnection("subscribeToCharacteristic")) {
+			centralOperationManager.subscribeToCharacteristic(charProxy, descriptorUUID, enableValue);
+		}
 	}
 
 	public void unsubscribeFromCharacteristic(TiBLECharacteristicProxy charProxy, String descriptorUUID,
 											  BufferProxy disableValue)
 	{
-		centralOperationManager.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+		if (hasConnection("unsubscribeFromCharacteristic")) {
+			centralOperationManager.unsubscribeFromCharacteristic(charProxy, descriptorUUID, disableValue);
+		}
 	}
 
 	public class LocalBinder extends Binder

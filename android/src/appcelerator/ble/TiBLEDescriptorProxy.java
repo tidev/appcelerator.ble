@@ -30,15 +30,15 @@ public class TiBLEDescriptorProxy extends KrollProxy
 
 	public static TiBLEDescriptorProxy createDescriptorProxy(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.permission.name())
-			|| !dict.containsKey(KeysConstants.uuid.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.permission.name())
+			|| !dict.containsKeyAndNotNull(KeysConstants.uuid.name())) {
 			Log.e(LCAT, "createDescriptorProxy(): Unable to create Descriptor, required parameters not provided");
 			return null;
 		}
 		String uuid = (String) dict.get(KeysConstants.uuid.name());
 		int permission = (int) dict.get(KeysConstants.permission.name());
 		BluetoothGattDescriptor descriptor = new BluetoothGattDescriptor(UUID.fromString(uuid), permission);
-		if (dict.containsKey(KeysConstants.value.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.value.name())) {
 			Object value = dict.get(KeysConstants.value.name());
 			try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				 ObjectOutput out = new ObjectOutputStream(bos)) {
@@ -76,6 +76,10 @@ public class TiBLEDescriptorProxy extends KrollProxy
 	@Kroll.getProperty
 	public TiBLECharacteristicProxy characteristic()
 	{
+		// A descriptor created with createDescriptor() has no characteristic until it is added to one.
+		if (descriptor.getCharacteristic() == null) {
+			return null;
+		}
 		return new TiBLECharacteristicProxy(descriptor.getCharacteristic());
 	}
 }

@@ -37,6 +37,16 @@ public class TiBLEPeripheralAdvertiseManager
 		this.managerProxyRef = new WeakReference<>(managerProxy);
 	}
 
+	private void fireProxyEvent(String eventName, Object data)
+	{
+		TiBLEPeripheralManagerProxy proxy = managerProxyRef.get();
+		if (proxy == null) {
+			Log.w(LCAT, "fireProxyEvent(): peripheral manager proxy no longer exists, dropping event- " + eventName);
+			return;
+		}
+		proxy.fireEvent(eventName, data);
+	}
+
 	private AdvertiseCallback advertiseCallback = new AdvertiseCallback() {
 		@Override
 		public void onStartSuccess(AdvertiseSettings settingsInEffect)
@@ -44,7 +54,7 @@ public class TiBLEPeripheralAdvertiseManager
 			super.onStartSuccess(settingsInEffect);
 			Log.d(LCAT, "onStartSuccess(): Advertising is started successfully");
 			advertisingState = AdvertisingState.Started;
-			managerProxyRef.get().fireEvent(DID_START_ADVERTISING_KEY, "advertising is started");
+			fireProxyEvent(DID_START_ADVERTISING_KEY, "advertising is started");
 		}
 
 		@Override
@@ -80,7 +90,7 @@ public class TiBLEPeripheralAdvertiseManager
 					break;
 			}
 			dict.put(KeysConstants.errorDescription.name(), errorDescription);
-			managerProxyRef.get().fireEvent(DID_START_ADVERTISING_KEY, dict);
+			fireProxyEvent(DID_START_ADVERTISING_KEY, dict);
 			Log.e(LCAT, "onStartFailure: Cannot start advertising, errorDescription: " + errorDescription
 							+ "errorCode: " + errorCode);
 		}
@@ -120,6 +130,10 @@ public class TiBLEPeripheralAdvertiseManager
 
 	public void stopAdvertising()
 	{
+		if (bluetoothLeAdvertiser == null) {
+			Log.e(LCAT, "stopAdvertising(): Cannot stop Advertising, advertising was never started");
+			return;
+		}
 		try {
 			bluetoothLeAdvertiser.stopAdvertising(advertiseCallback);
 			advertisingState = AdvertisingState.Stopped;

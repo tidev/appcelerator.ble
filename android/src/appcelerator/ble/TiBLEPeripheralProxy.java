@@ -90,7 +90,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void discoverIncludedServices(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.service.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.service.name())) {
 			Log.e(LCAT,
 				  "discoverIncludedServices(): unable to discover includedServices as service proxy not provided.");
 			return;
@@ -102,7 +102,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void discoverCharacteristics(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.service.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.service.name())) {
 			Log.e(LCAT, "discoverCharacteristics(): unable to discover characteristics as service proxy not provided.");
 			return;
 		}
@@ -113,7 +113,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void discoverDescriptorsForCharacteristic(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())) {
 			Log.e(
 				LCAT,
 				"discoverDescriptorsForCharacteristic(): unable to discover descriptors as characteristic proxy not provided.");
@@ -127,7 +127,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void readValueForCharacteristic(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())) {
 			Log.e(LCAT, "readValueForCharacteristic(): unable to read value as characteristic proxy not provided.");
 			return;
 		}
@@ -139,11 +139,11 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void writeValueForCharacteristic(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())) {
 			Log.e(LCAT, "writeValueForCharacteristic(): unable to write value as characteristic proxy not provided.");
 			return;
 		}
-		if (!dict.containsKey(KeysConstants.data.name())) {
+		if (!dict.containsKeyAndNotNull(KeysConstants.data.name())) {
 			Log.e(LCAT, "writeValueForCharacteristic(): unable to write value as buffer proxy not provided.");
 			return;
 		}
@@ -152,7 +152,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		BufferProxy bufferProxy = (BufferProxy) dict.get(KeysConstants.data.name());
 
 		int writeType = AppceleratorBleModule.CHARACTERISTIC_TYPE_WRITE_WITH_RESPONSE;
-		if (dict.containsKey(KeysConstants.type.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.type.name())) {
 			writeType = dict.getInt(KeysConstants.type.name());
 		}
 
@@ -162,7 +162,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void readValueForDescriptor(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.descriptor.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.descriptor.name())) {
 			Log.e(LCAT, "readValueForDescriptor(): unable to read value as descriptor proxy not provided.");
 			return;
 		}
@@ -175,11 +175,11 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void writeValueForDescriptor(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.descriptor.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.descriptor.name())) {
 			Log.e(LCAT, "writeValueForDescriptor(): unable to write value as descriptor proxy not provided.");
 			return;
 		}
-		if (!dict.containsKey(KeysConstants.data.name())) {
+		if (!dict.containsKeyAndNotNull(KeysConstants.data.name())) {
 			Log.e(LCAT, "writeValueForDescriptor(): unable to write value as buffer proxy not provided.");
 			return;
 		}
@@ -193,7 +193,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void subscribeToCharacteristic(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())) {
 			Log.e(LCAT, "subscribeToCharacteristic(): unable to subscribe as characteristic proxy not provided.");
 			return;
 		}
@@ -201,14 +201,14 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		TiBLECharacteristicProxy charProxy = (TiBLECharacteristicProxy) dict.get(KeysConstants.characteristic.name());
 
 		String descriptorUUID = null;
-		if (dict.containsKey(KeysConstants.descriptorUUID.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.descriptorUUID.name())) {
 			descriptorUUID = dict.getString(KeysConstants.descriptorUUID.name());
 		}
 
 		BufferProxy enableValue = null;
 		if (descriptorUUID != null && !descriptorUUID.isEmpty()) {
 			enableValue = new BufferProxy(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-			if (dict.containsKey(KeysConstants.descriptorValue.name())) {
+			if (dict.containsKeyAndNotNull(KeysConstants.descriptorValue.name())) {
 				enableValue = (BufferProxy) dict.get(KeysConstants.descriptorValue.name());
 			}
 		}
@@ -219,7 +219,7 @@ public class TiBLEPeripheralProxy extends KrollProxy
 	@Kroll.method
 	public void unsubscribeFromCharacteristic(KrollDict dict)
 	{
-		if (dict == null || !dict.containsKey(KeysConstants.characteristic.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.characteristic.name())) {
 			Log.e(
 				LCAT,
 				"unsubscribeFromCharacteristic(): unable to unsubscribeFromCharacteristic as characteristic proxy not provided.");
@@ -229,14 +229,14 @@ public class TiBLEPeripheralProxy extends KrollProxy
 		TiBLECharacteristicProxy charProxy = (TiBLECharacteristicProxy) dict.get(KeysConstants.characteristic.name());
 
 		String descriptorUUID = null;
-		if (dict.containsKey(KeysConstants.descriptorUUID.name())) {
+		if (dict.containsKeyAndNotNull(KeysConstants.descriptorUUID.name())) {
 			descriptorUUID = dict.getString(KeysConstants.descriptorUUID.name());
 		}
 
 		BufferProxy disableValue = null;
 		if (descriptorUUID != null && !descriptorUUID.isEmpty()) {
 			disableValue = new BufferProxy(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
-			if (dict.containsKey(KeysConstants.descriptorValue.name())) {
+			if (dict.containsKeyAndNotNull(KeysConstants.descriptorValue.name())) {
 				disableValue = (BufferProxy) dict.get(KeysConstants.descriptorValue.name());
 			}
 		}
@@ -253,13 +253,13 @@ public class TiBLEPeripheralProxy extends KrollProxy
 				"openL2CAPChannel(): unable to open the channel. This feature is supported on Android OS Version 'Q' and above.");
 			return;
 		}
-		if (dict == null || !dict.containsKey(KeysConstants.psmIdentifier.name())) {
+		if (dict == null || !dict.containsKeyAndNotNull(KeysConstants.psmIdentifier.name())) {
 			Log.e(LCAT, "openL2CAPChannel(): unable to open l2cap channel as psmIdentifier not provided.");
 			return;
 		}
 
 		int psmIdentifier = dict.getInt(KeysConstants.psmIdentifier.name());
-		boolean isEncryptionRequired = dict.containsKey(KeysConstants.encryptionRequired.name())
+		boolean isEncryptionRequired = dict.containsKeyAndNotNull(KeysConstants.encryptionRequired.name())
 									   && dict.getBoolean(KeysConstants.encryptionRequired.name());
 		handler.openL2CAPChannel(this, psmIdentifier, isEncryptionRequired);
 	}
